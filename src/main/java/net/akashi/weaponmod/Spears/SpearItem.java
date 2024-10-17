@@ -35,7 +35,7 @@ import java.util.List;
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class SpearItem extends Item implements Vanishable {
-	private final Multimap<Attribute, AttributeModifier> defaultModifiers;
+	private Multimap<Attribute, AttributeModifier> defaultModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
@@ -49,19 +49,17 @@ public class SpearItem extends Item implements Vanishable {
 			SHARPNESS
 	));
 
-	public SpearItem(SpearProperties spearProperties,
-	                 boolean isAdvanced,
-	                 Properties pProperties) {
+	public SpearItem(boolean isAdvanced, Properties pProperties){
 		super(pProperties);
-		this.ProjectileVelocity = spearProperties.VELOCITY.get();
-		this.ThrowDamage = spearProperties.RANGED_DAMAGE.get();
+		this.ProjectileVelocity = 2.5F;
+		this.ThrowDamage = 5;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE,CHANNELING));
 			ConflictEnchants.add(IMPALING);
 		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", spearProperties.MELEE_DAMAGE.get() - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", spearProperties.ATTACK_SPEED.get() - 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 5 - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 1.1 - 4, AttributeModifier.Operation.ADDITION));
 		this.defaultModifiers = builder.build();
 	}
 	public SpearItem(float attackDamage,
@@ -80,6 +78,25 @@ public class SpearItem extends Item implements Vanishable {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
+		this.defaultModifiers = builder.build();
+	}
+
+	public void updateFromConfig(float attackDamage, float attackSpeed,
+	                             float throwDamage, float projectileVelocity){
+		this.ProjectileVelocity = projectileVelocity;
+		this.ThrowDamage = throwDamage;
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
+		this.defaultModifiers = builder.build();
+	}
+
+	public void updateFromConfig(SpearProperties properties){
+		this.ProjectileVelocity = properties.VELOCITY.get().floatValue();
+		this.ThrowDamage = properties.RANGED_DAMAGE.get().floatValue();
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", properties.MELEE_DAMAGE.get().floatValue() - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", properties.ATTACK_SPEED.get().floatValue() - 4, AttributeModifier.Operation.ADDITION));
 		this.defaultModifiers = builder.build();
 	}
 

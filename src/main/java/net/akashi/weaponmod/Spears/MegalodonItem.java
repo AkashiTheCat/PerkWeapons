@@ -13,10 +13,6 @@ public class MegalodonItem extends SpearItem{
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 	}
 
-	public MegalodonItem(SpearProperties spearProperties, boolean isAdvanced, Properties pProperties) {
-		super(spearProperties, isAdvanced, pProperties);
-	}
-
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
 		return new ThrownMegalodon(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_MEGALODON.get());

@@ -1,30 +1,28 @@
 package net.akashi.weaponmod.Config;
 
 import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.DoubleValue;
 
 public class SpearProperties {
-	public ForgeConfigSpec.ConfigValue<Float> MELEE_DAMAGE;
-	public ForgeConfigSpec.ConfigValue<Float> ATTACK_SPEED;
-	public ForgeConfigSpec.ConfigValue<Float> RANGED_DAMAGE;
-	public ForgeConfigSpec.ConfigValue<Float> VELOCITY;
-	public ForgeConfigSpec.ConfigValue<Integer> DURABILITY;
+	public DoubleValue MELEE_DAMAGE;
+	public DoubleValue ATTACK_SPEED;
+	public DoubleValue RANGED_DAMAGE;
+	public DoubleValue VELOCITY;
 
 	SpearProperties(ForgeConfigSpec.Builder builder, String name,
 	                float defaultMeleeDamage, float defaultAttackSpeed,
-	                float defaultRangedDamage, float defaultVelocity,
-	                int defaultDurability) {
+	                float defaultRangedDamage, float defaultVelocity) {
 		builder.push(name);
 		MELEE_DAMAGE = builder.comment("Melee Damage Of " + name)
-				.define("Damage", defaultMeleeDamage);
+				.defineInRange("Damage", defaultMeleeDamage,0.1d,100.0d);
 		ATTACK_SPEED = builder.comment("Attack Speed Of " + name)
-				.define("Speed", defaultAttackSpeed);
+				.defineInRange("Speed", defaultAttackSpeed,0.0d,4.0d);
 		RANGED_DAMAGE = builder.comment("Ranged Damage(Throw Damage) Of " + name)
-				.define("Ranged", defaultRangedDamage);
+				.defineInRange("Ranged", defaultRangedDamage,0.1d,100.0d);
 		VELOCITY = builder.comment("Projectile Velocity Of " + name)
-				.define("Speed", defaultVelocity);
-		DURABILITY = builder.comment("Durability Of " + name)
-				.define("Durability", defaultDurability);
+				.defineInRange("Velocity", defaultVelocity,0.1d,10.0d);
 		builder.pop();
 	}
+
 
 }
