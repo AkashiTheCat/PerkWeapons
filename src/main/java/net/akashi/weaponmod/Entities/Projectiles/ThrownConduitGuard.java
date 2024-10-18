@@ -1,9 +1,12 @@
 package net.akashi.weaponmod.Entities.Projectiles;
 
+import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,6 +15,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
@@ -19,6 +23,8 @@ import javax.annotation.Nullable;
 public class ThrownConduitGuard extends ThrownSpear {
 	private double targetingRange = 5.0;
 	private double targetingThreshold = 0.5;
+	private boolean velocityChanged = false;
+	private int returnTime = 80;
 	private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(ThrownConduitGuard.class, EntityDataSerializers.INT);
 
 	public ThrownConduitGuard(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
@@ -26,11 +32,12 @@ public class ThrownConduitGuard extends ThrownSpear {
 	}
 
 	public ThrownConduitGuard(Level pLevel, LivingEntity pShooter, ItemStack pStack, int ReturnSlot,
-	                          double targetingRange, double targetingThreshold,
+	                          double targetingRange, double targetingThreshold, int returnTime,
 	                          EntityType<? extends ThrownSpear> spearType) {
 		super(pLevel, pShooter, pStack, ReturnSlot, spearType);
 		this.targetingRange = targetingRange;
 		this.targetingThreshold = targetingThreshold;
+		this.returnTime = returnTime;
 	}
 
 	@Override
@@ -45,7 +52,18 @@ public class ThrownConduitGuard extends ThrownSpear {
 			if (!this.level().isClientSide()) {
 				updateTarget();
 			}
-			//modified from twilight forest's tracking bow
+			if (!this.velocityChanged) {
+				this.setDeltaMovement(getMotionVec().scale(ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.VELOCITY_MULTIPLIER.get()));
+				this.velocityChanged = true;
+			}
+			if (returnTime <= 0) {
+				this.dealtDamage = true;
+			}
+			else {
+				returnTime--;
+			}
+			this.setNoGravity(true);
+			// modified from twilight forest's tracking bow
 			Entity target = getTarget();
 			if (target != null) {
 
@@ -71,6 +89,9 @@ public class ThrownConduitGuard extends ThrownSpear {
 					this.setTarget(null);
 				}
 			}
+		} else if (dealtDamage && this.getLoyaltyLevel() == 0) {
+			this.setNoPhysics(false);
+			this.setDeltaMovement(getMotionVec().scale(0.8).add(0,-0.1,0));
 		}
 		super.tick();
 	}
@@ -85,6 +106,7 @@ public class ThrownConduitGuard extends ThrownSpear {
 		super.readAdditionalSaveData(pCompound);
 		this.targetingRange = pCompound.getDouble("targetingRange");
 		this.targetingThreshold = pCompound.getDouble("targetingThreshold");
+		this.velocityChanged = pCompound.getBoolean("velocityChanged");
 	}
 
 	@Override
@@ -92,6 +114,7 @@ public class ThrownConduitGuard extends ThrownSpear {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.putDouble("targetingRange", this.targetingRange);
 		pCompound.putDouble("targetingThreshold", this.targetingThreshold);
+		pCompound.putBoolean("velocityChanged", this.velocityChanged);
 	}
 
 	private void updateTarget() {
@@ -115,6 +138,20 @@ public class ThrownConduitGuard extends ThrownSpear {
 	@Nullable
 	private Entity getTarget() {
 		return this.level().getEntity(this.getEntityData().get(TARGET));
+	}
+
+	@Override
+	public int getLoyaltyLevel() {
+		if (this.isInWater()) {
+			return 3;
+		}
+		return super.getLoyaltyLevel();
+	}
+
+	@Override
+	protected void onHitBlock(BlockHitResult pResult) {
+		super.onHitBlock(pResult);
+		this.setSoundEvent(SoundEvents.TRIDENT_HIT_GROUND);
 	}
 
 	private void setTarget(@Nullable Entity entity) {

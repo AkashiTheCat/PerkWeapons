@@ -38,7 +38,8 @@ public class ModCommonConfigs {
 		CONDUIT_GUARD_PROPERTIES = new ConduitGuardProperties(BUILDER, "Conduit Guard",
 				9, 1.2,
 				6, 2.5F,
-				5.0F, 45
+				5.0F, 45,
+				0.5, 80
 		);
 		SPEC = BUILDER.build();
 	}

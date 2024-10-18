@@ -8,6 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
+import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
+
 public class ConduitGuardItem extends SpearItem{
 	public ConduitGuardItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -22,6 +24,7 @@ public class ConduitGuardItem extends SpearItem{
 		return new ThrownConduitGuard(pLevel, player, pStack, getItemSlotIndex(player, pStack),
 				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.TRACKING_RANGE.get(),
 				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.getMaxTrackingAngleInDotProductForm(),
+				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.RETURN_TIME.get(),
 				ModEntities.THROWN_CONDUIT_GUARD.get());
 	}
 }

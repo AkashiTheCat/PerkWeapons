@@ -49,12 +49,12 @@ public class SpearItem extends Item implements Vanishable {
 			SHARPNESS
 	));
 
-	public SpearItem(boolean isAdvanced, Properties pProperties){
+	public SpearItem(boolean isAdvanced, Properties pProperties) {
 		super(pProperties);
 		this.ProjectileVelocity = 2.5F;
 		this.ThrowDamage = 5;
 		if (isAdvanced) {
-			GeneralEnchants.addAll(Arrays.asList(RIPTIDE,CHANNELING));
+			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
 		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -62,6 +62,7 @@ public class SpearItem extends Item implements Vanishable {
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 1.1 - 4, AttributeModifier.Operation.ADDITION));
 		this.defaultModifiers = builder.build();
 	}
+
 	public SpearItem(float attackDamage,
 	                 float attackSpeed,
 	                 float throwDamage,
@@ -72,7 +73,7 @@ public class SpearItem extends Item implements Vanishable {
 		this.ProjectileVelocity = projectileVelocity;
 		this.ThrowDamage = throwDamage;
 		if (isAdvanced) {
-			GeneralEnchants.addAll(Arrays.asList(RIPTIDE,CHANNELING));
+			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
 		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -82,7 +83,7 @@ public class SpearItem extends Item implements Vanishable {
 	}
 
 	public void updateFromConfig(float attackDamage, float attackSpeed,
-	                             float throwDamage, float projectileVelocity){
+	                             float throwDamage, float projectileVelocity) {
 		this.ProjectileVelocity = projectileVelocity;
 		this.ThrowDamage = throwDamage;
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -91,7 +92,7 @@ public class SpearItem extends Item implements Vanishable {
 		this.defaultModifiers = builder.build();
 	}
 
-	public void updateFromConfig(SpearProperties properties){
+	public void updateFromConfig(SpearProperties properties) {
 		this.ProjectileVelocity = properties.VELOCITY.get().floatValue();
 		this.ThrowDamage = properties.RANGED_DAMAGE.get().floatValue();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -109,8 +110,16 @@ public class SpearItem extends Item implements Vanishable {
 		return GeneralEnchants.add(enchantment);
 	}
 
+	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
+		return GeneralEnchants.remove(enchantment);
+	}
+
 	public boolean AddConflictEnchant(Enchantment enchantment) {
 		return ConflictEnchants.add(enchantment);
+	}
+
+	public boolean RemoveConflictEnchant(Enchantment enchantment) {
+		return ConflictEnchants.remove(enchantment);
 	}
 
 	@Override
@@ -186,7 +195,7 @@ public class SpearItem extends Item implements Vanishable {
 		}
 	}
 
-	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack){
+	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
 		return new ThrownSpear(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_SPEAR.get());
 	}
 

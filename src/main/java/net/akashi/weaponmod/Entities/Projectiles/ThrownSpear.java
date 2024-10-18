@@ -162,8 +162,8 @@ public class ThrownSpear extends AbstractArrow {
 		}
 
 		Entity entity = this.getOwner();
-		int i = this.entityData.get(ID_LOYALTY);
-		if (i > 0 && (this.dealtDamage || this.isNoPhysics()) && entity != null) {
+		int loyaltyLevel = getLoyaltyLevel();
+		if (loyaltyLevel > 0 && (this.dealtDamage || this.isNoPhysics()) && entity != null) {
 			if (!this.isAcceptableReturnOwner()) {
 				if (!this.level().isClientSide && this.pickup == Pickup.ALLOWED) {
 					this.spawnAtLocation(this.getPickupItem(), 0.1F);
@@ -172,12 +172,12 @@ public class ThrownSpear extends AbstractArrow {
 			} else {
 				this.setNoPhysics(true);
 				Vec3 vec3 = entity.getEyePosition().subtract(this.position());
-				this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double) i, this.getZ());
+				this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015D * (double) loyaltyLevel, this.getZ());
 				if (this.level().isClientSide) {
 					this.yOld = this.getY();
 				}
 
-				double d0 = 0.05D * (double) i;
+				double d0 = 0.05D * (double) loyaltyLevel;
 				this.setDeltaMovement(this.getDeltaMovement().scale(0.95D).add(vec3.normalize().scale(d0)));
 				if (this.clientSideReturnSpearTickCount == 0) {
 					this.playSound(SoundEvents.TRIDENT_RETURN, 10.0F, 1.0F);
@@ -249,6 +249,10 @@ public class ThrownSpear extends AbstractArrow {
 
 	public boolean isFoil() {
 		return this.entityData.get(ID_FOIL);
+	}
+
+	public int getLoyaltyLevel(){
+		return this.entityData.get(ID_LOYALTY);
 	}
 
 }
