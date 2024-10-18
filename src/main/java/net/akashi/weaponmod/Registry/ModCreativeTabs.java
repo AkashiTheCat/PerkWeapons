@@ -27,7 +27,7 @@ public class ModCreativeTabs {
 	public static final List<Supplier<? extends ItemLike>> BOW_TAB = new ArrayList<>();
 	private static final RegistryObject<CreativeModeTab> ACTUAL_INGREDIENTS_TAB = TABS.register("ingredients_tab",
 			() -> CreativeModeTab.builder()
-					.title(Component.translatable(WeaponMod.MODID+"itemGroup.ingredients_tab"))
+					.title(Component.translatable(WeaponMod.MODID+".itemGroup.ingredients_tab"))
 					.icon(ModItems.ANCIENT_SPIKE.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							INGREDIENTS_TAB.forEach(itemLike -> output.accept(itemLike.get())))
@@ -35,7 +35,7 @@ public class ModCreativeTabs {
 	);
 	private static final RegistryObject<CreativeModeTab> ACTUAL_SPEAR_TAB = TABS.register("spear_tab",
 			() -> CreativeModeTab.builder()
-					.title(Component.translatable(WeaponMod.MODID+"itemGroup.spear_tab"))
+					.title(Component.translatable(WeaponMod.MODID+".itemGroup.spear_tab"))
 					.icon(ModItems.PLACEHOLDER.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							SPEAR_TAB.forEach(itemLike -> output.accept(itemLike.get())))
@@ -43,7 +43,7 @@ public class ModCreativeTabs {
 	);
 	private static final RegistryObject<CreativeModeTab> ACTUAL_BOW_TAB = TABS.register("bow_tab",
 			() -> CreativeModeTab.builder()
-					.title(Component.translatable(WeaponMod.MODID+"itemGroup.bow_tab"))
+					.title(Component.translatable(WeaponMod.MODID+".itemGroup.bow_tab"))
 					.icon(ModItems.PLACEHOLDER.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							BOW_TAB.forEach(itemLike -> output.accept(itemLike.get())))

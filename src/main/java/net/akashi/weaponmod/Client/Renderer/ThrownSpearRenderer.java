@@ -56,6 +56,5 @@ public class ThrownSpearRenderer<T extends ThrownSpear> extends EntityRenderer<T
 		matrixStack.scale(2.2f, 2.2f, 2.2f);
 		matrixStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, entity.yRotO, entity.getYRot()) - 90.0f));
 		matrixStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, entity.xRotO, entity.getXRot()) - 45.0f));
-
 	}
 }

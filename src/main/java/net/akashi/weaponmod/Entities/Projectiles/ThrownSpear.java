@@ -39,10 +39,10 @@ public class ThrownSpear extends AbstractArrow {
 	private static final EntityDataAccessor<Byte> ID_LOYALTY = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Boolean> ID_FOIL = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<ItemStack> ID_SPEAR_ITEM = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.ITEM_STACK);
-	private boolean dealtDamage;
+	public boolean dealtDamage;
 	private int ReturnSlot;
 	public int clientSideReturnSpearTickCount;
-	private float baseDamage = 8.0f;
+	private float baseDamage = 5.0f;
 
 	public ThrownSpear(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -155,6 +155,7 @@ public class ThrownSpear extends AbstractArrow {
 		return this.dealtDamage ? null : super.findHitEntity(pStartVec, pEndVec);
 	}
 
+	@Override
 	public void tick() {
 		if (this.inGroundTime > 4) {
 			this.dealtDamage = true;

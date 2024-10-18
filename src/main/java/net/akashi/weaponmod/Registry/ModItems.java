@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Spears.ConduitGuardItem;
 import net.akashi.weaponmod.Spears.MegalodonItem;
 import net.akashi.weaponmod.Spears.SpearItem;
 import net.akashi.weaponmod.WeaponMod;
@@ -70,6 +71,11 @@ public class ModItems {
 			ITEMS.register("megalodon",
 					() -> new MegalodonItem(9, 1.2f,
 							6, 2.5F, true,
+							new Item.Properties().durability(1280))), SPEAR_TAB);
+	public static final RegistryObject<SpearItem> SPEAR_CONDUIT_GUARD = addToTab(
+			ITEMS.register("conduit_guard",
+					() -> new ConduitGuardItem(9, 1.1f,
+							9, 2.5F, true,
 							new Item.Properties().durability(1280))), SPEAR_TAB);
 
 }

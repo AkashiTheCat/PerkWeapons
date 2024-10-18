@@ -2,7 +2,7 @@ package net.akashi.weaponmod.Spears;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.akashi.weaponmod.Config.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.minecraft.core.BlockPos;
