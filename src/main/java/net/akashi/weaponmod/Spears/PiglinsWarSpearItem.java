@@ -6,9 +6,12 @@ import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.akashi.weaponmod.Config.Properties.PiglinsWarSpearProperties;
 import net.akashi.weaponmod.Config.Properties.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.Registry.ModItems;
+import net.akashi.weaponmod.Registry.ModPackages;
 import net.akashi.weaponmod.WeaponMod;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +25,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,8 +38,8 @@ import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
+@Mod.EventBusSubscriber(modid = WeaponMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class PiglinsWarSpearItem extends SpearItem {
-	private Player LastPlayer = null;
 	private static float DAMAGE_BONUS = 0.1f;
 	private static float SPEED_BONUS = 0.1f;
 	private static List<Item> allowedArmor = new ArrayList<>(Arrays.asList(
@@ -55,8 +59,8 @@ public class PiglinsWarSpearItem extends SpearItem {
 	}
 
 	@Override
-	public void updateAttributes(SpearProperties properties) {
-		super.updateAttributes(properties);
+	public void updateAttributesFromConfig(SpearProperties properties) {
+		super.updateAttributesFromConfig(properties);
 		if (properties instanceof PiglinsWarSpearProperties pProperties) {
 			DAMAGE_BONUS = pProperties.DAMAGE_BONUS.get().floatValue();
 			SPEED_BONUS = pProperties.SPEED_BONUS.get().floatValue();
@@ -64,11 +68,32 @@ public class PiglinsWarSpearItem extends SpearItem {
 		}
 	}
 
-	private Player getPlayer() {
-		return LastPlayer;
+	@SubscribeEvent
+	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+		if (event.getEntity() instanceof Player player) {
+			int count = getArmorCount(player);
+			float damageMultiplier = 1 + DAMAGE_BONUS * count;
+			float speedMultiplier = 1 + SPEED_BONUS * count;
+			if (!player.level().isClientSide()) {
+				ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+						new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
+				for (ItemStack IItem : player.getInventory().items) {
+					if (IItem.getItem() instanceof PiglinsWarSpearItem item) {
+						item.updateAttributes(damageMultiplier, speedMultiplier);
+					}
+				}
+			}
+		}
 	}
 
-	private int getGoldArmorCount(Player player) {
+	public void updateAttributes(float damageMultiplier, float speedMultiplier) {
+		this.updateAttributes(this.BaseAttackDamage * damageMultiplier,
+				this.BaseAttackSpeed * speedMultiplier,
+				this.BaseThrowDamage * damageMultiplier,
+				this.ProjectileVelocity);
+	}
+
+	private static int getArmorCount(Player player) {
 		int count = 0;
 		for (ItemStack armor : player.getArmorSlots()) {
 			if (allowedArmor.stream().anyMatch(pArmor -> pArmor.equals(armor.getItem()))) {
@@ -76,39 +101,5 @@ public class PiglinsWarSpearItem extends SpearItem {
 			}
 		}
 		return count;
-	}
-
-	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		if (slot == EquipmentSlot.MAINHAND) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-
-			PiglinsWarSpearProperties properties = ModCommonConfigs.PIGLINS_WARSPEAR_PROPERTIES;
-			float attackDamage = properties.MELEE_DAMAGE.get().floatValue();
-			float attackSpeed = properties.ATTACK_SPEED.get().floatValue();
-			Player player = getPlayer();
-			if (player != null) {
-				int count = getGoldArmorCount(player);
-				attackDamage = attackDamage * (1 + DAMAGE_BONUS * count);
-				attackSpeed = attackSpeed * (1 + SPEED_BONUS * count);
-			}
-			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
-			builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-			return builder.build();
-		}
-		return super.getAttributeModifiers(slot, stack);
-	}
-
-	@Override
-	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		float Damage = this.ThrowDamage * (1 + DAMAGE_BONUS * getGoldArmorCount(player));
-		return new ThrownSpear(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_SPEAR.get())
-				.setBaseDamage(Damage);
-	}
-
-	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		LastPlayer = player;
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
 	}
 }

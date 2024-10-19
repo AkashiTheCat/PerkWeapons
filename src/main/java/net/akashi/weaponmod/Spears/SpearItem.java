@@ -39,6 +39,9 @@ public class SpearItem extends Item {
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;
+	public float BaseAttackDamage;
+	public float BaseAttackSpeed;
+	public float BaseThrowDamage;
 
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
@@ -55,6 +58,9 @@ public class SpearItem extends Item {
 		super(pProperties);
 		this.ProjectileVelocity = 2.5F;
 		this.ThrowDamage = 5;
+		this.BaseThrowDamage = 5;
+		this.BaseAttackDamage = 5;
+		this.BaseAttackSpeed = 1.1F;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
@@ -72,8 +78,11 @@ public class SpearItem extends Item {
 	                 boolean isAdvanced,
 	                 Properties pProperties) {
 		super(pProperties);
-		ProjectileVelocity = projectileVelocity;
-		ThrowDamage = throwDamage;
+		this.ProjectileVelocity = projectileVelocity;
+		this.ThrowDamage = throwDamage;
+		this.BaseThrowDamage = throwDamage;
+		this.BaseAttackDamage = attackDamage;
+		this.BaseAttackSpeed = attackSpeed;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
@@ -81,7 +90,7 @@ public class SpearItem extends Item {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-		AttributeModifiers = builder.build();
+		this.AttributeModifiers = builder.build();
 	}
 
 	@Override
@@ -211,10 +220,13 @@ public class SpearItem extends Item {
 		return 1;
 	}
 
-	public void updateAttributes(SpearProperties properties) {
-		updateAttributes(properties.MELEE_DAMAGE.get().floatValue(),
-				properties.ATTACK_SPEED.get().floatValue(),
-				properties.RANGED_DAMAGE.get().floatValue(),
+	public void updateAttributesFromConfig(SpearProperties properties) {
+		this.BaseAttackDamage = properties.MELEE_DAMAGE.get().floatValue();
+		this.BaseAttackSpeed = properties.ATTACK_SPEED.get().floatValue();
+		this.BaseThrowDamage = properties.RANGED_DAMAGE.get().floatValue();
+		updateAttributes(this.BaseAttackDamage,
+				this.BaseAttackSpeed,
+				this.BaseThrowDamage,
 				properties.VELOCITY.get().floatValue());
 	}
 

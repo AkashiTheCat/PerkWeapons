@@ -53,12 +53,12 @@ public class ModCommonConfigs {
 	public static void onConfigLoad(ModConfigEvent event) {
 		if (event.getConfig().getSpec() != SPEC)
 			return;
-		ModItems.IRON_SPEAR.get().updateAttributes(IRON_SPEAR_PROPERTIES);
-		ModItems.GOLDEN_SPEAR.get().updateAttributes(GOLDEN_SPEAR_PROPERTIES);
-		ModItems.DIAMOND_SPEAR.get().updateAttributes(DIAMOND_SPEAR_PROPERTIES);
-		ModItems.NETHERITE_SPEAR.get().updateAttributes(NETHERITE_SPEAR_PROPERTIES);
-		ModItems.SPEAR_MEGALODON.get().updateAttributes(MEGALODON_PROPERTIES);
-		ModItems.SPEAR_CONDUIT_GUARD.get().updateAttributes(CONDUIT_GUARD_PROPERTIES);
-		ModItems.PIGLINS_WARSPEAR.get().updateAttributes(PIGLINS_WARSPEAR_PROPERTIES);
+		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
+		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
+		ModItems.DIAMOND_SPEAR.get().updateAttributesFromConfig(DIAMOND_SPEAR_PROPERTIES);
+		ModItems.NETHERITE_SPEAR.get().updateAttributesFromConfig(NETHERITE_SPEAR_PROPERTIES);
+		ModItems.SPEAR_MEGALODON.get().updateAttributesFromConfig(MEGALODON_PROPERTIES);
+		ModItems.SPEAR_CONDUIT_GUARD.get().updateAttributesFromConfig(CONDUIT_GUARD_PROPERTIES);
+		ModItems.PIGLINS_WARSPEAR.get().updateAttributesFromConfig(PIGLINS_WARSPEAR_PROPERTIES);
 	}
 }
