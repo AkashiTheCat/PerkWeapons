@@ -74,6 +74,8 @@ public class PiglinsWarSpearItem extends SpearItem {
 			int count = getArmorCount(player);
 			float damageMultiplier = 1 + DAMAGE_BONUS * count;
 			float speedMultiplier = 1 + SPEED_BONUS * count;
+			//Sync in this way will have probably unsolvable display problem if u r host in LAN multiplayer.
+			//But will have less impact on performance
 			if (!player.level().isClientSide()) {
 				ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 						new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
