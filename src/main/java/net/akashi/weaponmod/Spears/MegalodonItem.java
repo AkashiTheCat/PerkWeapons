@@ -18,6 +18,7 @@ public class MegalodonItem extends SpearItem{
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownMegalodon(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_MEGALODON.get());
+		return new ThrownMegalodon(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_MEGALODON.get())
+				.setBaseDamage(this.ThrowDamage);
 	}
 }

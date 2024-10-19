@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Spears;
 
 import net.akashi.weaponmod.Config.ModCommonConfigs;
+import net.akashi.weaponmod.Config.Properties.ConduitGuardProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownConduitGuard;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
@@ -21,10 +22,12 @@ public class ConduitGuardItem extends SpearItem{
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
+		ConduitGuardProperties properties = ModCommonConfigs.CONDUIT_GUARD_PROPERTIES;
 		return new ThrownConduitGuard(pLevel, player, pStack, getItemSlotIndex(player, pStack),
-				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.TRACKING_RANGE.get(),
-				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.getMaxTrackingAngleInDotProductForm(),
-				ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.RETURN_TIME.get(),
-				ModEntities.THROWN_CONDUIT_GUARD.get());
+				properties.TRACKING_RANGE.get(),
+				properties.getMaxTrackingAngleInDotProductForm(),
+				properties.RETURN_TIME.get(),
+				ModEntities.THROWN_CONDUIT_GUARD.get())
+				.setBaseDamage(this.ThrowDamage);
 	}
 }

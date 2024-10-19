@@ -3,6 +3,7 @@ package net.akashi.weaponmod.Registry;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Spears.ConduitGuardItem;
 import net.akashi.weaponmod.Spears.MegalodonItem;
+import net.akashi.weaponmod.Spears.PiglinsWarSpearItem;
 import net.akashi.weaponmod.Spears.SpearItem;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.resources.ResourceLocation;
@@ -77,5 +78,10 @@ public class ModItems {
 					() -> new ConduitGuardItem(9, 1.1f,
 							9, 2.5F, true,
 							new Item.Properties().durability(1280))), SPEAR_TAB);
+	public static final RegistryObject<SpearItem> PIGLINS_WARSPEAR = addToTab(
+			ITEMS.register("piglins_warspear",
+					() -> new PiglinsWarSpearItem(5, 1.2f,
+							8, 2.5F, false,
+							new Item.Properties().durability(640))), SPEAR_TAB);
 
 }

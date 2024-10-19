@@ -13,6 +13,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -34,10 +35,11 @@ import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class SpearItem extends Item implements Vanishable {
-	private Multimap<Attribute, AttributeModifier> defaultModifiers;
+public class SpearItem extends Item {
+	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;
+
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
 			MOB_LOOTING,
@@ -60,7 +62,7 @@ public class SpearItem extends Item implements Vanishable {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 5 - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 1.1 - 4, AttributeModifier.Operation.ADDITION));
-		this.defaultModifiers = builder.build();
+		this.AttributeModifiers = builder.build();
 	}
 
 	public SpearItem(float attackDamage,
@@ -70,8 +72,8 @@ public class SpearItem extends Item implements Vanishable {
 	                 boolean isAdvanced,
 	                 Properties pProperties) {
 		super(pProperties);
-		this.ProjectileVelocity = projectileVelocity;
-		this.ThrowDamage = throwDamage;
+		ProjectileVelocity = projectileVelocity;
+		ThrowDamage = throwDamage;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
@@ -79,47 +81,17 @@ public class SpearItem extends Item implements Vanishable {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-		this.defaultModifiers = builder.build();
+		AttributeModifiers = builder.build();
 	}
 
-	public void updateFromConfig(float attackDamage, float attackSpeed,
-	                             float throwDamage, float projectileVelocity) {
-		this.ProjectileVelocity = projectileVelocity;
-		this.ThrowDamage = throwDamage;
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-		this.defaultModifiers = builder.build();
-	}
-
-	public void updateFromConfig(SpearProperties properties) {
-		this.ProjectileVelocity = properties.VELOCITY.get().floatValue();
-		this.ThrowDamage = properties.RANGED_DAMAGE.get().floatValue();
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", properties.MELEE_DAMAGE.get().floatValue() - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", properties.ATTACK_SPEED.get().floatValue() - 4, AttributeModifier.Operation.ADDITION));
-		this.defaultModifiers = builder.build();
+	@Override
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
 	public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
 		return !pPlayer.isCreative();
-	}
-
-	public boolean AddGeneralEnchant(Enchantment enchantment) {
-		return GeneralEnchants.add(enchantment);
-	}
-
-	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
-		return GeneralEnchants.remove(enchantment);
-	}
-
-	public boolean AddConflictEnchant(Enchantment enchantment) {
-		return ConflictEnchants.add(enchantment);
-	}
-
-	public boolean RemoveConflictEnchant(Enchantment enchantment) {
-		return ConflictEnchants.remove(enchantment);
 	}
 
 	@Override
@@ -150,8 +122,7 @@ public class SpearItem extends Item implements Vanishable {
 							}
 						}
 					}
-					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack)
-							.setBaseDamage(this.ThrowDamage);
+					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
 					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity + (float) j * 0.5F, 1.0F);
 					if (player.getAbilities().instabuild) {
 						thrownspear.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
@@ -193,10 +164,6 @@ public class SpearItem extends Item implements Vanishable {
 				}
 			}
 		}
-	}
-
-	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownSpear(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_SPEAR.get());
 	}
 
 	@Override
@@ -244,12 +211,39 @@ public class SpearItem extends Item implements Vanishable {
 		return 1;
 	}
 
-	@Override
-	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot pEquipmentSlot) {
-		return pEquipmentSlot == EquipmentSlot.MAINHAND ? this.defaultModifiers : super.getDefaultAttributeModifiers(pEquipmentSlot);
+	public void updateAttributes(SpearProperties properties) {
+		updateAttributes(properties.MELEE_DAMAGE.get().floatValue(),
+				properties.ATTACK_SPEED.get().floatValue(),
+				properties.RANGED_DAMAGE.get().floatValue(),
+				properties.VELOCITY.get().floatValue());
 	}
 
-	int getItemSlotIndex(Player player, ItemStack stack) {
+	public void updateAttributes(float attackDamage, float attackSpeed, float throwDamage, float velocity) {
+		ProjectileVelocity = velocity;
+		ThrowDamage = throwDamage;
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
+		AttributeModifiers = builder.build();
+	}
+
+	public boolean AddGeneralEnchant(Enchantment enchantment) {
+		return GeneralEnchants.add(enchantment);
+	}
+
+	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
+		return GeneralEnchants.remove(enchantment);
+	}
+
+	public boolean AddConflictEnchant(Enchantment enchantment) {
+		return ConflictEnchants.add(enchantment);
+	}
+
+	public boolean RemoveConflictEnchant(Enchantment enchantment) {
+		return ConflictEnchants.remove(enchantment);
+	}
+
+	public int getItemSlotIndex(Player player, ItemStack stack) {
 		for (int i = 0; i < player.getInventory().items.size(); i++) {
 			ItemStack itemInSlot = player.getInventory().getItem(i);
 			if (itemInSlot.is(stack.getItem()) && itemInSlot.getCount() == stack.getCount() &&
@@ -258,5 +252,10 @@ public class SpearItem extends Item implements Vanishable {
 			}
 		}
 		return 0;
+	}
+
+	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
+		return new ThrownSpear(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_SPEAR.get())
+				.setBaseDamage(this.ThrowDamage);
 	}
 }

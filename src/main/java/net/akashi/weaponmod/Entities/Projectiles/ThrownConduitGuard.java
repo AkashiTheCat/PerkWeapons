@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -40,6 +39,7 @@ public class ThrownConduitGuard extends ThrownSpear {
 		this.returnTime = returnTime;
 	}
 
+	//Override Methods
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
@@ -117,6 +117,22 @@ public class ThrownConduitGuard extends ThrownSpear {
 		pCompound.putBoolean("velocityChanged", this.velocityChanged);
 	}
 
+	@Override
+	public byte getLoyaltyLevel() {
+		if (this.isInWater()) {
+			return 3;
+		}
+		return super.getLoyaltyLevel();
+	}
+
+	@Override
+	protected void onHitBlock(BlockHitResult pResult) {
+		super.onHitBlock(pResult);
+		this.setSoundEvent(SoundEvents.TRIDENT_HIT_GROUND);
+	}
+
+
+	//New methods
 	private void updateTarget() {
 		Entity target = getTarget();
 		if (target != null && !target.isAlive()) {
@@ -138,20 +154,6 @@ public class ThrownConduitGuard extends ThrownSpear {
 	@Nullable
 	private Entity getTarget() {
 		return this.level().getEntity(this.getEntityData().get(TARGET));
-	}
-
-	@Override
-	public int getLoyaltyLevel() {
-		if (this.isInWater()) {
-			return 3;
-		}
-		return super.getLoyaltyLevel();
-	}
-
-	@Override
-	protected void onHitBlock(BlockHitResult pResult) {
-		super.onHitBlock(pResult);
-		this.setSoundEvent(SoundEvents.TRIDENT_HIT_GROUND);
 	}
 
 	private void setTarget(@Nullable Entity entity) {
