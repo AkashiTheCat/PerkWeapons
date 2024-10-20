@@ -1,10 +1,7 @@
 package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
-import net.akashi.weaponmod.Spears.ConduitGuardItem;
-import net.akashi.weaponmod.Spears.MegalodonItem;
-import net.akashi.weaponmod.Spears.PiglinsWarSpearItem;
-import net.akashi.weaponmod.Spears.SpearItem;
+import net.akashi.weaponmod.Spears.*;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -83,5 +80,10 @@ public class ModItems {
 					() -> new PiglinsWarSpearItem(5, 1.2f,
 							8, 2.5F, false,
 							new Item.Properties().durability(640))), SPEAR_TAB);
+	public static final RegistryObject<SpearItem> DRAGON_STRIKE = addToTab(
+			ITEMS.register("dragon_strike",
+					() -> new DragonStrikeItem(10, 1.2f,
+							10, 2.5F, false,
+							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
 
 }

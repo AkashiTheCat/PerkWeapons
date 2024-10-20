@@ -15,5 +15,6 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
 		event.registerEntityRenderer(ModEntities.THROWN_MEGALODON.get(), ThrownSpearRenderer::new);
 		event.registerEntityRenderer(ModEntities.THROWN_CONDUIT_GUARD.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_DRAGON_STRIKE.get(), ThrownSpearRenderer::new);
 	}
 }

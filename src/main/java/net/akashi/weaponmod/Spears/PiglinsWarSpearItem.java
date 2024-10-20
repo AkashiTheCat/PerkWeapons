@@ -1,33 +1,17 @@
 package net.akashi.weaponmod.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
-import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.akashi.weaponmod.Config.Properties.PiglinsWarSpearProperties;
 import net.akashi.weaponmod.Config.Properties.SpearProperties;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
-import net.akashi.weaponmod.Registry.ModEntities;
-import net.akashi.weaponmod.Registry.ModItems;
 import net.akashi.weaponmod.Registry.ModPackages;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
@@ -74,7 +58,7 @@ public class PiglinsWarSpearItem extends SpearItem {
 			int count = getArmorCount(player);
 			float damageMultiplier = 1 + DAMAGE_BONUS * count;
 			float speedMultiplier = 1 + SPEED_BONUS * count;
-			//Sync in this way will have probably unsolvable display problem if u r host in LAN multiplayer.
+			//Sync in this way will probably have an unsolvable display problem if u r host in LAN multiplayer.(Doesn't affect actual gameplay)
 			//But will have less impact on performance
 			if (!player.level().isClientSide()) {
 				ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),

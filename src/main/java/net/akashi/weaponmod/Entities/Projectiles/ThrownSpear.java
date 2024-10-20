@@ -2,6 +2,7 @@ package net.akashi.weaponmod.Entities.Projectiles;
 
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.Registry.ModItems;
+import net.akashi.weaponmod.Spears.DragonStrikeItem;
 import net.akashi.weaponmod.Spears.SpearItem;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.core.BlockPos;
@@ -60,7 +61,6 @@ public class ThrownSpear extends AbstractArrow {
 		this.ReturnSlot = ReturnSlot;
 		setKnockback(EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK, pShooter));
 	}
-
 
 
 	//Override Methods

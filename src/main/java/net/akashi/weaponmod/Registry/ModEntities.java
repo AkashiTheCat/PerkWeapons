@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Entities.Projectiles.ThrownConduitGuard;
+import net.akashi.weaponmod.Entities.Projectiles.ThrownDragonStrike;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownMegalodon;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.WeaponMod;
@@ -25,9 +26,10 @@ public class ModEntities {
 						.build(new ResourceLocation(WeaponMod.MODID, name).toString()));
 	}
 
-	//Basic Material Based Spears
+	//Spear Registry
 	public static final RegistryObject<EntityType<ThrownSpear>> THROWN_SPEAR = SpearRegistry("thrown_spear", ThrownSpear::new);
 	public static final RegistryObject<EntityType<ThrownMegalodon>> THROWN_MEGALODON = SpearRegistry("thrown_megalodon", ThrownMegalodon::new);
 	public static final RegistryObject<EntityType<ThrownConduitGuard>> THROWN_CONDUIT_GUARD = SpearRegistry("thrown_conduit_guard", ThrownConduitGuard::new);
+	public static final RegistryObject<EntityType<ThrownDragonStrike>> THROWN_DRAGON_STRIKE = SpearRegistry("thrown_dragon_strike", ThrownDragonStrike::new);
 
 }
