@@ -39,7 +39,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 public class DragonStrikeItem extends SpearItem {
 	private static double MagicResistance = 0.5;
 	private static int knockbackCoolDownTime = 200;
-	private int coolDownTimer = 0;
+	private long lastAbilityUseTime = 0;
 
 	public DragonStrikeItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -71,7 +71,8 @@ public class DragonStrikeItem extends SpearItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (this.coolDownTimer == 0 && pPlayer.isCrouching() && pHand == InteractionHand.MAIN_HAND) {
+		if (pLevel.getGameTime() - this.lastAbilityUseTime > knockbackCoolDownTime
+				&& pPlayer.isCrouching() && pHand == InteractionHand.MAIN_HAND) {
 			double x = pPlayer.getX();
 			double y = pPlayer.getY();
 			double z = pPlayer.getZ();
@@ -86,23 +87,15 @@ public class DragonStrikeItem extends SpearItem {
 						entity.setDeltaMovement(knockbackDirection.x, 0.5, knockbackDirection.z);
 					}
 				}
+				this.lastAbilityUseTime = pLevel.getGameTime();
 			} else {
 				pLevel.addParticle(ParticleTypes.EXPLOSION_EMITTER, x, y, z,
 						1.0, 0.0, 0.0);
 				pLevel.playSound(pPlayer, x, y, z, SoundEvents.ENDER_DRAGON_GROWL, pPlayer.getSoundSource(),
 						1.0F, 1.0F);
 			}
-			this.coolDownTimer = knockbackCoolDownTime;
 		}
 		return super.use(pLevel, pPlayer, pHand);
-	}
-
-	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		if (!level.isClientSide() && this.coolDownTimer > 0) {
-			coolDownTimer--;
-		}
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
 	}
 
 	@SubscribeEvent
