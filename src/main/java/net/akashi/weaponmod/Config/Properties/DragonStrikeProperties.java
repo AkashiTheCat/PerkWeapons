@@ -22,7 +22,7 @@ public class DragonStrikeProperties extends SpearProperties {
 				.defineInRange("InitAffectCloudRadius", defaultInitAffectCloudRadius, 0, 10);
 		MAX_AFFECT_RADIUS = builder.comment("Max Radius Of Affect Cloud To Grow Up To")
 				.defineInRange("MaxAffectCloudRadius", defaultMaxAffectCloudRadius, 0, 10);
-		AFFECT_DURATION = builder.comment("Affct Cloud Duration(In Ticks)")
+		AFFECT_DURATION = builder.comment("Affect Cloud Duration(In Ticks)")
 				.defineInRange("AffectCloudDuration", defaultAffectCloudDuration, 0, 3600);
 		MAGIC_RESISTANCE = builder.comment("Percentage Of Magic Resistance Given When Held In Hand")
 				.defineInRange("MagicResistance", defaultMagicResistance, 0, 1);

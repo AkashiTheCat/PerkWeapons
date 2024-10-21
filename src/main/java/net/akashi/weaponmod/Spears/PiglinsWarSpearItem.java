@@ -61,7 +61,7 @@ public class PiglinsWarSpearItem extends SpearItem {
 			float damageMultiplier = 1 + DAMAGE_BONUS * count;
 			float speedMultiplier = 1 + SPEED_BONUS * count;
 			//IDK why this is needed to sync to client actually
-			//Syncing in this way will probably cause an inevitable display problem if you are hosting a LAN server.(Doesn't affect actual gameplay)
+			//Syncing in this way will probably cause an inevitable display bug if you are hosting a LAN server.(Doesn't affect actual gameplay)
 			ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 					new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
 			item.updateAttributes(damageMultiplier, speedMultiplier);

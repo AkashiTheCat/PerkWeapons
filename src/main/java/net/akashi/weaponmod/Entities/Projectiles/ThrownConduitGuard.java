@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Entities.Projectiles;
 
 import net.akashi.weaponmod.Config.ModCommonConfigs;
+import net.akashi.weaponmod.Spears.ConduitGuardItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -19,9 +20,9 @@ import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 
+import static net.akashi.weaponmod.Spears.ConduitGuardItem.*;
+
 public class ThrownConduitGuard extends ThrownSpear {
-	private double targetingRange = 5.0;
-	private double targetingThreshold = 0.5;
 	private boolean velocityChanged = false;
 	private int returnTime = 80;
 	private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(ThrownConduitGuard.class, EntityDataSerializers.INT);
@@ -30,12 +31,9 @@ public class ThrownConduitGuard extends ThrownSpear {
 		super(pEntityType, pLevel);
 	}
 
-	public ThrownConduitGuard(Level pLevel, LivingEntity pShooter, ItemStack pStack, int ReturnSlot,
-	                          double targetingRange, double targetingThreshold, int returnTime,
+	public ThrownConduitGuard(Level pLevel, LivingEntity pShooter, ItemStack pStack, int returnTime,
 	                          EntityType<? extends ThrownSpear> spearType) {
-		super(pLevel, pShooter, pStack, ReturnSlot, spearType);
-		this.targetingRange = targetingRange;
-		this.targetingThreshold = targetingThreshold;
+		super(pLevel, pShooter, pStack, spearType);
 		this.returnTime = returnTime;
 	}
 
@@ -77,7 +75,7 @@ public class ThrownConduitGuard extends ThrownSpear {
 
 				double dotProduct = courseVec.dot(targetVec) / (courseLen * targetLen); // cosine similarity
 
-				if (dotProduct > targetingThreshold) {
+				if (dotProduct > TRACKING_THRESHOLD) {
 
 					// add vector to target, scale to match current velocity
 					Vec3 newMotion = courseVec.scale(courseLen / (totalLen * 2)).add(targetVec.scale(courseLen / totalLen));
@@ -89,9 +87,12 @@ public class ThrownConduitGuard extends ThrownSpear {
 					this.setTarget(null);
 				}
 			}
-		} else if (dealtDamage && this.getLoyaltyLevel() == 0) {
-			this.setNoPhysics(false);
-			this.setDeltaMovement(getMotionVec().scale(0.8).add(0,-0.1,0));
+		} else {
+			this.setNoGravity(false);
+			if (dealtDamage && this.getLoyaltyLevel() == 0){
+				this.setNoPhysics(false);
+				this.setDeltaMovement(getMotionVec().scale(0.8).add(0,-0.1,0));
+			}
 		}
 		super.tick();
 	}
@@ -104,16 +105,12 @@ public class ThrownConduitGuard extends ThrownSpear {
 	@Override
 	public void readAdditionalSaveData(CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
-		this.targetingRange = pCompound.getDouble("targetingRange");
-		this.targetingThreshold = pCompound.getDouble("targetingThreshold");
 		this.velocityChanged = pCompound.getBoolean("velocityChanged");
 	}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
-		pCompound.putDouble("targetingRange", this.targetingRange);
-		pCompound.putDouble("targetingThreshold", this.targetingThreshold);
 		pCompound.putBoolean("velocityChanged", this.velocityChanged);
 	}
 
@@ -140,9 +137,9 @@ public class ThrownConduitGuard extends ThrownSpear {
 			this.setTarget(null);
 		}
 		if (target == null) {
-			AABB positionBB = new AABB(getX() - targetingRange, getY() - targetingRange, getZ() - targetingRange,
-					getX() + targetingRange, getY() + targetingRange, getZ() + targetingRange);
-			Entity closestTarget = this.level().getNearestEntity(Monster.class, TargetingConditions.forCombat().range(targetingRange),
+			AABB positionBB = new AABB(getX() - TRACKING_RANGE, getY() - TRACKING_RANGE, getZ() - TRACKING_RANGE,
+					getX() + TRACKING_RANGE, getY() + TRACKING_RANGE, getZ() + TRACKING_RANGE);
+			Entity closestTarget = this.level().getNearestEntity(Monster.class, TargetingConditions.forCombat().range(TRACKING_RANGE),
 					null, this.getX(), this.getY(), this.getZ(), positionBB
 			);
 			if (closestTarget != null && closestTarget != this.getOwner()) {

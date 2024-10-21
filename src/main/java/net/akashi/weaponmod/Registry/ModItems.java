@@ -85,5 +85,10 @@ public class ModItems {
 					() -> new DragonStrikeItem(10, 1.2f,
 							10, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
+	public static final RegistryObject<SpearItem> SCOURGE = addToTab(
+			ITEMS.register("scourge",
+					() -> new ScourgeItem(10, 1.2f,
+							10, 2.5F, false,
+							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
 
 }

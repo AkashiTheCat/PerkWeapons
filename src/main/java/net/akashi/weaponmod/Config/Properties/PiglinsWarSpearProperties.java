@@ -25,7 +25,7 @@ public class PiglinsWarSpearProperties extends SpearProperties {
 		SPEED_BONUS = builder.comment("AttackSpeed = BaseAttackSpeed * (1 + ArmorCount * this)")
 				.defineInRange("SpeedBonus", defaultSpeedBonus, 0, 10);
 		ALLOWED_ARMOR = builder.comment("List Of Armor That Will Buff The Weapon When Equipped")
-				.defineList("allowedArmor", Arrays.asList("minecraft:golden_helmet", "minecraft:golden_chestplate",
+				.defineList("AllowedArmor", Arrays.asList("minecraft:golden_helmet", "minecraft:golden_chestplate",
 						"minecraft:golden_leggings", "minecraft:golden_boots"), obj -> obj instanceof String);
 		builder.pop();
 	}

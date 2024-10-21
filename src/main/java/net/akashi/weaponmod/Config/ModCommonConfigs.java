@@ -1,9 +1,6 @@
 package net.akashi.weaponmod.Config;
 
-import net.akashi.weaponmod.Config.Properties.ConduitGuardProperties;
-import net.akashi.weaponmod.Config.Properties.DragonStrikeProperties;
-import net.akashi.weaponmod.Config.Properties.PiglinsWarSpearProperties;
-import net.akashi.weaponmod.Config.Properties.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.*;
 import net.akashi.weaponmod.Registry.ModItems;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,6 +19,7 @@ public class ModCommonConfigs {
 	public static ConduitGuardProperties CONDUIT_GUARD_PROPERTIES;
 	public static PiglinsWarSpearProperties PIGLINS_WARSPEAR_PROPERTIES;
 	public static DragonStrikeProperties DRAGON_STRIKE_PROPERTIES;
+	public static ScourgeProperties SCOURGE_PROPERTIES;
 
 	static {
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
@@ -55,6 +53,14 @@ public class ModCommonConfigs {
 				60, 5,
 				0.5, 40,
 				200);
+		SCOURGE_PROPERTIES = new ScourgeProperties(BUILDER, "Scourge",
+				8, 1.0,
+				8, 2.5F,
+				40, 3,
+				40, 2,
+				60, 2,
+				3.0, 5.0,
+				200, 255);
 		SPEC = BUILDER.build();
 	}
 
@@ -70,5 +76,6 @@ public class ModCommonConfigs {
 		ModItems.SPEAR_CONDUIT_GUARD.get().updateAttributesFromConfig(CONDUIT_GUARD_PROPERTIES);
 		ModItems.PIGLINS_WARSPEAR.get().updateAttributesFromConfig(PIGLINS_WARSPEAR_PROPERTIES);
 		ModItems.DRAGON_STRIKE.get().updateAttributesFromConfig(DRAGON_STRIKE_PROPERTIES);
+		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
 	}
 }

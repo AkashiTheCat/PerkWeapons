@@ -38,7 +38,12 @@ import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 @Mod.EventBusSubscriber(modid = WeaponMod.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DragonStrikeItem extends SpearItem {
 	private static double MagicResistance = 0.5;
-	private static int knockbackCoolDownTime = 200;
+	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
+	public static float MAX_AFFECT_CLOUD_RADIUS = 6.0F;
+	public static int AFFECT_CLOUD_DURATION = 60;
+	public static int EFFECT_DAMAGE = 5;
+	public static int RETURN_TIME = 40;
+	private static int AbilityCoolDownTime = 200;
 	private long lastAbilityUseTime = 0;
 
 	public DragonStrikeItem(boolean isAdvanced, Properties pProperties) {
@@ -57,21 +62,26 @@ public class DragonStrikeItem extends SpearItem {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof DragonStrikeProperties dProperties) {
 			MagicResistance = dProperties.MAGIC_RESISTANCE.get();
-			knockbackCoolDownTime = dProperties.ABILITY_COOLDOWN_TIME.get();
+			AbilityCoolDownTime = dProperties.ABILITY_COOLDOWN_TIME.get();
+			INIT_AFFECT_CLOUD_RADIUS = dProperties.INIT_AFFECT_RADIUS.get().floatValue();
+			MAX_AFFECT_CLOUD_RADIUS = dProperties.MAX_AFFECT_RADIUS.get().floatValue();
+			AFFECT_CLOUD_DURATION = dProperties.AFFECT_DURATION.get();
+			EFFECT_DAMAGE = dProperties.EFFECT_DAMAGE.get();
+			RETURN_TIME = dProperties.RETURN_TIME.get();
 		}
 	}
 
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownDragonStrike(pLevel, player, pStack, getItemSlotIndex(player, pStack),
-				ModCommonConfigs.DRAGON_STRIKE_PROPERTIES.RETURN_TIME.get(), ModEntities.THROWN_DRAGON_STRIKE.get())
+		return new ThrownDragonStrike(pLevel, player, pStack, RETURN_TIME,
+				ModEntities.THROWN_DRAGON_STRIKE.get())
 				.setBaseDamage(this.ThrowDamage);
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (pLevel.getGameTime() - this.lastAbilityUseTime > knockbackCoolDownTime
+		if (pLevel.getGameTime() - this.lastAbilityUseTime > AbilityCoolDownTime
 				&& pPlayer.isCrouching() && pHand == InteractionHand.MAIN_HAND) {
 			double x = pPlayer.getX();
 			double y = pPlayer.getY();

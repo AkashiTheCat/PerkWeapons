@@ -120,6 +120,8 @@ public class SpearItem extends Item {
 			if (i >= 10) {
 				int j = EnchantmentHelper.getRiptide(pStack);
 				if (j <= 0 || player.isInWaterOrRain()) {
+					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
+					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity + (float) j * 0.5F, 1.0F);
 					if (!pLevel.isClientSide) {
 						pStack.hurtAndBreak(1, player, (pOnBroken) -> {
 							pOnBroken.broadcastBreakEvent(pEntityLiving.getUsedItemHand());
@@ -131,8 +133,6 @@ public class SpearItem extends Item {
 							}
 						}
 					}
-					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
-					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity + (float) j * 0.5F, 1.0F);
 					if (player.getAbilities().instabuild) {
 						thrownspear.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 					}
@@ -255,19 +255,8 @@ public class SpearItem extends Item {
 		return ConflictEnchants.remove(enchantment);
 	}
 
-	public int getItemSlotIndex(Player player, ItemStack stack) {
-		for (int i = 0; i < player.getInventory().items.size(); i++) {
-			ItemStack itemInSlot = player.getInventory().getItem(i);
-			if (itemInSlot.is(stack.getItem()) && itemInSlot.getCount() == stack.getCount() &&
-					itemInSlot.is(stack.getItem())) {
-				return i;
-			}
-		}
-		return 0;
-	}
-
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownSpear(pLevel, player, pStack, getItemSlotIndex(player, pStack), ModEntities.THROWN_SPEAR.get())
+		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get())
 				.setBaseDamage(this.ThrowDamage);
 	}
 }

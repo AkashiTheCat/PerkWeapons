@@ -1,16 +1,13 @@
 package net.akashi.weaponmod.Entities.Projectiles;
 
-import net.akashi.weaponmod.Registry.ModEntities;
+import com.google.common.collect.Lists;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.akashi.weaponmod.Registry.ModItems;
-import net.akashi.weaponmod.Spears.DragonStrikeItem;
-import net.akashi.weaponmod.Spears.SpearItem;
-import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -23,16 +20,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.ThrownTrident;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.registries.RegistryObject;
-import org.stringtemplate.v4.ST;
 
 import javax.annotation.Nullable;
 
@@ -52,13 +46,14 @@ public class ThrownSpear extends AbstractArrow {
 		super(pEntityType, pLevel);
 	}
 
-	public ThrownSpear(Level pLevel, LivingEntity pShooter, ItemStack pStack, int ReturnSlot, EntityType<? extends ThrownSpear> spearType) {
+	public ThrownSpear(Level pLevel, LivingEntity pShooter, ItemStack pStack, EntityType<? extends ThrownSpear> spearType) {
 		super(spearType, pShooter, pLevel);
 		this.entityData.set(ID_SPEAR_ITEM, pStack);
 		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(pStack));
 		this.entityData.set(ID_FIRE_ASPECT, (byte) pStack.getEnchantmentLevel(FIRE_ASPECT));
 		this.entityData.set(ID_FOIL, pStack.hasFoil());
-		this.ReturnSlot = ReturnSlot;
+		if (pShooter instanceof Player player)
+			this.ReturnSlot = player.getInventory().findSlotMatchingItem(pStack);
 		setKnockback(EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK, pShooter));
 	}
 
@@ -93,7 +88,6 @@ public class ThrownSpear extends AbstractArrow {
 
 		Entity entity1 = this.getOwner();
 		DamageSource damagesource = this.damageSources().trident(this, (Entity) (entity1 == null ? this : entity1));
-		this.dealtDamage = true;
 		SoundEvent soundevent = SoundEvents.TRIDENT_HIT;
 		if (entity.hurt(damagesource, f)) {
 			if (entity.getType() == EntityType.ENDERMAN) {
@@ -121,9 +115,13 @@ public class ThrownSpear extends AbstractArrow {
 				this.doPostHurtEffects(livingentity);
 			}
 		}
-
-
-		this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
+		byte pierceLevel = this.getPierceLevel();
+		if (pierceLevel == 0) {
+			this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
+			this.dealtDamage = true;
+		} else {
+			this.setPierceLevel(--pierceLevel);
+		}
 		float f1 = 1.0F;
 		if (this.level() instanceof ServerLevel && this.level().isThundering() && this.isChanneling()) {
 			BlockPos blockpos = entity.blockPosition();

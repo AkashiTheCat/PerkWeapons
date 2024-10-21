@@ -1,9 +1,6 @@
 package net.akashi.weaponmod.Registry;
 
-import net.akashi.weaponmod.Entities.Projectiles.ThrownConduitGuard;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownDragonStrike;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownMegalodon;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Entities.Projectiles.*;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -31,5 +28,6 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<ThrownMegalodon>> THROWN_MEGALODON = SpearRegistry("thrown_megalodon", ThrownMegalodon::new);
 	public static final RegistryObject<EntityType<ThrownConduitGuard>> THROWN_CONDUIT_GUARD = SpearRegistry("thrown_conduit_guard", ThrownConduitGuard::new);
 	public static final RegistryObject<EntityType<ThrownDragonStrike>> THROWN_DRAGON_STRIKE = SpearRegistry("thrown_dragon_strike", ThrownDragonStrike::new);
+	public static final RegistryObject<EntityType<ThrownScourge>> THROWN_SCOURGE = SpearRegistry("thrown_scourge", ThrownScourge::new);
 
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "weaponmod:item/base_spear",
+  "textures": {
+    "layer0": "weaponmod:item/spear/scourge"
+  }
+}
