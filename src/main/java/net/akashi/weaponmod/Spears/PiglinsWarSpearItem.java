@@ -54,21 +54,17 @@ public class PiglinsWarSpearItem extends SpearItem {
 
 	@SubscribeEvent
 	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-		if (event.getEntity() instanceof Player player) {
+		//This will only update attributes when item is in MainHand to avoid performance issue
+		if (event.getEntity() instanceof Player player && !player.level().isClientSide()
+				&& player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem item) {
 			int count = getArmorCount(player);
 			float damageMultiplier = 1 + DAMAGE_BONUS * count;
 			float speedMultiplier = 1 + SPEED_BONUS * count;
-			//Sync in this way will probably have an unsolvable display problem if u r host in LAN multiplayer.(Doesn't affect actual gameplay)
-			//But will have less impact on performance
-			if (!player.level().isClientSide()) {
-				ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
-				for (ItemStack IItem : player.getInventory().items) {
-					if (IItem.getItem() instanceof PiglinsWarSpearItem item) {
-						item.updateAttributes(damageMultiplier, speedMultiplier);
-					}
-				}
-			}
+			//IDK why this is needed to sync to client actually
+			//Syncing in this way will probably cause an inevitable display problem if you are hosting a LAN server.(Doesn't affect actual gameplay)
+			ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+					new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
+			item.updateAttributes(damageMultiplier, speedMultiplier);
 		}
 	}
 

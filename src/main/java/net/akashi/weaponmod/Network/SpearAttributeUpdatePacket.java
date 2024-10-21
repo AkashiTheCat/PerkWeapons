@@ -35,10 +35,8 @@ public class SpearAttributeUpdatePacket {
 		ctx.get().enqueueWork(() -> {
 			Player player = (Player) Minecraft.getInstance().level.getEntity(msg.playerId);
 			if (player != null) {
-				for (ItemStack Item : player.getInventory().items) {
-					if (Item.getItem() instanceof PiglinsWarSpearItem item) {
-						item.updateAttributes(msg.damageMultiplier, msg.speedMultiplier);
-					}
+				if (player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem item) {
+					item.updateAttributes(msg.damageMultiplier, msg.speedMultiplier);
 				}
 			}
 		});
