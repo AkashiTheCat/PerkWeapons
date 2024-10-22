@@ -1,9 +1,7 @@
 package net.akashi.weaponmod.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
-import net.akashi.weaponmod.Config.ModCommonConfigs;
-import net.akashi.weaponmod.Config.Properties.DragonStrikeProperties;
-import net.akashi.weaponmod.Config.Properties.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.DragonStrikeProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownDragonStrike;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
@@ -15,23 +13,14 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-
-import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 

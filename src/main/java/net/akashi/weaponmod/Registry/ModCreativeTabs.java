@@ -36,7 +36,7 @@ public class ModCreativeTabs {
 	private static final RegistryObject<CreativeModeTab> ACTUAL_SPEAR_TAB = TABS.register("spear_tab",
 			() -> CreativeModeTab.builder()
 					.title(Component.translatable(WeaponMod.MODID+".itemGroup.spear_tab"))
-					.icon(ModItems.PLACEHOLDER.get()::getDefaultInstance)
+					.icon(ModItems.DIAMOND_SPEAR.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							SPEAR_TAB.forEach(itemLike -> output.accept(itemLike.get())))
 					.build()
@@ -44,7 +44,7 @@ public class ModCreativeTabs {
 	private static final RegistryObject<CreativeModeTab> ACTUAL_BOW_TAB = TABS.register("bow_tab",
 			() -> CreativeModeTab.builder()
 					.title(Component.translatable(WeaponMod.MODID+".itemGroup.bow_tab"))
-					.icon(ModItems.PLACEHOLDER.get()::getDefaultInstance)
+					.icon(ModItems.SHORT_BOW.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							BOW_TAB.forEach(itemLike -> output.accept(itemLike.get())))
 					.build()

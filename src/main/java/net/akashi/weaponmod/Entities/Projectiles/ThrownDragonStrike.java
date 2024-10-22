@@ -1,9 +1,6 @@
 package net.akashi.weaponmod.Entities.Projectiles;
 
-import net.akashi.weaponmod.Config.ModCommonConfigs;
-import net.akashi.weaponmod.Config.Properties.DragonStrikeProperties;
 import net.akashi.weaponmod.Registry.ModEffects;
-import net.akashi.weaponmod.Spears.DragonStrikeItem;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;

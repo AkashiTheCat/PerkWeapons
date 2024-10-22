@@ -1,7 +1,7 @@
 package net.akashi.weaponmod.Spears;
 
-import net.akashi.weaponmod.Config.Properties.PiglinsWarSpearProperties;
-import net.akashi.weaponmod.Config.Properties.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.PiglinsWarSpearProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
 import net.akashi.weaponmod.Registry.ModPackages;
 import net.akashi.weaponmod.WeaponMod;

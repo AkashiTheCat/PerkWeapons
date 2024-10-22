@@ -2,7 +2,7 @@ package net.akashi.weaponmod.Spears;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.akashi.weaponmod.Config.Properties.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -13,7 +13,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -35,7 +34,7 @@ import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class SpearItem extends Item {
+public class SpearItem extends Item implements Vanishable{
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;

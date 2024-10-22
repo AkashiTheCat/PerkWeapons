@@ -1,4 +1,4 @@
-package net.akashi.weaponmod.Config.Properties;
+package net.akashi.weaponmod.Config.Properties.Spear;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 

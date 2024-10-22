@@ -1,8 +1,7 @@
-package net.akashi.weaponmod.Config.Properties;
+package net.akashi.weaponmod.Config.Properties.Spear;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 

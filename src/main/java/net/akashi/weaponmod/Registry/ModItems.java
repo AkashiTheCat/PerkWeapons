@@ -1,12 +1,15 @@
 package net.akashi.weaponmod.Registry;
 
+import net.akashi.weaponmod.Bows.BaseBowItem;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Spears.*;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -20,8 +23,6 @@ public class ModItems {
 	//simple item registry
 	public static final DeferredRegister<Item> ITEMS =
 			DeferredRegister.create(ForgeRegistries.ITEMS, WeaponMod.MODID);
-	public static final RegistryObject<Item> PLACEHOLDER = ITEMS.register("placeholder",
-			() -> new Item(new Item.Properties()));
 	public static final RegistryObject<Item> ANCIENT_SPIKE = addToTab(
 			ITEMS.register("ancient_spike",
 					() -> new Item(new Item.Properties().rarity(Rarity.RARE))), INGREDIENTS_TAB);
@@ -37,14 +38,19 @@ public class ModItems {
 	public static final RegistryObject<Item> DRAGON_FANG = addToTab(
 			ITEMS.register("dragon_fang",
 					() -> new Item(new Item.Properties().rarity(Rarity.EPIC))), INGREDIENTS_TAB);
-	public static final RegistryObject<Item> FURNACE_CORE = addToTab(
-			ITEMS.register("furnace_core",
-					() -> new Item(new Item.Properties())), INGREDIENTS_TAB);
+	public static final RegistryObject<Item> HUNTERS_REMAINS = addToTab(
+			ITEMS.register("hunters_remains",
+					() -> new Item(new Item.Properties().rarity(Rarity.RARE))), INGREDIENTS_TAB);
 	public static final RegistryObject<Item> TOTEM_OF_EVOKING = addToTab(
 			ITEMS.register("totem_of_evoking",
 					() -> new Item(new Item.Properties().rarity(Rarity.EPIC))), INGREDIENTS_TAB);
 
-	//spear item registry
+	//Block item registry
+	public static final RegistryObject<BlockItem> FURNACE_CORE = addToTab(
+			ITEMS.register("furnace_core",
+					() -> new BlockItem(ModBlocks.FURNACE_CORE.get(), new Item.Properties())), INGREDIENTS_TAB);
+
+	//Spear item registry
 	public static final RegistryObject<SpearItem> IRON_SPEAR = addToTab(
 			ITEMS.register("iron_spear",
 					() -> new SpearItem(8, 1.1f,
@@ -91,4 +97,13 @@ public class ModItems {
 							10, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
 
+	//Bow item registry
+	public static final RegistryObject<BaseBowItem> SHORT_BOW = addToTab(
+			ITEMS.register("short_bow",
+					() -> new BaseBowItem(12, 8, 2.25F, 0.05F,
+							new Item.Properties().durability(256))), BOW_TAB);
+	public static final RegistryObject<BaseBowItem> LONGBOW = addToTab(
+			ITEMS.register("longbow",
+					() -> new BaseBowItem(40, 15, 4.5F, 0.15F,
+							new Item.Properties().durability(512))), BOW_TAB);
 }

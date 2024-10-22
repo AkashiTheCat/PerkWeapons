@@ -1,6 +1,3 @@
 {
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "weaponmod:item/furnace_core"
-  }
+  "parent": "weaponmod:block/furnace_core"
 }

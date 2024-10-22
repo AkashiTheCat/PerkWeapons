@@ -1,8 +1,8 @@
 package net.akashi.weaponmod.Spears;
 
 import net.akashi.weaponmod.Config.ModCommonConfigs;
-import net.akashi.weaponmod.Config.Properties.ConduitGuardProperties;
-import net.akashi.weaponmod.Config.Properties.SpearProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.ConduitGuardProperties;
+import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownConduitGuard;
 import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
@@ -19,11 +19,13 @@ public class ConduitGuardItem extends SpearItem {
 
 	public ConduitGuardItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
+		RemoveGeneralEnchant(LOYALTY);
 	}
 
 	public ConduitGuardItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
 	                        boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
+		RemoveGeneralEnchant(LOYALTY);
 	}
 
 	@Override
