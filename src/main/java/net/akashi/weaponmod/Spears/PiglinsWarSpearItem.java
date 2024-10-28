@@ -68,13 +68,6 @@ public class PiglinsWarSpearItem extends SpearItem {
 		}
 	}
 
-	public void updateAttributes(float damageMultiplier, float speedMultiplier) {
-		this.updateAttributes(this.BaseAttackDamage * damageMultiplier,
-				this.BaseAttackSpeed * speedMultiplier,
-				this.BaseThrowDamage * damageMultiplier,
-				this.ProjectileVelocity);
-	}
-
 	private static int getArmorCount(Player player) {
 		int count = 0;
 		for (ItemStack armor : player.getArmorSlots()) {

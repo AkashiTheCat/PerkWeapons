@@ -4,6 +4,7 @@ import net.akashi.weaponmod.Spears.PiglinsWarSpearItem;
 import net.akashi.weaponmod.Spears.SpearItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent;
@@ -34,8 +35,8 @@ public class SpearAttributeUpdatePacket {
 	public static void handle(SpearAttributeUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			Player player = (Player) Minecraft.getInstance().level.getEntity(msg.playerId);
-			if (player != null) {
-				if (player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem item) {
+			if (player != null && !(player instanceof ServerPlayer)) {
+				if (player.getMainHandItem().getItem() instanceof SpearItem item) {
 					item.updateAttributes(msg.damageMultiplier, msg.speedMultiplier);
 				}
 			}

@@ -254,6 +254,13 @@ public class SpearItem extends Item implements Vanishable{
 		return ConflictEnchants.remove(enchantment);
 	}
 
+	public void updateAttributes(float damageMultiplier, float speedMultiplier) {
+		this.updateAttributes(this.BaseAttackDamage * damageMultiplier,
+				this.BaseAttackSpeed * speedMultiplier,
+				this.BaseThrowDamage * damageMultiplier,
+				this.ProjectileVelocity);
+	}
+
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
 		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get())
 				.setBaseDamage(this.ThrowDamage);

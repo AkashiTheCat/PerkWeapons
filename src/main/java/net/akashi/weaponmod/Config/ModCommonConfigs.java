@@ -53,7 +53,7 @@ public class ModCommonConfigs {
 		PIGLINS_WARSPEAR_PROPERTIES = new PiglinsWarSpearProperties(BUILDER, "Piglin's WarSpear",
 				5, 1.2,
 				8, 2.5F,
-				0.1, 0.1);
+				0.15, 0.15);
 		DRAGON_STRIKE_PROPERTIES = new DragonStrikeProperties(BUILDER, "Dragon Strike",
 				10, 1.2,
 				10, 2.5F,
@@ -66,9 +66,9 @@ public class ModCommonConfigs {
 				8, 2.5F,
 				40, 3,
 				40, 2,
-				60, 2,
-				3.0, 5.0,
-				200, 255);
+				120, 0.3,
+				10,3,
+				600, 255);
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER,"Short Bow",
 				12, 8,
