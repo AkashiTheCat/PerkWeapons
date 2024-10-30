@@ -22,6 +22,7 @@ public class ClientModEvents {
 
 		event.registerEntityRenderer(ModEntities.BASE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.FOREST_KEEPER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
 	}
 }

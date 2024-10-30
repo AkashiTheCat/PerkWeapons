@@ -1,0 +1,28 @@
+{
+    "parent": "weaponmod:item/base/base_bow",
+    "textures": {
+        "layer0": "weaponmod:item/bow/forest_keeper/forest_keeper"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "weaponmod:pulling": 1
+            },
+            "model": "weaponmod:item/forest_keeper_pulling_0"
+        },
+        {
+            "predicate": {
+                "weaponmod:pulling": 1,
+                "weaponmod:pull": 0.6
+            },
+            "model": "weaponmod:item/forest_keeper_pulling_1"
+        },
+        {
+            "predicate": {
+                "weaponmod:pulling": 1,
+                "weaponmod:pull": 1.0
+            },
+            "model": "weaponmod:item/forest_keeper_pulling_2"
+        }
+    ]
+}

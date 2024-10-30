@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Enchantments;
 
 import net.akashi.weaponmod.Bows.PurgatoryItem;
+import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -23,7 +24,7 @@ public class MeltDownEnchantment extends Enchantment {
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack) {
-		return false;
+		return ModCommonConfigs.ENABLE_MELT_DOWN_ON_TABLE.get();
 	}
 
 	@Override

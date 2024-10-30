@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Bows;
 
 import com.google.common.collect.ImmutableMultimap;
+import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.akashi.weaponmod.Config.Properties.Bow.BowProperties;
 import net.akashi.weaponmod.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.weaponmod.Entities.Projectiles.Arrows.ExplosiveArrow;
@@ -87,7 +88,7 @@ public class PurgatoryItem extends BaseBowItem {
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
 		if (enchantment == ModEnchantments.MELT_DOWN_ARROW.get()) {
-			return false;
+			return ModCommonConfigs.ENABLE_MELT_DOWN_ON_TABLE.get();
 		}
 		return super.canApplyAtEnchantingTable(stack, enchantment);
 	}

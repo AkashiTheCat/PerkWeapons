@@ -40,13 +40,15 @@ public class OutOfSightExplosionPacket {
 	public static void handle(OutOfSightExplosionPacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
 			Level level = Minecraft.getInstance().level;
-
-			level.addAlwaysVisibleParticle(ParticleTypes.EXPLOSION_EMITTER,true,
-					packet.x,packet.y,packet.z,0,0,0);
+			if (level == null) {
+				return;
+			}
+			level.addAlwaysVisibleParticle(ParticleTypes.EXPLOSION_EMITTER, true,
+					packet.x, packet.y, packet.z, 0, 0, 0);
 
 			Entity entity = level.getEntity(packet.PlayerID);
-			if(entity instanceof Player player){
-				player.playSound(SoundEvents.GENERIC_EXPLODE,0.1f,0.7f);
+			if (entity instanceof Player player) {
+				player.playSound(SoundEvents.GENERIC_EXPLODE, 0.1f, 0.7f);
 			}
 		});
 		context.get().setPacketHandled(true);

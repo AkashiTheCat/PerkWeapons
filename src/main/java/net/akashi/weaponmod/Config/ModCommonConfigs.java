@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Config;
 
 import net.akashi.weaponmod.Config.Properties.Bow.BowProperties;
+import net.akashi.weaponmod.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.weaponmod.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.*;
 import net.akashi.weaponmod.Registry.ModItems;
@@ -14,6 +15,8 @@ public class ModCommonConfigs {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 
+	//General Configs
+	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
 	//Spear Configs
 	public static SpearProperties IRON_SPEAR_PROPERTIES;
 	public static SpearProperties GOLDEN_SPEAR_PROPERTIES;
@@ -29,8 +32,14 @@ public class ModCommonConfigs {
 	public static BowProperties SHORT_BOW_PROPERTIES;
 	public static BowProperties LONGBOW_PROPERTIES;
 	public static PurgatoryProperties PURGATORY_PROPERTIES;
+	public static ForestKeeperProperties FOREST_KEEPER_PROPERTIES;
 
 	static {
+		//General
+		BUILDER.push("General");
+		ENABLE_MELT_DOWN_ON_TABLE = BUILDER.comment("Set True To Allow Getting Melt Down Enchantment On Enchantment Table")
+				.define("EnableMeltDownOnTable", true);
+		BUILDER.pop();
 		//Spears
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
 				8, 1.1,
@@ -69,25 +78,30 @@ public class ModCommonConfigs {
 				40, 3,
 				40, 2,
 				120, 0.3,
-				10,3,
+				10, 3,
 				600, 255);
 		//Bows
-		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER,"Short Bow",
+		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
 				12, 8,
-				2.25,1.0,
-				0.0,0.05,
+				2.25, 1.0,
+				0.0, 0.05,
 				true);
-		LONGBOW_PROPERTIES = new BowProperties(BUILDER,"Longbow",
+		LONGBOW_PROPERTIES = new BowProperties(BUILDER, "Longbow",
 				40, 15,
 				4.5, 0.2,
-				-0.5,0.15,
+				-0.5, 0.15,
 				true);
 		PURGATORY_PROPERTIES = new PurgatoryProperties(BUILDER, "Purgatory",
 				50, 25,
-				4.5,0.2,
+				4.5, 0.2,
 				4, 30,
-				-1.0, 0.15
-				);
+				-1.0, 0.15);
+		FOREST_KEEPER_PROPERTIES = new ForestKeeperProperties(BUILDER, "Forest Keeper",
+				12,8,
+				2.25,1.0,
+				5,40,
+				0.1,true,
+				0.0,0.0);
 		SPEC = BUILDER.build();
 	}
 
@@ -107,5 +121,6 @@ public class ModCommonConfigs {
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);
 		ModItems.PURGATORY.get().updateAttributesFromConfig(PURGATORY_PROPERTIES);
+		ModItems.FOREST_KEEPER.get().updateAttributesFromConfig(FOREST_KEEPER_PROPERTIES);
 	}
 }

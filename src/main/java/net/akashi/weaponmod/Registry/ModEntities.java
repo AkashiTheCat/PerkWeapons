@@ -2,6 +2,7 @@ package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.weaponmod.Entities.Projectiles.Arrows.ExplosiveArrow;
+import net.akashi.weaponmod.Entities.Projectiles.Arrows.ForestKeeperArrow;
 import net.akashi.weaponmod.Entities.Projectiles.Arrows.PurgatoryArrow;
 import net.akashi.weaponmod.Entities.Projectiles.Spears.*;
 import net.akashi.weaponmod.WeaponMod;
@@ -49,5 +50,6 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<BaseArrow>> BASE_ARROW = ArrowRegistry("arrow", BaseArrow::new);
 	public static final RegistryObject<EntityType<PurgatoryArrow>> PURGATORY_ARROW = ArrowRegistry("purgatory_arrow", PurgatoryArrow::new);
 	public static final RegistryObject<EntityType<ExplosiveArrow>> EXPLOSIVE_ARROW = ArrowRegistry("explosive_arrow", ExplosiveArrow::new);
+	public static final RegistryObject<EntityType<ForestKeeperArrow>> FOREST_KEEPER_ARROW = ArrowRegistry("forestkeeper_arrow",ForestKeeperArrow::new);
 
 }

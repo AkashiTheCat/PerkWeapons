@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Bows.BaseBowItem;
+import net.akashi.weaponmod.Bows.ForestKeeperItem;
 import net.akashi.weaponmod.Bows.PurgatoryItem;
 import net.akashi.weaponmod.Spears.*;
 import net.akashi.weaponmod.WeaponMod;
@@ -107,4 +108,8 @@ public class ModItems {
 			ITEMS.register("purgatory",
 					() -> new PurgatoryItem(50, 25, 4.5F, 0.2f, -1.0F, 1.0F, 0.15F,
 							new Item.Properties().durability(640))), BOW_TAB);
+	public static final RegistryObject<ForestKeeperItem> FOREST_KEEPER = addToTab(
+			ITEMS.register("forest_keeper",
+					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F, 0.0F, 0.0F,
+							new Item.Properties().durability(1280))), BOW_TAB);
 }

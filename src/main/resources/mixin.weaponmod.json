@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "net.akashi.weaponmod.mixin",
+  "refmap": "mixins.weaponmod.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "MixinLocalPlayer"
+  ],
+  "server": [
+    "MixinLocalPlayer"
+  ]
+}
