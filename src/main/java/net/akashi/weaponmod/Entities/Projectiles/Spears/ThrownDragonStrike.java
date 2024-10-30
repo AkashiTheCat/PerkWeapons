@@ -1,4 +1,4 @@
-package net.akashi.weaponmod.Entities.Projectiles;
+package net.akashi.weaponmod.Entities.Projectiles.Spears;
 
 import net.akashi.weaponmod.Registry.ModEffects;
 import net.minecraft.core.particles.ParticleTypes;

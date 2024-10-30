@@ -1,6 +1,6 @@
 package net.akashi.weaponmod.Config;
 
-import net.akashi.weaponmod.Client.EventHandler.BowZoomHandler;
+import net.akashi.weaponmod.Client.Events.BowZoomHandler;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

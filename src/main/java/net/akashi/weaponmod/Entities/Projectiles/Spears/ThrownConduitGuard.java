@@ -1,7 +1,6 @@
-package net.akashi.weaponmod.Entities.Projectiles;
+package net.akashi.weaponmod.Entities.Projectiles.Spears;
 
 import net.akashi.weaponmod.Config.ModCommonConfigs;
-import net.akashi.weaponmod.Spears.ConduitGuardItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

@@ -1,15 +1,12 @@
 package net.akashi.weaponmod;
 
-import net.akashi.weaponmod.Client.EventHandler.BowZoomHandler;
 import net.akashi.weaponmod.Config.ModClientConfigs;
 import net.akashi.weaponmod.Config.ModCommonConfigs;
 import net.akashi.weaponmod.Registry.*;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(WeaponMod.MODID)
@@ -25,8 +22,9 @@ public class WeaponMod {
 		ModCreativeTabs.TABS.register(bus);
 		ModEntities.ENTITIES.register(bus);
 		ModEffects.EFFECTS.register(bus);
+		ModEnchantments.ENCHANTMENTS.register(bus);
 
-		ModPackages.registerPackets();
+		ModPackets.registerPackets();
 
 		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, WeaponMod.MODID + "-common.toml");
 		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModClientConfigs.SPEC, WeaponMod.MODID + "-client.toml");

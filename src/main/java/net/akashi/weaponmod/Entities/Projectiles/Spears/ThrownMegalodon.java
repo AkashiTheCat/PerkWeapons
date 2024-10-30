@@ -1,4 +1,4 @@
-package net.akashi.weaponmod.Entities.Projectiles;
+package net.akashi.weaponmod.Entities.Projectiles.Spears;
 
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;

@@ -20,7 +20,7 @@
         {
             "predicate": {
                 "weaponmod:pulling": 1,
-                "weaponmod:pull": 0.9
+                "weaponmod:pull": 1.0
             },
             "model": "weaponmod:item/short_bow_pulling_2"
         }

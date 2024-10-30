@@ -1,7 +1,7 @@
 package net.akashi.weaponmod.Spears;
 
-import net.akashi.weaponmod.Entities.Projectiles.ThrownMegalodon;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownMegalodon;
+import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;

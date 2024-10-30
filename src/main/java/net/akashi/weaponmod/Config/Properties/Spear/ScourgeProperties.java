@@ -36,11 +36,11 @@ public class ScourgeProperties extends SpearProperties {
 				.defineInRange("AttackSpeedBonus", defaultAbilityAttackSpeedBonus, 0, 10);
 		ABILITY_SHOTS_INTERVAL = builder.comment("The Interval(In Ticks) Between Shots From The Crouch+Use Ability")
 				.defineInRange("ShotsInterval", defaultAbilityShotsInterval, 0, Integer.MAX_VALUE);
-		ABILITY_SHOTS_INTERVAL = builder.comment("The Number Of Shots From The Crouch+Use Ability")
+		ABILITY_SHOTS_COUNT = builder.comment("The Number Of Shots From The Crouch+Use Ability")
 				.defineInRange("ShotsCount", defaultAbilityShotsCount, 0, 255);
 		ABILITY_COOLDOWN = builder.comment("How Long In Ticks Will The Crouch+Use Ability's CoolDown Be")
 				.defineInRange("AbilityCD", defaultAbilityCoolDownTime, 0, 6000);
-		PIERCE_LEVEL = builder.comment("How Many Entities Can The Spear Pierce")
+		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name)
 				.defineInRange("PierceLevel", defaultPiercingLevel, 0, 255);
 		builder.pop();
 	}

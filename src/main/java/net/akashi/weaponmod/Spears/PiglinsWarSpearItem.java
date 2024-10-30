@@ -3,7 +3,7 @@ package net.akashi.weaponmod.Spears;
 import net.akashi.weaponmod.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
-import net.akashi.weaponmod.Registry.ModPackages;
+import net.akashi.weaponmod.Registry.ModPackets;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -62,7 +62,7 @@ public class PiglinsWarSpearItem extends SpearItem {
 			float speedMultiplier = 1 + SPEED_BONUS * count;
 			//IDK why this is needed to sync to client actually
 			//Syncing in this way will probably cause an inevitable display bug if you are hosting a LAN server.(Doesn't affect actual gameplay)
-			ModPackages.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+			ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
 					new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
 			item.updateAttributes(damageMultiplier, speedMultiplier);
 		}

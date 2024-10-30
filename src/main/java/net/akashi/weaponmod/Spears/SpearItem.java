@@ -3,7 +3,7 @@ package net.akashi.weaponmod.Spears;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -208,10 +209,31 @@ public class SpearItem extends Item implements Vanishable{
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (GeneralEnchants.stream().anyMatch(CEnchantment -> CEnchantment.equals(enchantment))) {
+		if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
 			return true;
 		}
-		return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
+		if(ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))){
+			return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		Map<Enchantment, Integer> enchantments = book.getAllEnchantments();
+		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+			Enchantment enchantment = entry.getKey();
+			if(GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))){
+				continue;
+			}
+			else if(ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))){
+				if(ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)){
+					continue;
+				}
+			}
+			return false;
+		}
+		return true;
 	}
 
 	@Override

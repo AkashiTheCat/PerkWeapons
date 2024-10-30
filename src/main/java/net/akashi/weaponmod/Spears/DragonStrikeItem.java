@@ -2,8 +2,8 @@ package net.akashi.weaponmod.Spears;
 
 import net.akashi.weaponmod.Config.Properties.Spear.DragonStrikeProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownDragonStrike;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownDragonStrike;
+import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.core.particles.ParticleTypes;

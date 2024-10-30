@@ -1,15 +1,12 @@
 package net.akashi.weaponmod.Registry;
 
 import net.akashi.weaponmod.Bows.BaseBowItem;
-import net.akashi.weaponmod.Entities.Projectiles.ThrownSpear;
+import net.akashi.weaponmod.Bows.PurgatoryItem;
 import net.akashi.weaponmod.Spears.*;
 import net.akashi.weaponmod.WeaponMod;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -100,10 +97,14 @@ public class ModItems {
 	//Bow item registry
 	public static final RegistryObject<BaseBowItem> SHORT_BOW = addToTab(
 			ITEMS.register("short_bow",
-					() -> new BaseBowItem(12, 8, 2.25F, 0.05F,
-							new Item.Properties().durability(256))), BOW_TAB);
+					() -> new BaseBowItem(12, 8, 2.25F, 1.0F, 0.0F, 0.05F,
+							new Item.Properties().durability(640))), BOW_TAB);
 	public static final RegistryObject<BaseBowItem> LONGBOW = addToTab(
 			ITEMS.register("longbow",
-					() -> new BaseBowItem(40, 15, 4.5F, 0.15F,
-							new Item.Properties().durability(512))), BOW_TAB);
+					() -> new BaseBowItem(40, 15, 4.5F, 0.2F, -0.5F, 0.15F,
+							new Item.Properties().durability(320))), BOW_TAB);
+	public static final RegistryObject<PurgatoryItem> PURGATORY = addToTab(
+			ITEMS.register("purgatory",
+					() -> new PurgatoryItem(50, 25, 4.5F, 0.2f, -1.0F, 1.0F, 0.15F,
+							new Item.Properties().durability(640))), BOW_TAB);
 }

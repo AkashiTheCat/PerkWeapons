@@ -1,6 +1,7 @@
 package net.akashi.weaponmod.Config;
 
 import net.akashi.weaponmod.Config.Properties.Bow.BowProperties;
+import net.akashi.weaponmod.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.*;
 import net.akashi.weaponmod.Registry.ModItems;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -27,6 +28,7 @@ public class ModCommonConfigs {
 	//Bow Configs
 	public static BowProperties SHORT_BOW_PROPERTIES;
 	public static BowProperties LONGBOW_PROPERTIES;
+	public static PurgatoryProperties PURGATORY_PROPERTIES;
 
 	static {
 		//Spears
@@ -72,12 +74,20 @@ public class ModCommonConfigs {
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER,"Short Bow",
 				12, 8,
-				2.25F, 0.05F,
+				2.25,1.0,
+				0.0,0.05,
 				true);
 		LONGBOW_PROPERTIES = new BowProperties(BUILDER,"Longbow",
 				40, 15,
-				4.5F, 0.15F,
+				4.5, 0.2,
+				-0.5,0.15,
 				true);
+		PURGATORY_PROPERTIES = new PurgatoryProperties(BUILDER, "Purgatory",
+				50, 25,
+				4.5,0.2,
+				4, 30,
+				-1.0, 0.15
+				);
 		SPEC = BUILDER.build();
 	}
 
@@ -96,5 +106,6 @@ public class ModCommonConfigs {
 		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);
+		ModItems.PURGATORY.get().updateAttributesFromConfig(PURGATORY_PROPERTIES);
 	}
 }

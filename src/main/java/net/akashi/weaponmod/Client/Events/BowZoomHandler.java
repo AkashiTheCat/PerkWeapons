@@ -1,9 +1,8 @@
-package net.akashi.weaponmod.Client.EventHandler;
+package net.akashi.weaponmod.Client.Events;
 
 import net.akashi.weaponmod.Bows.BaseBowItem;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.Options;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;

@@ -1,28 +1,52 @@
 package net.akashi.weaponmod.Bows;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.akashi.weaponmod.Client.ClientHelper;
 import net.akashi.weaponmod.Config.Properties.Bow.BowProperties;
+import net.akashi.weaponmod.Entities.Projectiles.Arrows.BaseArrow;
+import net.akashi.weaponmod.Network.ArrowVelocityUpdatePacket;
+import net.akashi.weaponmod.Registry.ModEntities;
+import net.akashi.weaponmod.Registry.ModPackets;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.network.PacketDistributor;
 
+import java.util.*;
 import java.util.function.Predicate;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
+	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
+	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float VELOCITY = 3.0F;
 	public int DRAW_TIME = 20;
 	public float PROJECTILE_DAMAGE = 10;
 	public float ZOOM_FACTOR = 0.1f;
+	public float INACCURACY = 1.0f;
+
+	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+			INFINITY_ARROWS,
+			FLAMING_ARROWS,
+			POWER_ARROWS,
+			PUNCH_ARROWS
+	));
+	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
 
 	public BaseBowItem(Properties properties) {
 		super(properties);
@@ -30,14 +54,56 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 			ClientHelper.registerLongbowPropertyOverrides(this);
 	}
 
-	public BaseBowItem(int drawTime, float projectileDamage, float velocity, float zoomFactor, Properties properties) {
+	public BaseBowItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
+	                   float zoomFactor, Properties properties) {
 		super(properties);
 		this.VELOCITY = velocity;
 		this.DRAW_TIME = drawTime;
 		this.PROJECTILE_DAMAGE = projectileDamage;
 		this.ZOOM_FACTOR = zoomFactor;
+		this.INACCURACY = inaccuracy;
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerLongbowPropertyOverrides(this);
+		if (speedModifier != 0.0F) {
+			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
+					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
+			this.AttributeModifiers = builder.build();
+		}
+	}
+
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+		if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
+			return true;
+		}
+		if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
+			return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
+		}
+		return false;
+	}
+
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
+		Map<Enchantment, Integer> enchantments = book.getAllEnchantments();
+		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
+			Enchantment enchantment = entry.getKey();
+			if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
+				continue;
+			} else if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
+				if (ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)) {
+					continue;
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		return (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) && AttributeModifiers != null ?
+				AttributeModifiers : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
@@ -60,9 +126,9 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 						&& ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, pStack, player));
 				if (!pLevel.isClientSide) {
 					ArrowItem arrowitem = (ArrowItem) (itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
-					AbstractArrow abstractarrow = arrowitem.createArrow(pLevel, itemstack, player);
-					abstractarrow = createArrow(abstractarrow);
-					abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, VELOCITY, 1.0F);
+
+					AbstractArrow abstractarrow = createArrow(pLevel, arrowitem, pStack, itemstack, player);
+					abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, VELOCITY, INACCURACY);
 
 					//Handle Enchantments
 					//Power
@@ -88,8 +154,11 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 							|| itemstack.is(Items.TIPPED_ARROW))) {
 						abstractarrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 					}
-
 					pLevel.addFreshEntity(abstractarrow);
+
+					//Sync velocity to all clients
+					ModPackets.NETWORK.send(PacketDistributor.ALL.noArg(),
+							new ArrowVelocityUpdatePacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
 				}
 
 				pLevel.playSound((Player) null, player.getX(), player.getY(), player.getZ(),
@@ -138,7 +207,34 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 		return ARROW_ONLY;
 	}
 
-	public AbstractArrow createArrow(AbstractArrow arrow) {
+	@Override
+	public int getDefaultProjectileRange() {
+		return 15;
+	}
+
+	public boolean AddGeneralEnchant(Enchantment enchantment) {
+		return GeneralEnchants.add(enchantment);
+	}
+
+	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
+		return GeneralEnchants.remove(enchantment);
+	}
+
+	public boolean AddConflictEnchant(Enchantment enchantment) {
+		return ConflictEnchants.add(enchantment);
+	}
+
+	public boolean RemoveConflictEnchant(Enchantment enchantment) {
+		return ConflictEnchants.remove(enchantment);
+	}
+
+	public AbstractArrow createArrow(Level level, ArrowItem arrowItem, ItemStack bowStack, ItemStack arrowStack, Player player) {
+		BaseArrow arrow = new BaseArrow(ModEntities.BASE_ARROW.get(), level, player);
+		if (arrowItem instanceof SpectralArrowItem) {
+			arrow.setSpectralArrow(true);
+		} else {
+			arrow.setEffectsFromItem(arrowStack);
+		}
 		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
 		return arrow;
 	}
@@ -148,13 +244,19 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 		this.PROJECTILE_DAMAGE = properties.DAMAGE.get().floatValue();
 		this.VELOCITY = properties.VELOCITY.get().floatValue();
 		this.ZOOM_FACTOR = properties.ZOOM_FACTOR.get().floatValue();
+		this.INACCURACY = properties.INACCURACY.get().floatValue();
+		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
+		if (speedModifier != 0.0F) {
+			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
+					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
+			this.AttributeModifiers = builder.build();
+		}
+
 	}
 
 	public float getDrawProgress(LivingEntity shooter) {
 		return shooter.getTicksUsingItem() < DRAW_TIME ? (float) shooter.getTicksUsingItem() / DRAW_TIME : 1;
 	}
 
-	public int getDefaultProjectileRange() {
-		return 15;
-	}
 }
