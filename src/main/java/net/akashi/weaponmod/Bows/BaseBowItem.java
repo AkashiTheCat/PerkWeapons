@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import net.akashi.weaponmod.Client.ClientHelper;
 import net.akashi.weaponmod.Config.Properties.Bow.BowProperties;
 import net.akashi.weaponmod.Entities.Projectiles.Arrows.BaseArrow;
-import net.akashi.weaponmod.Network.ArrowVelocityUpdatePacket;
+import net.akashi.weaponmod.Network.ArrowVelocitySyncPacket;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.Registry.ModPackets;
 import net.minecraft.sounds.SoundEvents;
@@ -158,7 +158,7 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 
 					//Sync velocity to all clients
 					ModPackets.NETWORK.send(PacketDistributor.ALL.noArg(),
-							new ArrowVelocityUpdatePacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
+							new ArrowVelocitySyncPacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
 				}
 
 				pLevel.playSound((Player) null, player.getX(), player.getY(), player.getZ(),

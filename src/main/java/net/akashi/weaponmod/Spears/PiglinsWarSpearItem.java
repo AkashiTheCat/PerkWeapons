@@ -2,7 +2,7 @@ package net.akashi.weaponmod.Spears;
 
 import net.akashi.weaponmod.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
-import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
+import net.akashi.weaponmod.Network.SpearAttributeUpdateSyncPacket;
 import net.akashi.weaponmod.Registry.ModPackets;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +55,7 @@ public class PiglinsWarSpearItem extends SpearItem {
 	@SubscribeEvent
 	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
 		//This will only update attributes when item is in MainHand to avoid performance issue
-		if (event.getEntity() instanceof Player player && !player.level().isClientSide()
+		if (event.getSlot().isArmor() && event.getEntity() instanceof Player player && !player.level().isClientSide()
 				&& player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem item) {
 			int count = getArmorCount(player);
 			float damageMultiplier = 1 + DAMAGE_BONUS * count;
@@ -63,7 +63,7 @@ public class PiglinsWarSpearItem extends SpearItem {
 			//IDK why this is needed to sync to client actually
 			//Syncing in this way will probably cause an inevitable display bug if you are hosting a LAN server.(Doesn't affect actual gameplay)
 			ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-					new SpearAttributeUpdatePacket(player.getId(), damageMultiplier, speedMultiplier));
+					new SpearAttributeUpdateSyncPacket(player.getId(), damageMultiplier, speedMultiplier));
 			item.updateAttributes(damageMultiplier, speedMultiplier);
 		}
 	}

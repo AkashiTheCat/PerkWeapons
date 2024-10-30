@@ -1,5 +1,6 @@
 package net.akashi.weaponmod.Client.Events;
 
+import net.akashi.weaponmod.Client.GUI.PerkIndicatorHud;
 import net.akashi.weaponmod.Client.Renderer.BaseArrowRenderer;
 import net.akashi.weaponmod.Client.Renderer.ExplosiveArrowRenderer;
 import net.akashi.weaponmod.Client.Renderer.ThrownSpearRenderer;
@@ -7,6 +8,7 @@ import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.WeaponMod;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -24,5 +26,10 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.FOREST_KEEPER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
+	}
+
+	@SubscribeEvent
+	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event){
+		event.registerAboveAll("forestkeeper_hud", PerkIndicatorHud.INDICATOR_BAR);
 	}
 }

@@ -1,6 +1,6 @@
 package net.akashi.weaponmod.Entities.Projectiles.Arrows;
 
-import net.akashi.weaponmod.Network.OutOfSightExplosionPacket;
+import net.akashi.weaponmod.Network.OutOfSightExplosionSyncPacket;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.Registry.ModPackets;
 import net.minecraft.core.particles.ParticleTypes;
@@ -102,7 +102,7 @@ public class ExplosiveArrow extends BaseArrow {
 		if (this.getOwnerSqrDistance() > 64 * 64) {
 			if (this.getOwner() instanceof Player player){
 				ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new OutOfSightExplosionPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
+						new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
 			}
 		}
 		this.discard();

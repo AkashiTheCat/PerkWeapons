@@ -4,7 +4,7 @@ import net.akashi.weaponmod.Config.Properties.Spear.ScourgeProperties;
 import net.akashi.weaponmod.Config.Properties.Spear.SpearProperties;
 import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownScourge;
 import net.akashi.weaponmod.Entities.Projectiles.Spears.ThrownSpear;
-import net.akashi.weaponmod.Network.SpearAttributeUpdatePacket;
+import net.akashi.weaponmod.Network.SpearAttributeUpdateSyncPacket;
 import net.akashi.weaponmod.Registry.ModEntities;
 import net.akashi.weaponmod.Registry.ModPackets;
 import net.akashi.weaponmod.WeaponMod;
@@ -93,13 +93,13 @@ public class ScourgeItem extends SpearItem {
 				updateAttributes(1, 1 + ABILITY_ATTACK_SPEED_BONUS);
 				if (this.Owner != entity)
 					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.Owner),
-							new SpearAttributeUpdatePacket(entity.getId(), 1, 1 + ABILITY_ATTACK_SPEED_BONUS));
+							new SpearAttributeUpdateSyncPacket(entity.getId(), 1, 1 + ABILITY_ATTACK_SPEED_BONUS));
 			}
 			if (buffTimer == 0) {
 				updateAttributes(1, 1);
 				if (this.Owner != entity)
 					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.Owner),
-							new SpearAttributeUpdatePacket(entity.getId(), 1, 1));
+							new SpearAttributeUpdateSyncPacket(entity.getId(), 1, 1));
 			}
 
 			if (shootTimer > 0) {
