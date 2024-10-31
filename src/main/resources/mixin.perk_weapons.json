@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "net.akashi.perk_weapons.mixin",
+  "refmap": "mixins.perk_weapons.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "MixinLocalPlayer"
+  ],
+  "server": [
+    "MixinLocalPlayer"
+  ]
+}

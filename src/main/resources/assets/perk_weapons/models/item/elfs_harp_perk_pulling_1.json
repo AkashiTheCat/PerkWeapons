@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/elfs_harp",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/elfs_harp/elfs_harp_perk_pulling_1"
+    }
+}

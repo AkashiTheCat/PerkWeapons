@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/purgatory",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/purgatory/purgatory_pulling_2"
+    }
+}

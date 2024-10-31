@@ -1,0 +1,57 @@
+{
+    "parent": "perk_weapons:item/base/base_bow",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/elfs_harp/elfs_harp"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1
+            },
+            "model": "perk_weapons:item/elfs_harp_pulling_0"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 0.6
+            },
+            "model": "perk_weapons:item/elfs_harp_pulling_1"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 1.0
+            },
+            "model": "perk_weapons:item/elfs_harp_pulling_2"
+        },
+        {
+            "predicate": {
+                "perk_weapons:perk_max": 1
+            },
+            "model": "perk_weapons:item/elfs_harp_perk"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:perk_max": 1
+            },
+            "model": "perk_weapons:item/elfs_harp_perk_pulling_0"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 0.6,
+                "perk_weapons:perk_max": 1
+            },
+            "model": "perk_weapons:item/elfs_harp_perk_pulling_1"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 1.0,
+                "perk_weapons:perk_max": 1
+            },
+            "model": "perk_weapons:item/elfs_harp_perk_pulling_2"
+        }
+    ]
+}

@@ -1,6 +1,0 @@
-{
-  "parent": "weaponmod:item/base/base_spear",
-  "textures": {
-    "layer0": "weaponmod:item/spear/golden_spear"
-  }
-}

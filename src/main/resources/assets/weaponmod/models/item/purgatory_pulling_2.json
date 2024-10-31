@@ -1,6 +1,0 @@
-{
-    "parent": "weaponmod:item/purgatory",
-    "textures": {
-        "layer0": "weaponmod:item/bow/purgatory/purgatory_pulling_2"
-    }
-}

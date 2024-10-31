@@ -1,6 +1,0 @@
-{
-    "parent": "weaponmod:item/short_bow",
-    "textures": {
-        "layer0": "weaponmod:item/bow/forest_keeper/forest_keeper_pulling_0"
-    }
-}

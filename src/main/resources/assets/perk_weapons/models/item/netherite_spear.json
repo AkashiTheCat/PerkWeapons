@@ -1,0 +1,6 @@
+{
+  "parent": "perk_weapons:item/base/base_spear",
+  "textures": {
+    "layer0": "perk_weapons:item/spear/netherite_spear"
+  }
+}

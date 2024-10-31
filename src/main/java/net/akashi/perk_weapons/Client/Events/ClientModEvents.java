@@ -1,0 +1,35 @@
+package net.akashi.perk_weapons.Client.Events;
+
+import net.akashi.perk_weapons.Client.GUI.PerkIndicatorHud;
+import net.akashi.perk_weapons.Client.Renderer.BaseArrowRenderer;
+import net.akashi.perk_weapons.Client.Renderer.ExplosiveArrowRenderer;
+import net.akashi.perk_weapons.Client.Renderer.ThrownSpearRenderer;
+import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Registry.ModEntities;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+
+@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public class ClientModEvents {
+	@SubscribeEvent
+	public static void registerRenders(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerEntityRenderer(ModEntities.THROWN_SPEAR.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_MEGALODON.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_CONDUIT_GUARD.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_DRAGON_STRIKE.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_SCOURGE.get(), ThrownSpearRenderer::new);
+
+		event.registerEntityRenderer(ModEntities.BASE_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.PERK_UPDATE_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
+	}
+
+	@SubscribeEvent
+	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event){
+		event.registerAboveAll("forestkeeper_hud", PerkIndicatorHud.INDICATOR_BAR);
+	}
+}

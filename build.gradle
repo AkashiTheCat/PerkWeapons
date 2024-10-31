@@ -99,8 +99,8 @@ tasks.named('jar', Jar).configure {
 
 mixin {
     // MixinGradle Settings
-    add sourceSets.main, 'mixins.weaponmod.refmap.json'
-    config 'mixin.weaponmod.json'
+    add sourceSets.main, 'mixins.perk_weapons.refmap.json'
+    config 'mixin.perk_weapons.json'
 }
 publishing {
     publications {

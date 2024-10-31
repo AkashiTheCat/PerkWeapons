@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/forest_keeper",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/forest_keeper/forest_keeper_pulling_1"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "parent": "perk_weapons:item/base/base_bow",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/purgatory/purgatory"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1
+            },
+            "model": "perk_weapons:item/purgatory_pulling_0"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 0.6
+            },
+            "model": "perk_weapons:item/purgatory_pulling_1"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 1.0
+            },
+            "model": "perk_weapons:item/purgatory_pulling_2"
+        }
+    ]
+}

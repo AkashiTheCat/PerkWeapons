@@ -1,6 +1,0 @@
-{
-    "parent": "weaponmod:item/short_bow",
-    "textures": {
-        "layer0": "weaponmod:item/bow/longbow/longbow_pulling_0"
-    }
-}
