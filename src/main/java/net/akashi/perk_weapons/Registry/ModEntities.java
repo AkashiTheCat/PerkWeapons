@@ -1,9 +1,6 @@
 package net.akashi.perk_weapons.Registry;
 
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
+import net.akashi.perk_weapons.Entities.Projectiles.Arrows.*;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.*;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.minecraft.resources.ResourceLocation;
@@ -49,6 +46,7 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<BaseArrow>> BASE_ARROW = ArrowRegistry("arrow", BaseArrow::new);
 	public static final RegistryObject<EntityType<PurgatoryArrow>> PURGATORY_ARROW = ArrowRegistry("purgatory_arrow", PurgatoryArrow::new);
 	public static final RegistryObject<EntityType<ExplosiveArrow>> EXPLOSIVE_ARROW = ArrowRegistry("explosive_arrow", ExplosiveArrow::new);
-	public static final RegistryObject<EntityType<PerkUpdateArrow>> PERK_UPDATE_ARROW = ArrowRegistry("forestkeeper_arrow", PerkUpdateArrow::new);
+	public static final RegistryObject<EntityType<PerkUpdateArrow>> PERK_UPDATE_ARROW = ArrowRegistry("perk_arrow", PerkUpdateArrow::new);
+	public static final RegistryObject<EntityType<FrostHunterArrow>> FROST_HUNTER_ARROW = ArrowRegistry("frost_hunter_arrow", FrostHunterArrow::new);
 
 }

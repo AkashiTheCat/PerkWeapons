@@ -1,3 +1,4 @@
 
 ----------------------------------
-Just A Weapon Mod
+Perk Weapons
+Add Weapons With Perks!

@@ -1,27 +1,35 @@
 package net.akashi.perk_weapons.Spears;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.ScourgeProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownScourge;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
-import net.akashi.perk_weapons.Network.SpearAttributeUpdateSyncPacket;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
-import net.akashi.perk_weapons.Registry.ModPackets;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
@@ -38,10 +46,8 @@ public class ScourgeItem extends SpearItem {
 	public static int ABILITY_SHOTS_COUNT = 3;
 	public static int PIERCE_LEVEL = 255;
 
-	private int buffTimer = -1;
-	private int shootTimer = 0;
-	private int perkShotsRemain = 0;
-	private Player Owner = null;
+	private static final Map<UUID, Integer> ABILITY_SHOT_MAP = new HashMap<>();
+	private static final Map<UUID, Integer> ABILITY_BUFF_TIME_MAP = new HashMap<>();
 
 	public ScourgeItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -78,52 +84,35 @@ public class ScourgeItem extends SpearItem {
 		}
 	}
 
-
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int SlotId, boolean isSelected) {
-		if (shootTimer == 0 && perkShotsRemain > 0 && this.Owner != null) {
-			ShootSpear(level, this.Owner, stack);
-			if (!level.isClientSide()) {
-				shootTimer = ABILITY_SHOTS_INTERVAL;
-				perkShotsRemain--;
-			}
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		CompoundTag tag = stack.getTag();
+		float speedMultiplier = 1.0F;
+		if (tag != null) {
+			speedMultiplier = tag.getFloat("speedBonus") + 1;
 		}
-		if (!level.isClientSide()) {
-			if (buffTimer == ABILITY_BUFF_DURATION) {
-				updateAttributes(1, 1 + ABILITY_ATTACK_SPEED_BONUS);
-				if (this.Owner != entity)
-					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.Owner),
-							new SpearAttributeUpdateSyncPacket(entity.getId(), 1, 1 + ABILITY_ATTACK_SPEED_BONUS));
-			}
-			if (buffTimer == 0) {
-				updateAttributes(1, 1);
-				if (this.Owner != entity)
-					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.Owner),
-							new SpearAttributeUpdateSyncPacket(entity.getId(), 1, 1));
-			}
-
-			if (shootTimer > 0) {
-				shootTimer--;
-			}
-			if (buffTimer >= 0) {
-				buffTimer--;
-			}
-		}
-		super.inventoryTick(stack, level, entity, SlotId, isSelected);
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", BaseAttackDamage - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", BaseAttackSpeed * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
+		return slot == EquipmentSlot.MAINHAND ? builder.build() : super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (pPlayer.isCrouching() && pHand == InteractionHand.MAIN_HAND) {
-			this.Owner = pPlayer;
+		if (pPlayer.isCrouching()) {
 			pPlayer.getCooldowns().addCooldown(this, ABILITY_COOLDOWN);
 			if (pPlayer.level().isClientSide()) {
 				pLevel.playSound(pPlayer, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
 						SoundEvents.WITHER_AMBIENT, pPlayer.getSoundSource(),
 						1.0F, 1.0F);
 			} else {
-				perkShotsRemain = ABILITY_SHOTS_COUNT;
-				buffTimer = ABILITY_BUFF_DURATION;
+				ABILITY_SHOT_MAP.put(pPlayer.getUUID(), (ABILITY_SHOTS_COUNT - 1) * ABILITY_SHOTS_INTERVAL);
+				ABILITY_BUFF_TIME_MAP.put(pPlayer.getUUID(), ABILITY_BUFF_DURATION);
+				ItemStack itemStack = pPlayer.getItemInHand(pHand);
+				CompoundTag tag = itemStack.getTag();
+				if (tag != null) {
+					tag.putFloat("speedBonus", ABILITY_ATTACK_SPEED_BONUS);
+				}
 			}
 		}
 		return super.use(pLevel, pPlayer, pHand);
@@ -144,6 +133,51 @@ public class ScourgeItem extends SpearItem {
 			scourge.allowPickup = false;
 			level.addFreshEntity(scourge);
 			level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+		if (!event.side.isClient() && event.phase == TickEvent.Phase.END) {
+			Player player = event.player;
+
+			UUID playerID = player.getUUID();
+			ItemStack itemStack = ItemStack.EMPTY;
+			if (player.getMainHandItem().getItem() instanceof ScourgeItem) {
+				itemStack = player.getMainHandItem();
+			} else if (player.getOffhandItem().getItem() instanceof ScourgeItem) {
+				itemStack = player.getOffhandItem();
+			}
+
+			//Handle ability shots
+			if (ABILITY_SHOT_MAP.containsKey(playerID)) {
+				int timer = ABILITY_SHOT_MAP.get(playerID);
+				if (timer % ABILITY_SHOTS_INTERVAL == 0) {
+					if (itemStack != ItemStack.EMPTY) {
+						ScourgeItem item = (ScourgeItem) itemStack.getItem();
+						item.ShootSpear(player.level(), player, itemStack);
+					}
+				}
+				if (timer != -1) {
+					ABILITY_SHOT_MAP.put(playerID, timer - 1);
+				}
+			}
+
+			//Handle ability attributes buff
+			if (ABILITY_BUFF_TIME_MAP.containsKey(player.getUUID())) {
+				int time = ABILITY_BUFF_TIME_MAP.get(playerID);
+				if (time > 0) {
+					ABILITY_BUFF_TIME_MAP.put(playerID, time - 1);
+				} else {
+					if (itemStack != ItemStack.EMPTY) {
+						CompoundTag tag = itemStack.getTag();
+						if (tag.getFloat("speedBonus") == ABILITY_ATTACK_SPEED_BONUS) {
+							tag.putFloat("speedBonus", 0.0F);
+							itemStack.setTag(tag);
+						}
+					}
+				}
+			}
 		}
 	}
 }

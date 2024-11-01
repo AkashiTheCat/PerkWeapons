@@ -1,8 +1,6 @@
 package net.akashi.perk_weapons.Config;
 
-import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
-import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
-import net.akashi.perk_weapons.Config.Properties.Bow.PurgatoryProperties;
+import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,6 +31,8 @@ public class ModCommonConfigs {
 	public static BowProperties LONGBOW_PROPERTIES;
 	public static PurgatoryProperties PURGATORY_PROPERTIES;
 	public static ForestKeeperProperties FOREST_KEEPER_PROPERTIES;
+	public static ElfsHarpProperties ELFS_HARP_PROPERTIES;
+	public static FrostHunterProperties FROST_HUNTER_PROPERTIES;
 
 	static {
 		//General
@@ -102,6 +102,19 @@ public class ModCommonConfigs {
 				5,40,
 				0.1,true,
 				0.0,0.0);
+		ELFS_HARP_PROPERTIES = new ElfsHarpProperties(BUILDER,"Elf's Harp",
+				20, 10.0,
+				3.0,0.8,
+				3,100,
+				1.0,0.0,
+				0.1);
+		FROST_HUNTER_PROPERTIES = new FrostHunterProperties(BUILDER, "Frost Hunter",
+				24,9,
+				3.0,0.8,
+				160,1200,
+				400,2,
+				true,0.0,
+				0.1);
 		SPEC = BUILDER.build();
 	}
 
@@ -113,14 +126,18 @@ public class ModCommonConfigs {
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
 		ModItems.DIAMOND_SPEAR.get().updateAttributesFromConfig(DIAMOND_SPEAR_PROPERTIES);
 		ModItems.NETHERITE_SPEAR.get().updateAttributesFromConfig(NETHERITE_SPEAR_PROPERTIES);
+
 		ModItems.SPEAR_MEGALODON.get().updateAttributesFromConfig(MEGALODON_PROPERTIES);
 		ModItems.SPEAR_CONDUIT_GUARD.get().updateAttributesFromConfig(CONDUIT_GUARD_PROPERTIES);
 		ModItems.PIGLINS_WARSPEAR.get().updateAttributesFromConfig(PIGLINS_WARSPEAR_PROPERTIES);
 		ModItems.DRAGON_STRIKE.get().updateAttributesFromConfig(DRAGON_STRIKE_PROPERTIES);
 		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
+
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);
 		ModItems.PURGATORY.get().updateAttributesFromConfig(PURGATORY_PROPERTIES);
 		ModItems.FOREST_KEEPER.get().updateAttributesFromConfig(FOREST_KEEPER_PROPERTIES);
+		ModItems.ELFS_HARP.get().updateAttributesFromConfig(ELFS_HARP_PROPERTIES);
+		ModItems.FROST_HUNTER.get().updateAttributesFromConfig(FROST_HUNTER_PROPERTIES);
 	}
 }

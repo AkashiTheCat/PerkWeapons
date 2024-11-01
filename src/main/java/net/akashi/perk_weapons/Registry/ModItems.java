@@ -1,9 +1,6 @@
 package net.akashi.perk_weapons.Registry;
 
-import net.akashi.perk_weapons.Bows.BaseBowItem;
-import net.akashi.perk_weapons.Bows.ElfsHarpItem;
-import net.akashi.perk_weapons.Bows.ForestKeeperItem;
-import net.akashi.perk_weapons.Bows.PurgatoryItem;
+import net.akashi.perk_weapons.Bows.*;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
 import net.minecraft.world.item.BlockItem;
@@ -116,5 +113,9 @@ public class ModItems {
 	public static final RegistryObject<ElfsHarpItem> ELFS_HARP = addToTab(
 			ITEMS.register("elfs_harp",
 					() -> new ElfsHarpItem(20, 10, 3.0F, 0.8F, 0.0F, 0.1F,
+							new Item.Properties().durability(960))), BOW_TAB);
+	public static final RegistryObject<FrostHunterItem> FROST_HUNTER = addToTab(
+			ITEMS.register("frost_hunter",
+					() -> new FrostHunterItem(24, 9, 3.0F, 0.8F, 0.0F, 0.1F,
 							new Item.Properties().durability(960))), BOW_TAB);
 }

@@ -3,6 +3,7 @@ package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 import com.google.common.collect.Sets;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -32,7 +33,7 @@ import java.util.Set;
 //Basically A Copy Of Vanilla Arrow Class
 public class BaseArrow extends AbstractArrow {
 	private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR
-			= SynchedEntityData.defineId(net.minecraft.world.entity.projectile.Arrow.class, EntityDataSerializers.INT);
+			= SynchedEntityData.defineId(BaseArrow.class, EntityDataSerializers.INT);
 	private Potion potion = Potions.EMPTY;
 	private final Set<MobEffectInstance> effects = Sets.newHashSet();
 	private boolean fixedColor;
@@ -182,7 +183,6 @@ public class BaseArrow extends AbstractArrow {
 			pCompound.put("CustomPotionEffects", listtag);
 		}
 		pCompound.putFloat("magicDamage", this.magicDamage);
-
 	}
 
 	@Override

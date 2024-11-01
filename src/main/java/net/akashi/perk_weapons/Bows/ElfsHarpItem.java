@@ -1,9 +1,12 @@
 package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Client.ClientHelper;
+import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
+import net.akashi.perk_weapons.Config.Properties.Bow.ElfsHarpProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -14,11 +17,15 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	public static byte MAX_PERK_LEVEL = 3;
 	public static float PERK_BUFF = 1.0F;
 	public static int GLOWING_TIME = 100;
-	private byte perkLevel = 0;
+	private static final Map<UUID, Byte> PERK_LEVEL_MAP = new HashMap<>();
 
 	public ElfsHarpItem(Properties properties) {
 		super(properties);
@@ -33,26 +40,27 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	}
 
 	@Override
-	public int getIndicatorLength() {
-		return 5 * perkLevel;
+	public byte getMaxPerkLevel() {
+		return MAX_PERK_LEVEL;
 	}
 
 	@Override
-	public void gainPerkLevel() {
-		if (perkLevel < MAX_PERK_LEVEL) {
-			perkLevel++;
+	public float getPerkLevel(Player player, ItemStack stack) {
+		return PERK_LEVEL_MAP.getOrDefault(player.getUUID(), (byte) 0);
+	}
+
+	@Override
+	public boolean isPerkMax(Player player, ItemStack stack) {
+		return ((byte) Math.ceil(getPerkLevel(player, stack))) == MAX_PERK_LEVEL;
+	}
+
+	@Override
+	public void gainPerkLevel(Player player, ItemStack stack) {
+		if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
+			PERK_LEVEL_MAP.put(player.getUUID(), (byte) (PERK_LEVEL_MAP.get(player.getUUID()) + 1));
+		} else {
+			PERK_LEVEL_MAP.put(player.getUUID(), (byte) 1);
 		}
-	}
-
-	@Override
-	public byte getPerkLevel() {
-		return this.perkLevel;
-	}
-
-	@Override
-	public boolean isPerkMax() {
-		System.out.println(perkLevel);
-		return perkLevel == MAX_PERK_LEVEL;
 	}
 
 	@Override
@@ -63,12 +71,27 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		}
 		arrow.setBaseDamage(0.0F);
 		arrow.addEffect(new MobEffectInstance(MobEffects.GLOWING, GLOWING_TIME));
-		if (perkLevel == MAX_PERK_LEVEL) {
+		if (isPerkMax(player, bowStack)) {
 			arrow.setMagicDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF));
-			perkLevel = 0;
+			arrow.setRenderTrail(true);
+			initPerkLevel(player);
 		} else {
 			arrow.setMagicDamage(PROJECTILE_DAMAGE);
 		}
 		return arrow;
+	}
+
+	@Override
+	public void updateAttributesFromConfig(BowProperties properties) {
+		super.updateAttributesFromConfig(properties);
+		if (properties instanceof ElfsHarpProperties eProperties) {
+			MAX_PERK_LEVEL = eProperties.MAX_PERK_LEVEL.get().byteValue();
+			PERK_BUFF = eProperties.PERK_BUFF.get().floatValue();
+			GLOWING_TIME = eProperties.GLOWING_TIME.get();
+		}
+	}
+
+	public void initPerkLevel(Player player) {
+		PERK_LEVEL_MAP.put(player.getUUID(), (byte) 0);
 	}
 }

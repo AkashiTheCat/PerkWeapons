@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class SpearItem extends Item implements Vanishable{
+public class SpearItem extends Item implements Vanishable {
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;
@@ -212,7 +212,7 @@ public class SpearItem extends Item implements Vanishable{
 		if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
 			return true;
 		}
-		if(ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))){
+		if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
 			return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
 		}
 		return false;
@@ -223,11 +223,10 @@ public class SpearItem extends Item implements Vanishable{
 		Map<Enchantment, Integer> enchantments = book.getAllEnchantments();
 		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
 			Enchantment enchantment = entry.getKey();
-			if(GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))){
+			if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
 				continue;
-			}
-			else if(ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))){
-				if(ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)){
+			} else if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
+				if (ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)) {
 					continue;
 				}
 			}

@@ -7,8 +7,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin({LocalPlayer.class})
-public class MixinLocalPlayer {
-	public MixinLocalPlayer() {
+public class LocalPlayerMixin {
+	public LocalPlayerMixin() {
 	}
 
 	@Redirect(method = {"aiStep"},

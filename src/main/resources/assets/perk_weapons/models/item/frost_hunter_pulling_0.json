@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/frost_hunter",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/frost_hunter/frost_hunter_pulling_0"
+    }
+}

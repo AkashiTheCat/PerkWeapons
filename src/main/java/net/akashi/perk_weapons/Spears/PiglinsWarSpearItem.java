@@ -1,11 +1,15 @@
 package net.akashi.perk_weapons.Spears;
 
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
-import net.akashi.perk_weapons.Network.SpearAttributeUpdateSyncPacket;
 import net.akashi.perk_weapons.PerkWeapons;
-import net.akashi.perk_weapons.Registry.ModPackets;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +18,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,19 +55,47 @@ public class PiglinsWarSpearItem extends SpearItem {
 		}
 	}
 
+	@Override
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
+		CompoundTag tag = stack.getTag();
+		float speedMultiplier = 1.0F;
+		float damageMultiplier = 1.0F;
+		if (tag != null) {
+			speedMultiplier = tag.getFloat("speedMultiplier");
+			damageMultiplier = tag.getFloat("damageMultiplier");
+		}
+		if(speedMultiplier==1.0F && damageMultiplier==1.0F){
+			super.getAttributeModifiers(slot, stack);
+		}
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", BaseAttackDamage * damageMultiplier - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", BaseAttackSpeed * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
+		return slot == EquipmentSlot.MAINHAND ? builder.build() : super.getAttributeModifiers(slot, stack);
+	}
+
 	@SubscribeEvent
 	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-		//This will only update attributes when item is in MainHand to avoid performance issue
-		if (event.getSlot().isArmor() && event.getEntity() instanceof Player player && !player.level().isClientSide()
-				&& player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem item) {
-			int count = getArmorCount(player);
-			float damageMultiplier = 1 + DAMAGE_BONUS * count;
-			float speedMultiplier = 1 + SPEED_BONUS * count;
-			//IDK why this is needed to sync to client actually
-			//Syncing in this way will probably cause an inevitable display bug if you are hosting a LAN server.(Doesn't affect actual gameplay)
-			ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-					new SpearAttributeUpdateSyncPacket(player.getId(), damageMultiplier, speedMultiplier));
-			item.updateAttributes(damageMultiplier, speedMultiplier);
+		if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
+			ItemStack itemStack = ItemStack.EMPTY;
+			if (player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem) {
+				itemStack = player.getMainHandItem();
+			} else if (player.getOffhandItem().getItem() instanceof PiglinsWarSpearItem) {
+				itemStack = player.getOffhandItem();
+			}
+			if (itemStack != ItemStack.EMPTY) {
+				int count = getArmorCount(player);
+				float damageMultiplier = 1 + DAMAGE_BONUS * count;
+				float speedMultiplier = 1 + SPEED_BONUS * count;
+				CompoundTag tag = itemStack.getTag();
+				if (tag != null) {
+					if (tag.getFloat("damageMultiplier") != damageMultiplier ||
+							tag.getFloat("speedMultiplier") != speedMultiplier) {
+						tag.putFloat("damageMultiplier", damageMultiplier);
+						tag.putFloat("speedMultiplier", speedMultiplier);
+						itemStack.setTag(tag);
+					}
+				}
+			}
 		}
 	}
 

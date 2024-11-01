@@ -6,9 +6,9 @@
   "mixins": [
   ],
   "client": [
-    "MixinLocalPlayer"
+    "LocalPlayerMixin"
   ],
   "server": [
-    "MixinLocalPlayer"
+    "LocalPlayerMixin"
   ]
 }

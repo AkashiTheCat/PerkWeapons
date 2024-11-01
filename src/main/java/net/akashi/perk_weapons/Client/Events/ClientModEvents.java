@@ -1,5 +1,7 @@
 package net.akashi.perk_weapons.Client.Events;
 
+import net.akashi.perk_weapons.Client.GUI.CoolDownIndicatorHud;
+import net.akashi.perk_weapons.Client.GUI.CustomCrossHair;
 import net.akashi.perk_weapons.Client.GUI.PerkIndicatorHud;
 import net.akashi.perk_weapons.Client.Renderer.BaseArrowRenderer;
 import net.akashi.perk_weapons.Client.Renderer.ExplosiveArrowRenderer;
@@ -9,6 +11,7 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -26,10 +29,13 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.PERK_UPDATE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.FROST_HUNTER_ARROW.get(), BaseArrowRenderer::new);
 	}
 
 	@SubscribeEvent
 	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event){
-		event.registerAboveAll("forestkeeper_hud", PerkIndicatorHud.INDICATOR_BAR);
+		event.registerAboveAll("perk_hud", PerkIndicatorHud.INDICATOR_BAR);
+		event.registerAboveAll("cooldown_hud", CoolDownIndicatorHud.INDICATOR_BAR);
+		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(),"crosshair", CustomCrossHair.CROSSHAIR);
 	}
 }

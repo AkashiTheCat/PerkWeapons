@@ -1,24 +1,27 @@
 package net.akashi.perk_weapons.Util;
 
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.IForgeRegistry;
 
 public interface IPerkItem {
 	/**
-	 * 1 Full Indicator Bar's Length is 5
+	 *
+	 * @return Max Perk Level Of The Item
 	 */
-	int getIndicatorLength();
+	byte getMaxPerkLevel();
 
 	/**
 	 * Called When PerkOnHitArrow Hits An Entity
 	 */
-	void gainPerkLevel();
+	void gainPerkLevel(Player player, ItemStack stack);
 	/**
 	 * Used For Model Overrides
 	 */
-	byte getPerkLevel();
+	float getPerkLevel(Player player,ItemStack stack);
 
 	/**
 	 * Used For Model Overrides
 	 */
-	boolean isPerkMax();
+	boolean isPerkMax(Player player,ItemStack stack);
 }

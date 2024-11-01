@@ -7,16 +7,23 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
@@ -26,9 +33,8 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public static float PERK_BUFF = 0.1F;
 	public static int PERK_DROP_INTERVAL = 40;
 	public static boolean ENABLE_SLOWDOWN_REMOVAL = true;
-	private byte perkLevel = 0;
-	private int perkDropTimer = 0;
-	private int IndicatorLength = 0;
+	private static float PERK_DROP_PER_TICK = (float) 1 / PERK_DROP_INTERVAL;
+	private static final Map<UUID, Float> PERK_LEVEL_MAP = new HashMap<>();
 
 	public ForestKeeperItem(Properties properties) {
 		super(properties);
@@ -54,24 +60,9 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 		} else {
 			arrow.setEffectsFromItem(arrowStack);
 		}
-		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * this.perkLevel) / VELOCITY);
+		byte perkLevel = (byte) Math.ceil(getPerkLevel(player, bowStack));
+		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * perkLevel) / VELOCITY);
 		return arrow;
-	}
-
-	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
-		if (!level.isClientSide()) {
-			if (this.perkDropTimer % 8 == 0) {
-				IndicatorLength = calculatePerkIndicatorLength();
-			}
-			if (this.perkDropTimer > 0) {
-				perkDropTimer--;
-			} else if (perkLevel > 0) {
-				perkLevel--;
-				perkDropTimer = PERK_DROP_INTERVAL;
-			}
-		}
 	}
 
 	@Override
@@ -82,51 +73,57 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 			PERK_DROP_INTERVAL = fProperties.PERK_DROP_INTERVAL.get();
 			PERK_BUFF = fProperties.PERK_DAMAGE_BUFF.get().floatValue();
 			ENABLE_SLOWDOWN_REMOVAL = fProperties.ENABLE_SLOWDOWN_REMOVAL.get();
+			PERK_DROP_PER_TICK = (float) 1 / PERK_DROP_INTERVAL;
+		}
+	}
+
+	@Override
+	public byte getMaxPerkLevel() {
+		return MAX_PERK_LEVEL;
+	}
+
+	@Override
+	public float getPerkLevel(Player player, ItemStack stack) {
+		return Math.max(0F, PERK_LEVEL_MAP.getOrDefault(player.getUUID(), 0F));
+	}
+
+	@Override
+	public boolean isPerkMax(Player player, ItemStack stack) {
+		return ((byte) Math.ceil(getPerkLevel(player, stack))) == MAX_PERK_LEVEL;
+	}
+
+	@Override
+	public void gainPerkLevel(Player player, ItemStack stack) {
+		if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
+			PERK_LEVEL_MAP.put(player.getUUID(), (float) Math.min((Math.ceil(getPerkLevel(player, stack)) + 1), MAX_PERK_LEVEL));
+		} else {
+			PERK_LEVEL_MAP.put(player.getUUID(), 1F);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerHurt(LivingHurtEvent event) {
 		if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
-			player.getInventory().items.forEach((stack) -> {
-				if (stack.getItem() instanceof ForestKeeperItem bowItem) {
-					bowItem.clearPerkLevel();
+			ForestKeeperItem.initPerkLevel(player);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
+		if (!event.side.isClient() && event.phase == TickEvent.Phase.END) {
+			Player player = event.player;
+			if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
+				float perkLevel = PERK_LEVEL_MAP.get(player.getUUID());
+				if (perkLevel > 0) {
+					PERK_LEVEL_MAP.put(player.getUUID(), perkLevel - PERK_DROP_PER_TICK);
+				} else if (perkLevel != 0F) {
+					initPerkLevel(player);
 				}
-			});
+			}
 		}
 	}
 
-	@Override
-	public int getIndicatorLength() {
-		return IndicatorLength;
+	public static void initPerkLevel(Player player) {
+		PERK_LEVEL_MAP.put(player.getUUID(), 0.0F);
 	}
-
-	private int calculatePerkIndicatorLength() {
-		return (this.perkLevel - 1) * 5 + perkDropTimer / 8;
-	}
-
-	@Override
-	public byte getPerkLevel() {
-		return this.perkLevel;
-	}
-
-	@Override
-	public boolean isPerkMax() {
-		return perkLevel == MAX_PERK_LEVEL;
-	}
-
-	@Override
-	public void gainPerkLevel() {
-		this.perkDropTimer = PERK_DROP_INTERVAL;
-		if (this.perkLevel < MAX_PERK_LEVEL) {
-			this.perkLevel++;
-		}
-		IndicatorLength = calculatePerkIndicatorLength();
-	}
-
-	public void clearPerkLevel() {
-		this.perkLevel = 0;
-		this.perkDropTimer = 0;
-	}
-
 }

@@ -6,6 +6,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownDragonStrike;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -22,10 +23,14 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class DragonStrikeItem extends SpearItem {
+public class DragonStrikeItem extends SpearItem implements ICoolDownItem {
 	private static double MagicResistance = 0.5;
 	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
 	public static float MAX_AFFECT_CLOUD_RADIUS = 6.0F;
@@ -33,7 +38,7 @@ public class DragonStrikeItem extends SpearItem {
 	public static int EFFECT_DAMAGE = 5;
 	public static int RETURN_TIME = 40;
 	private static int AbilityCoolDownTime = 200;
-	private long lastAbilityUseTime = 0;
+	private static final Map<UUID, Long> AbilityUseTimeMap = new HashMap<>();
 
 	public DragonStrikeItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -70,8 +75,9 @@ public class DragonStrikeItem extends SpearItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (pLevel.getGameTime() - this.lastAbilityUseTime > AbilityCoolDownTime
-				&& pPlayer.isCrouching() && pHand == InteractionHand.MAIN_HAND) {
+		boolean flag = !AbilityUseTimeMap.containsKey(pPlayer.getUUID());
+		if (flag || (pLevel.getGameTime() - AbilityUseTimeMap.get(pPlayer.getUUID()) > AbilityCoolDownTime
+				&& pPlayer.isCrouching())) {
 			double x = pPlayer.getX();
 			double y = pPlayer.getY();
 			double z = pPlayer.getZ();
@@ -86,7 +92,7 @@ public class DragonStrikeItem extends SpearItem {
 						entity.setDeltaMovement(knockbackDirection.x, 0.5, knockbackDirection.z);
 					}
 				}
-				this.lastAbilityUseTime = pLevel.getGameTime();
+				AbilityUseTimeMap.put(pPlayer.getUUID(), pLevel.getGameTime());
 			} else {
 				pLevel.addParticle(ParticleTypes.EXPLOSION_EMITTER, x, y, z,
 						1.0, 0.0, 0.0);
@@ -105,6 +111,20 @@ public class DragonStrikeItem extends SpearItem {
 					float reducedDamage = event.getAmount() * (1 - (float) MagicResistance);
 					event.setAmount(reducedDamage);
 				}
+			}
+		}
+	}
+
+	@Override
+	public float getCoolDownProgress(Level level, Player player) {
+		if (!AbilityUseTimeMap.containsKey(player.getUUID()))
+			return 1.0f;
+		else {
+			long timeInterval = level.getGameTime() - AbilityUseTimeMap.get(player.getUUID());
+			if (timeInterval > AbilityCoolDownTime) {
+				return 1.0f;
+			} else {
+				return (float) timeInterval / AbilityCoolDownTime;
 			}
 		}
 	}

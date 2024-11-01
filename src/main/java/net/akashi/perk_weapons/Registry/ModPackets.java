@@ -15,10 +15,6 @@ public class ModPackets {
 	);
 	public static void registerPackets() {
 		int id = 0;
-		NETWORK.registerMessage(id++, SpearAttributeUpdateSyncPacket.class,
-				SpearAttributeUpdateSyncPacket::write,
-				SpearAttributeUpdateSyncPacket::read,
-				SpearAttributeUpdateSyncPacket::handle);
 		NETWORK.registerMessage(id++, ArrowVelocitySyncPacket.class,
 				ArrowVelocitySyncPacket::write,
 				ArrowVelocitySyncPacket::read,
