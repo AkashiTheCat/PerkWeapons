@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/short_bow",
+    "parent": "perk_weapons:item/longbow",
     "textures": {
         "layer0": "perk_weapons:item/bow/longbow/longbow_pulling_2"
     }

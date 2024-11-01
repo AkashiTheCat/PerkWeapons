@@ -49,7 +49,6 @@ public class PerkUpdateArrow extends BaseArrow {
 	@Override
 	public void tick() {
 		super.tick();
-
 		if (!this.inGround && this.entityData.get(ID_RENDER_TRAIL) && this.level().isClientSide()) {
 			this.level().addParticle(ParticleTypes.CRIT,
 					this.getX(), this.getY(), this.getZ(),

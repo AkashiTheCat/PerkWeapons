@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.akashi.perk_weapons.Bows.BaseBowItem;
+import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
@@ -21,6 +22,11 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 public class CoolDownIndicatorHud {
 	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
 	public static final IGuiOverlay INDICATOR_BAR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+		//Check Indicators Enabled
+		if (!ModClientConfigs.ENABLE_COOLDOWN_INDICATOR.get()) {
+			return;
+		}
+
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 		Level level = mc.level;
@@ -43,7 +49,7 @@ public class CoolDownIndicatorHud {
 
 
 			int startX = Math.round((float) screenWidth / 2);
-			if (coolDownItem instanceof BaseBowItem) {
+			if (coolDownItem instanceof BaseBowItem && ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get()) {
 				startX += 32;
 			} else {
 				startX += 10;

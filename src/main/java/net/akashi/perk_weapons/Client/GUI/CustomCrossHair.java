@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.akashi.perk_weapons.Bows.BaseBowItem;
+import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.minecraft.client.Minecraft;
@@ -28,6 +29,11 @@ public class CustomCrossHair {
 	public static boolean isVanillaCrosshairDisabled = false;
 	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
 	public static final IGuiOverlay CROSSHAIR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+		//Check CrossHairs Enabled
+		if (!ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get()) {
+			return;
+		}
+
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 
@@ -77,8 +83,8 @@ public class CustomCrossHair {
 
 		int centerX = Math.round((float) screenWidth / 2);
 		int startY = Math.round((float) screenHeight / 2) - 1;
-		int leftStartX = (int) (centerX + progress * 13 - 27);
-		int rightStartX = (int) (centerX - progress * 13 + 16);
+		int leftStartX = centerX + Math.round(progress * 13) - 27;
+		int rightStartX = centerX - Math.round(progress * 13) + 16;
 
 		//render center
 		guiGraphics.blit(HUD_TEXTURE, centerX - 1, startY, 19, 0, 3, 3);
@@ -93,7 +99,8 @@ public class CustomCrossHair {
 
 	@SubscribeEvent
 	public static void onRenderVanillaCrosshair(RenderGuiOverlayEvent event) {
-		if (isVanillaCrosshairDisabled && event.getOverlay().id() == VanillaGuiOverlay.CROSSHAIR.id()) {
+		if (ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get() && isVanillaCrosshairDisabled
+				&& event.getOverlay().id() == VanillaGuiOverlay.CROSSHAIR.id()) {
 			event.setCanceled(true);
 		}
 	}

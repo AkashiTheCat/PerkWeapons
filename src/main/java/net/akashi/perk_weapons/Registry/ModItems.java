@@ -104,7 +104,7 @@ public class ModItems {
 							new Item.Properties().durability(320))), BOW_TAB);
 	public static final RegistryObject<PurgatoryItem> PURGATORY = addToTab(
 			ITEMS.register("purgatory",
-					() -> new PurgatoryItem(50, 25, 4.5F, 0.2f, -1.0F, 1.0F, 0.15F,
+					() -> new PurgatoryItem(50, 25, 4.5F, 0.2F, -1.0F, 1.0F, 0.15F,
 							new Item.Properties().durability(640))), BOW_TAB);
 	public static final RegistryObject<ForestKeeperItem> FOREST_KEEPER = addToTab(
 			ITEMS.register("forest_keeper",
@@ -117,5 +117,13 @@ public class ModItems {
 	public static final RegistryObject<FrostHunterItem> FROST_HUNTER = addToTab(
 			ITEMS.register("frost_hunter",
 					() -> new FrostHunterItem(24, 9, 3.0F, 0.8F, 0.0F, 0.1F,
+							new Item.Properties().durability(960))), BOW_TAB);
+	public static final RegistryObject<HouYiItem> HOU_YI = addToTab(
+			ITEMS.register("hou_yi",
+					() -> new HouYiItem(40, 15, 4.5F, 0.2F, -0.5F, 0.15F,
+							new Item.Properties().durability(640))), BOW_TAB);
+	public static final RegistryObject<DevourerItem> DEVOURER = addToTab(
+			ITEMS.register("devourer",
+					() -> new DevourerItem(20, 7, 3.0F, 0.8F, 0.0F, 0.1F,
 							new Item.Properties().durability(960))), BOW_TAB);
 }

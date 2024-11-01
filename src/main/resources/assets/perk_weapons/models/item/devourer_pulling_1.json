@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/devourer",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/devourer/devourer_pulling_1"
+    }
+}

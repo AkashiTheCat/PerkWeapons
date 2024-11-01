@@ -30,6 +30,8 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.PERK_UPDATE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.FROST_HUNTER_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.STAR_SHOOTER_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.DEVOURER_ARROW.get(), BaseArrowRenderer::new);
 	}
 
 	@SubscribeEvent

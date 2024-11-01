@@ -2,11 +2,15 @@ package net.akashi.perk_weapons.Config;
 
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
+import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModCommonConfigs {
@@ -15,6 +19,10 @@ public class ModCommonConfigs {
 
 	//General Configs
 	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
+	public static ForgeConfigSpec.BooleanValue ENABLE_STAR_SHOOTER_ON_TABLE;
+	public static ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_AS_FLYING;
+
+
 	//Spear Configs
 	public static SpearProperties IRON_SPEAR_PROPERTIES;
 	public static SpearProperties GOLDEN_SPEAR_PROPERTIES;
@@ -33,12 +41,20 @@ public class ModCommonConfigs {
 	public static ForestKeeperProperties FOREST_KEEPER_PROPERTIES;
 	public static ElfsHarpProperties ELFS_HARP_PROPERTIES;
 	public static FrostHunterProperties FROST_HUNTER_PROPERTIES;
+	public static BowProperties HOU_YI_PROPERTIES;
+	public static DevourerProperties DEVOURER_PROPERTIES;
 
 	static {
 		//General
 		BUILDER.push("General");
-		ENABLE_MELT_DOWN_ON_TABLE = BUILDER.comment("Set True To Allow Getting Melt Down Enchantment On Enchantment Table")
+		ENABLE_MELT_DOWN_ON_TABLE = BUILDER.comment("Set True To Allow Getting Melt Down Enchantment From Enchanting Table")
 				.define("EnableMeltDownOnTable", true);
+		ENABLE_STAR_SHOOTER_ON_TABLE = BUILDER.comment("Set True To Allow Getting Star Shooter Enchantment From Enchanting Table")
+				.define("EnableStarShooterOnTable", true);
+		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
+				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
+						"minecraft:ender_dragon"), obj -> obj instanceof String);
+
 		BUILDER.pop();
 		//Spears
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
@@ -97,23 +113,33 @@ public class ModCommonConfigs {
 				4, 30,
 				-1.0, 0.15);
 		FOREST_KEEPER_PROPERTIES = new ForestKeeperProperties(BUILDER, "Forest Keeper",
-				12,8,
-				2.25,1.0,
-				5,40,
-				0.1,true,
-				0.0,0.0);
-		ELFS_HARP_PROPERTIES = new ElfsHarpProperties(BUILDER,"Elf's Harp",
+				12, 8,
+				2.25, 1.0,
+				5, 40,
+				0.1, true,
+				0.0, 0.0);
+		ELFS_HARP_PROPERTIES = new ElfsHarpProperties(BUILDER, "Elf's Harp",
 				20, 10.0,
-				3.0,0.8,
-				3,100,
-				1.0,0.0,
+				3.0, 0.8,
+				3, 100,
+				1.0, 0.0,
 				0.1);
 		FROST_HUNTER_PROPERTIES = new FrostHunterProperties(BUILDER, "Frost Hunter",
-				24,9,
-				3.0,0.8,
-				160,1200,
-				400,2,
-				true,0.0,
+				24, 9,
+				3.0, 0.8,
+				160, 1200,
+				400, 2,
+				true, 0.0,
+				0.1);
+		HOU_YI_PROPERTIES = new BowProperties(BUILDER, "Hou Yi",
+				40, 15,
+				4.5, 0.2,
+				-0.5, 0.15,
+				true);
+		DEVOURER_PROPERTIES = new DevourerProperties(BUILDER, "Devourer",
+				20, 7,
+				3.0, 0.8,
+				(byte) 2, 0.0,
 				0.1);
 		SPEC = BUILDER.build();
 	}
@@ -122,6 +148,8 @@ public class ModCommonConfigs {
 	public static void onConfigLoad(ModConfigEvent event) {
 		if (event.getConfig().getSpec() != SPEC)
 			return;
+		StarShooterArrow.updateEntityTypeListFromConfig(ALWAYS_AS_FLYING.get());
+
 		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
 		ModItems.DIAMOND_SPEAR.get().updateAttributesFromConfig(DIAMOND_SPEAR_PROPERTIES);
@@ -133,11 +161,15 @@ public class ModCommonConfigs {
 		ModItems.DRAGON_STRIKE.get().updateAttributesFromConfig(DRAGON_STRIKE_PROPERTIES);
 		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
 
+
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);
+
 		ModItems.PURGATORY.get().updateAttributesFromConfig(PURGATORY_PROPERTIES);
 		ModItems.FOREST_KEEPER.get().updateAttributesFromConfig(FOREST_KEEPER_PROPERTIES);
 		ModItems.ELFS_HARP.get().updateAttributesFromConfig(ELFS_HARP_PROPERTIES);
 		ModItems.FROST_HUNTER.get().updateAttributesFromConfig(FROST_HUNTER_PROPERTIES);
+		ModItems.HOU_YI.get().updateAttributesFromConfig(HOU_YI_PROPERTIES);
+		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
 	}
 }

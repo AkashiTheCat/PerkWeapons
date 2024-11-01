@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/hou_yi",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/hou_yi/hou_yi_pulling_0"
+    }
+}

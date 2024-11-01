@@ -11,11 +11,20 @@ public class ModClientConfigs {
 	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 	public static final ForgeConfigSpec SPEC;
 	public static ForgeConfigSpec.BooleanValue ENABLE_ZOOM;
+	public static ForgeConfigSpec.BooleanValue ENABLE_CUSTOM_CROSSHAIR;
+	public static ForgeConfigSpec.BooleanValue ENABLE_PERK_INDICATOR;
+	public static ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN_INDICATOR;
 
 	static {
 		BUILDER.push("Client");
 		ENABLE_ZOOM = BUILDER.comment("Enable Bow Aiming Zoom")
 				.define("Zoom", true);
+		ENABLE_CUSTOM_CROSSHAIR = BUILDER.comment("Enable Custom CrossHairs")
+				.define("CustomCrossHairs", true);
+		ENABLE_PERK_INDICATOR = BUILDER.comment("Enable Perk Indicators")
+				.define("EnablePerkIndicators", true);
+		ENABLE_COOLDOWN_INDICATOR = BUILDER.comment("Enable Ability CoolDown Indicators")
+				.define("EnableCoolDownIndicators", true);
 		SPEC = BUILDER.build();
 	}
 

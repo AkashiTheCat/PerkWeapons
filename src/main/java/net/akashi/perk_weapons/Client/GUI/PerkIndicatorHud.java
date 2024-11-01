@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Client.GUI;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.minecraft.client.Minecraft;
@@ -19,6 +20,11 @@ public class PerkIndicatorHud {
 	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
 
 	public static final IGuiOverlay INDICATOR_BAR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+		//Check Indicators Enabled
+		if (!ModClientConfigs.ENABLE_PERK_INDICATOR.get()) {
+			return;
+		}
+
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
 

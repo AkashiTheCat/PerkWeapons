@@ -130,12 +130,18 @@ public class BaseArrow extends AbstractArrow {
 							0.0D, 0.0D, 0.0D);
 				}
 			}
-		} else if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
-			this.level().broadcastEntityEvent(this, (byte) 0);
-			this.potion = Potions.EMPTY;
-			this.effects.clear();
-			this.entityData.set(ID_EFFECT_COLOR, -1);
+		} else {
+			if (this.isNoGravity()) {
+				tickDespawn();
+			}
+			if (this.inGround && this.inGroundTime != 0 && !this.effects.isEmpty() && this.inGroundTime >= 600) {
+				this.level().broadcastEntityEvent(this, (byte) 0);
+				this.potion = Potions.EMPTY;
+				this.effects.clear();
+				this.entityData.set(ID_EFFECT_COLOR, -1);
+			}
 		}
+
 
 	}
 
