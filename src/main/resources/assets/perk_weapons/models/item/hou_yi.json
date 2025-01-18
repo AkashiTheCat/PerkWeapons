@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/base/base_bow",
+    "parent": "perk_weapons:item/base/base_large_bow",
     "textures": {
         "layer0": "perk_weapons:item/bow/hou_yi/hou_yi"
     },

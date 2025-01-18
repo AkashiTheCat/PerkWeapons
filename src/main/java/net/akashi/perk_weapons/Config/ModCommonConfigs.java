@@ -54,8 +54,8 @@ public class ModCommonConfigs {
 		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
-
 		BUILDER.pop();
+
 		//Spears
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
 				8, 1.1,
@@ -96,6 +96,7 @@ public class ModCommonConfigs {
 				120, 0.3,
 				10, 3,
 				600, 255);
+
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
 				12, 8,
