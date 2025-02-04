@@ -1,15 +1,19 @@
 package net.akashi.perk_weapons.Bows;
 
+import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 public class HouYiItem extends BaseBowItem {

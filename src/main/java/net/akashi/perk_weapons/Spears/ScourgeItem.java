@@ -34,7 +34,7 @@ import java.util.UUID;
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ScourgeItem extends SpearItem {
+public class ScourgeItem extends BaseSpearItem {
 	private static int ABILITY_COOLDOWN = 600;
 	public static int WITHER_DURATION = 40;
 	public static int WITHER_LEVEL = 3;

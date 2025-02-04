@@ -4,7 +4,6 @@ import net.akashi.perk_weapons.Client.GUI.CoolDownIndicatorHud;
 import net.akashi.perk_weapons.Client.GUI.CustomCrossHair;
 import net.akashi.perk_weapons.Client.GUI.PerkIndicatorHud;
 import net.akashi.perk_weapons.Client.Renderer.BaseArrowRenderer;
-import net.akashi.perk_weapons.Client.Renderer.ExplosiveArrowRenderer;
 import net.akashi.perk_weapons.Client.Renderer.ThrownSpearRenderer;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
@@ -28,7 +27,7 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.BASE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.PERK_UPDATE_ARROW.get(), BaseArrowRenderer::new);
-		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), ExplosiveArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.EXPLOSIVE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.FROST_HUNTER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.STAR_SHOOTER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.DEVOURER_ARROW.get(), BaseArrowRenderer::new);

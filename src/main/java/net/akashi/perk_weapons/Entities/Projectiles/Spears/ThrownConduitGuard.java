@@ -24,8 +24,9 @@ import static net.akashi.perk_weapons.Spears.ConduitGuardItem.*;
 
 public class ThrownConduitGuard extends ThrownSpear {
 	private boolean velocityChanged = false;
+	private boolean reachedShore = false;
 	private int returnTime = 80;
-	private int noClipTime = 10;
+	private int noClipTime = 0;
 	private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(ThrownConduitGuard.class, EntityDataSerializers.INT);
 
 	public ThrownConduitGuard(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
@@ -90,8 +91,8 @@ public class ThrownConduitGuard extends ThrownSpear {
 		} else {
 			this.setNoGravity(false);
 			if (dealtDamage) {
-				if(this.isInWall()){
-					noClipTime = 10;
+				if (this.isInWall() && !this.reachedShore) {
+					noClipTime = 7;
 				}
 				if (noClipTime > 0) {
 					noClipTime--;
@@ -136,7 +137,9 @@ public class ThrownConduitGuard extends ThrownSpear {
 	protected void onHitBlock(BlockHitResult pResult) {
 		super.onHitBlock(pResult);
 		this.setSoundEvent(SoundEvents.TRIDENT_HIT_GROUND);
-
+		if(!this.isInWater()){
+			this.reachedShore = true;
+		}
 	}
 
 

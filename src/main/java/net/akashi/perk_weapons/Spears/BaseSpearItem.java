@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class SpearItem extends Item implements Vanishable {
+public class BaseSpearItem extends Item implements Vanishable {
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;
@@ -43,6 +43,7 @@ public class SpearItem extends Item implements Vanishable {
 	public float BaseAttackSpeed;
 	public float BaseThrowDamage;
 
+	public boolean isAdvanced;
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
 			MOB_LOOTING,
@@ -54,7 +55,7 @@ public class SpearItem extends Item implements Vanishable {
 			SHARPNESS
 	));
 
-	public SpearItem(boolean isAdvanced, Properties pProperties) {
+	public BaseSpearItem(boolean isAdvanced, Properties pProperties) {
 		super(pProperties);
 		this.ProjectileVelocity = 2.5F;
 		this.ThrowDamage = 5;
@@ -71,12 +72,12 @@ public class SpearItem extends Item implements Vanishable {
 		this.AttributeModifiers = builder.build();
 	}
 
-	public SpearItem(float attackDamage,
-	                 float attackSpeed,
-	                 float throwDamage,
-	                 float projectileVelocity,
-	                 boolean isAdvanced,
-	                 Properties pProperties) {
+	public BaseSpearItem(float attackDamage,
+	                     float attackSpeed,
+	                     float throwDamage,
+	                     float projectileVelocity,
+	                     boolean isAdvanced,
+	                     Properties pProperties) {
 		super(pProperties);
 		this.ProjectileVelocity = projectileVelocity;
 		this.ThrowDamage = throwDamage;

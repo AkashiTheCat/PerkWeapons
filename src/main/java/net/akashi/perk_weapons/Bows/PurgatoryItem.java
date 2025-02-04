@@ -85,14 +85,6 @@ public class PurgatoryItem extends BaseBowItem {
 		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
 	}
 
-	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (enchantment == ModEnchantments.MELT_DOWN_ARROW.get()) {
-			return ModCommonConfigs.ENABLE_MELT_DOWN_ON_TABLE.get();
-		}
-		return super.canApplyAtEnchantingTable(stack, enchantment);
-	}
-
 	public AbstractArrow setArrowAttributes(AbstractArrow arrow) {
 		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
 		arrow.setPierceLevel(PIERCE_LEVEL);

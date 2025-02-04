@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Enchantments;
 
+import net.akashi.perk_weapons.Bows.HouYiItem;
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Util.EntityTypeListReader;
 import net.minecraft.world.entity.EntityType;
@@ -20,18 +21,8 @@ public class StarShooterEnchantment extends Enchantment {
 	}
 
 	@Override
-	public int getMinCost(int pEnchantmentLevel) {
-		return pEnchantmentLevel * 40;
-	}
-
-	@Override
-	public int getMaxCost(int pEnchantmentLevel) {
-		return this.getMinCost(pEnchantmentLevel) + 80;
-	}
-
-	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack) {
-		return ModCommonConfigs.ENABLE_STAR_SHOOTER_ON_TABLE.get();
+		return ModCommonConfigs.ENABLE_STAR_SHOOTER_ON_TABLE.get() && stack.getItem() instanceof HouYiItem;
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -83,30 +85,47 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	}
 
 	@Override
-	public float getPerkLevel(Player player, ItemStack stack) {
-		return Math.max(0F, PERK_LEVEL_MAP.getOrDefault(player.getUUID(), 0F));
+	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
+		return Math.max(0F, PERK_LEVEL_MAP.getOrDefault(entity.getUUID(), 0F));
 	}
 
 	@Override
-	public boolean isPerkMax(Player player, ItemStack stack) {
-		return ((byte) Math.ceil(getPerkLevel(player, stack))) == MAX_PERK_LEVEL;
+	public boolean isPerkMax(LivingEntity entity, ItemStack stack) {
+		return ((byte) Math.ceil(getPerkLevel(entity, stack))) == MAX_PERK_LEVEL;
 	}
 
 	@Override
-	public void gainPerkLevel(Player player, ItemStack stack) {
-		if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
-			PERK_LEVEL_MAP.put(player.getUUID(), (float) Math.min((Math.ceil(getPerkLevel(player, stack)) + 1), MAX_PERK_LEVEL));
+	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
+		if (PERK_LEVEL_MAP.containsKey(entity.getUUID())) {
+			PERK_LEVEL_MAP.put(entity.getUUID(), (float) Math.min((Math.ceil(getPerkLevel(entity, stack)) + 1), MAX_PERK_LEVEL));
 		} else {
-			PERK_LEVEL_MAP.put(player.getUUID(), 1F);
+			PERK_LEVEL_MAP.put(entity.getUUID(), 1F);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onPlayerHurt(LivingHurtEvent event) {
-		if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
-			ForestKeeperItem.initPerkLevel(player);
+		if (!event.getEntity().level().isClientSide()) {
+			ForestKeeperItem.initPerkLevel(event.getEntity());
 		}
 	}
+
+
+	@SubscribeEvent
+	public static void onEntityTick(LivingEvent.LivingTickEvent event){
+		LivingEntity entity = event.getEntity();
+		if(!entity.level().isClientSide()){
+			if (PERK_LEVEL_MAP.containsKey(entity.getUUID())) {
+				float perkLevel = PERK_LEVEL_MAP.get(entity.getUUID());
+				if (perkLevel > 0) {
+					PERK_LEVEL_MAP.put(entity.getUUID(), perkLevel - PERK_DROP_PER_TICK);
+				} else if (perkLevel != 0F) {
+					initPerkLevel(entity);
+				}
+			}
+		}
+	}
+
 
 	@SubscribeEvent
 	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
@@ -123,7 +142,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 		}
 	}
 
-	public static void initPerkLevel(Player player) {
-		PERK_LEVEL_MAP.put(player.getUUID(), 0.0F);
+	public static void initPerkLevel(LivingEntity entity) {
+		PERK_LEVEL_MAP.put(entity.getUUID(), 0.0F);
 	}
 }

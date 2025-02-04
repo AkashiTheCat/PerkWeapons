@@ -30,7 +30,7 @@ import java.util.UUID;
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class DragonStrikeItem extends SpearItem implements ICoolDownItem {
+public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	private static double MagicResistance = 0.5;
 	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
 	public static float MAX_AFFECT_CLOUD_RADIUS = 6.0F;
@@ -76,8 +76,8 @@ public class DragonStrikeItem extends SpearItem implements ICoolDownItem {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 		boolean flag = !AbilityUseTimeMap.containsKey(pPlayer.getUUID());
-		if (flag || (pLevel.getGameTime() - AbilityUseTimeMap.get(pPlayer.getUUID()) > AbilityCoolDownTime
-				&& pPlayer.isCrouching())) {
+		if ((flag || pLevel.getGameTime() - AbilityUseTimeMap.get(pPlayer.getUUID()) > AbilityCoolDownTime)
+				&& pPlayer.isCrouching()) {
 			double x = pPlayer.getX();
 			double y = pPlayer.getY();
 			double z = pPlayer.getZ();

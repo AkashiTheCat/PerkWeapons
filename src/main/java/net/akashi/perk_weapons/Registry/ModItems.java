@@ -47,47 +47,47 @@ public class ModItems {
 					() -> new BlockItem(ModBlocks.FURNACE_CORE.get(), new Item.Properties())), INGREDIENTS_TAB);
 
 	//Spear item registry
-	public static final RegistryObject<SpearItem> IRON_SPEAR = addToTab(
+	public static final RegistryObject<BaseSpearItem> IRON_SPEAR = addToTab(
 			ITEMS.register("iron_spear",
-					() -> new SpearItem(8, 1.1f,
+					() -> new BaseSpearItem(8, 1.1f,
 							7, 2.5F, false,
 							new Item.Properties().durability(256))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> GOLDEN_SPEAR = addToTab(
+	public static final RegistryObject<BaseSpearItem> GOLDEN_SPEAR = addToTab(
 			ITEMS.register("golden_spear",
-					() -> new SpearItem(5, 1.6f,
+					() -> new BaseSpearItem(5, 1.6f,
 							6, 2.5F, false,
 							new Item.Properties().durability(32))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> DIAMOND_SPEAR = addToTab(
+	public static final RegistryObject<BaseSpearItem> DIAMOND_SPEAR = addToTab(
 			ITEMS.register("diamond_spear",
-					() -> new SpearItem(9, 1.1f,
+					() -> new BaseSpearItem(9, 1.1f,
 							8, 2.5F, false,
 							new Item.Properties().durability(640))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> NETHERITE_SPEAR = addToTab(
+	public static final RegistryObject<BaseSpearItem> NETHERITE_SPEAR = addToTab(
 			ITEMS.register("netherite_spear",
-					() -> new SpearItem(10, 1.1f,
+					() -> new BaseSpearItem(10, 1.1f,
 							9, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> SPEAR_MEGALODON = addToTab(
+	public static final RegistryObject<BaseSpearItem> SPEAR_MEGALODON = addToTab(
 			ITEMS.register("megalodon",
 					() -> new MegalodonItem(9, 1.2f,
 							6, 2.5F, true,
 							new Item.Properties().durability(1280))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> SPEAR_CONDUIT_GUARD = addToTab(
+	public static final RegistryObject<BaseSpearItem> SPEAR_CONDUIT_GUARD = addToTab(
 			ITEMS.register("conduit_guard",
 					() -> new ConduitGuardItem(9, 1.1f,
 							9, 2.5F, true,
 							new Item.Properties().durability(1280))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> PIGLINS_WARSPEAR = addToTab(
+	public static final RegistryObject<BaseSpearItem> PIGLINS_WARSPEAR = addToTab(
 			ITEMS.register("piglins_warspear",
 					() -> new PiglinsWarSpearItem(5, 1.2f,
 							8, 2.5F, false,
 							new Item.Properties().durability(640))), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> DRAGON_STRIKE = addToTab(
+	public static final RegistryObject<BaseSpearItem> DRAGON_STRIKE = addToTab(
 			ITEMS.register("dragon_strike",
 					() -> new DragonStrikeItem(10, 1.2f,
 							10, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
-	public static final RegistryObject<SpearItem> SCOURGE = addToTab(
+	public static final RegistryObject<BaseSpearItem> SCOURGE = addToTab(
 			ITEMS.register("scourge",
 					() -> new ScourgeItem(10, 1.2f,
 							10, 2.5F, false,

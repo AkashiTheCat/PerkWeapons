@@ -26,7 +26,7 @@ import java.util.List;
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public class PiglinsWarSpearItem extends SpearItem {
+public class PiglinsWarSpearItem extends BaseSpearItem {
 	private static float DAMAGE_BONUS = 0.1f;
 	private static float SPEED_BONUS = 0.1f;
 	private static List<Item> allowedArmor = new ArrayList<>(Arrays.asList(

@@ -10,6 +10,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -30,8 +31,11 @@ import net.minecraftforge.network.PlayMessages;
 import java.util.Collection;
 import java.util.Set;
 
-//Basically A Copy Of Vanilla Arrow Class
+//A Copy Of The Vanilla Arrow Class With Texture Modifying Support
 public class BaseArrow extends AbstractArrow {
+	public static final ResourceLocation NORMAL_ARROW_LOCATION = new ResourceLocation("textures/entity/projectiles/arrow.png");
+	public static final ResourceLocation TIPPED_ARROW_LOCATION = new ResourceLocation("textures/entity/projectiles/tipped_arrow.png");
+	public static final ResourceLocation SPECTRAL_ARROW_LOCATION = new ResourceLocation("textures/entity/projectiles/spectral_arrow.png");
 	private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR
 			= SynchedEntityData.defineId(BaseArrow.class, EntityDataSerializers.INT);
 	private Potion potion = Potions.EMPTY;
@@ -56,8 +60,15 @@ public class BaseArrow extends AbstractArrow {
 		isSpectralArrow = target;
 	}
 
-	public boolean isSpectralArrow() {
-		return isSpectralArrow;
+	public boolean isTipped() {
+		return getColor() > 0;
+	}
+
+	public ResourceLocation getArrowTexture() {
+		if (isSpectralArrow) {
+			return SPECTRAL_ARROW_LOCATION;
+		}
+		return isTipped() ? TIPPED_ARROW_LOCATION : NORMAL_ARROW_LOCATION;
 	}
 
 	public void setEffectsFromItem(ItemStack pStack) {

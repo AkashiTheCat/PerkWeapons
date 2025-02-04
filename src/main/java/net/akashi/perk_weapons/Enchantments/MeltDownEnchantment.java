@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Enchantments;
 
+import net.akashi.perk_weapons.Bows.HouYiItem;
 import net.akashi.perk_weapons.Bows.PurgatoryItem;
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -13,18 +14,8 @@ public class MeltDownEnchantment extends Enchantment {
 	}
 
 	@Override
-	public int getMinCost(int pEnchantmentLevel) {
-		return pEnchantmentLevel * 40;
-	}
-
-	@Override
-	public int getMaxCost(int pEnchantmentLevel) {
-		return this.getMinCost(pEnchantmentLevel) + 80;
-	}
-
-	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack) {
-		return ModCommonConfigs.ENABLE_MELT_DOWN_ON_TABLE.get();
+		return ModCommonConfigs.ENABLE_MELT_DOWN_ON_TABLE.get() && stack.getItem() instanceof PurgatoryItem;
 	}
 
 	@Override

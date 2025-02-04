@@ -12,7 +12,7 @@ import net.minecraft.world.level.Level;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
-public class ConduitGuardItem extends SpearItem {
+public class ConduitGuardItem extends BaseSpearItem {
 	public static double TRACKING_RANGE = 5.0;
 	public static double TRACKING_THRESHOLD = 0.5;
 	public static int RETURN_TIME = 80;

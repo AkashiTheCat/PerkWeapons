@@ -9,6 +9,7 @@ import net.akashi.perk_weapons.Util.IPerkItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -45,21 +46,21 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	}
 
 	@Override
-	public float getPerkLevel(Player player, ItemStack stack) {
-		return PERK_LEVEL_MAP.getOrDefault(player.getUUID(), (byte) 0);
+	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
+		return PERK_LEVEL_MAP.getOrDefault(entity.getUUID(), (byte) 0);
 	}
 
 	@Override
-	public boolean isPerkMax(Player player, ItemStack stack) {
-		return ((byte) Math.ceil(getPerkLevel(player, stack))) == MAX_PERK_LEVEL;
+	public boolean isPerkMax(LivingEntity entity, ItemStack stack) {
+		return ((byte) Math.ceil(getPerkLevel(entity, stack))) == MAX_PERK_LEVEL;
 	}
 
 	@Override
-	public void gainPerkLevel(Player player, ItemStack stack) {
-		if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
-			PERK_LEVEL_MAP.put(player.getUUID(), (byte) (PERK_LEVEL_MAP.get(player.getUUID()) + 1));
+	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
+		if (PERK_LEVEL_MAP.containsKey(entity.getUUID())) {
+			PERK_LEVEL_MAP.put(entity.getUUID(), (byte) (PERK_LEVEL_MAP.get(entity.getUUID()) + 1));
 		} else {
-			PERK_LEVEL_MAP.put(player.getUUID(), (byte) 1);
+			PERK_LEVEL_MAP.put(entity.getUUID(), (byte) 1);
 		}
 	}
 

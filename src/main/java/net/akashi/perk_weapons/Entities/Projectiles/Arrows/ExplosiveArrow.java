@@ -1,10 +1,12 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
 import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPacket;
+import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -22,6 +24,8 @@ import org.joml.Vector3f;
 
 
 public class ExplosiveArrow extends BaseArrow {
+	public static final ResourceLocation EXPLOSIVE_ARROW_LOCATION =
+			new ResourceLocation(PerkWeapons.MODID, "textures/entity/projectiles/explosive_arrow.png");
 	private int fuseTime = 30;
 
 	public ExplosiveArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
@@ -106,6 +110,11 @@ public class ExplosiveArrow extends BaseArrow {
 			}
 		}
 		this.discard();
+	}
+
+	@Override
+	public ResourceLocation getArrowTexture() {
+		return EXPLOSIVE_ARROW_LOCATION;
 	}
 
 	@Override

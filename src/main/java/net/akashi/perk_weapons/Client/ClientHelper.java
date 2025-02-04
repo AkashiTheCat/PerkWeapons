@@ -18,10 +18,10 @@ public class ClientHelper {
 	}
 
 	public static <T extends IPerkItem> void registerPerkBowPropertyOverrides(T perkItem) {
-		ItemProperties.register((Item) perkItem, ModelOverrides.PERK, (stack, world, player, value) ->
-				player != null ? perkItem.getPerkLevel((Player) player, stack) : 0.0f);
-		ItemProperties.register((Item) perkItem, ModelOverrides.PERK_MAX, (stack, world, player, value) ->
-				player != null && perkItem.isPerkMax((Player) player, stack) ? 1.0f : 0.0f);
+		ItemProperties.register((Item) perkItem, ModelOverrides.PERK, (stack, world, entity, value) ->
+				entity != null ? perkItem.getPerkLevel(entity, stack) : 0.0f);
+		ItemProperties.register((Item) perkItem, ModelOverrides.PERK_MAX, (stack, world, entity, value) ->
+				entity != null && perkItem.isPerkMax(entity, stack) ? 1.0f : 0.0f);
 	}
 
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {

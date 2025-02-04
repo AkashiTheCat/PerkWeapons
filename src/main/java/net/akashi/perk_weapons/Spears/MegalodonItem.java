@@ -7,7 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class MegalodonItem extends SpearItem{
+public class MegalodonItem extends BaseSpearItem {
 	public MegalodonItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
 	}
