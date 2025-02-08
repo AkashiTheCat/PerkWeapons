@@ -25,16 +25,17 @@ public class ClientHelper {
 	}
 
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {
-		ItemProperties.register(crossbow, ModelOverrides.PULL, (stack, world, entity, value) ->
-		{
+		ItemProperties.register(crossbow, ModelOverrides.PULL, (stack, world, entity, value) -> {
 			if (entity != null)
-				return crossbow.getChargeProgress(entity, stack);
+				return crossbow.getChargeProgress(entity.getTicksUsingItem(), stack);
 			return 0.0f;
 		});
 		ItemProperties.register(crossbow, ModelOverrides.PULLING, (stack, world, entity, value) ->
 				entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0f : 0.0f);
 		ItemProperties.register(crossbow, ModelOverrides.CHARGED, (stack, world, entity, value) ->
-				BaseCrossbowItem.isCharged(stack) ? 1.0f : 0.0f);
+				crossbow.isCrossbowCharged(stack) ? 1.0f : 0.0f);
+		ItemProperties.register(crossbow, ModelOverrides.FIREWORK, (stack, world, entity, value) ->
+				crossbow.isFireworkCharged(stack) ? 1.0f : 0.0f);
 	}
 }
 

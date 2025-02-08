@@ -102,11 +102,12 @@ public class ExplosiveArrow extends BaseArrow {
 		if (!level.isClientSide()) {
 			level.explode(this.getOwner(), this.getX(), this.getY(), this.getZ(),
 					4.0F, Level.ExplosionInteraction.NONE);
-		}
-		if (this.getOwnerSqrDistance() > 64 * 64) {
-			if (this.getOwner() instanceof Player player){
-				ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-						new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
+
+			if (this.getOwnerSqrDistance() > 64 * 64) {
+				if (this.getOwner() instanceof Player player) {
+					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+							new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
+				}
 			}
 		}
 		this.discard();

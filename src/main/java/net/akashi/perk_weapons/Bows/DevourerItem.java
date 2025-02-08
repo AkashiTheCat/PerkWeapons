@@ -20,8 +20,8 @@ public class DevourerItem extends BaseBowItem {
 	}
 
 	public DevourerItem(int drawTime, float projectileDamage, float velocity, float inaccuracy,
-	                    float speedModifier, float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	                    float speedModifier, float zoomFactor,boolean onlyAllowMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor,onlyAllowMainHand, properties);
 	}
 
 	@Override

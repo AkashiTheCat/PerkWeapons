@@ -37,8 +37,9 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 		super(properties);
 	}
 
-	public FrostHunterItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier, float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	public FrostHunterItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
+	                       float zoomFactor, boolean onlyMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 	}
 
 	@Override

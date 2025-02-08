@@ -7,7 +7,6 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -57,7 +56,7 @@ public class PerkIndicatorHud {
 			} else {
 				startX = centerX - 15;
 			}
-			if (CustomCrossHair.isVanillaCrosshairDisabled) {
+			if (DoubleLineCrossHair.isVanillaCrosshairDisabled) {
 				startX++;
 			}
 

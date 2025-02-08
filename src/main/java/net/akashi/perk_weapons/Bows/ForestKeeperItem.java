@@ -46,8 +46,9 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	}
 
 	public ForestKeeperItem(int drawTime, float projectileDamage, float velocity,
-	                        float inaccuracy, float speedModifier, float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	                        float inaccuracy, float speedModifier, float zoomFactor,
+	                        boolean onlyMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		RemoveGeneralEnchant(PUNCH_ARROWS);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerPerkBowPropertyOverrides(this);
@@ -112,9 +113,9 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 
 
 	@SubscribeEvent
-	public static void onEntityTick(LivingEvent.LivingTickEvent event){
+	public static void onEntityTick(LivingEvent.LivingTickEvent event) {
 		LivingEntity entity = event.getEntity();
-		if(!entity.level().isClientSide()){
+		if (!entity.level().isClientSide()) {
 			if (PERK_LEVEL_MAP.containsKey(entity.getUUID())) {
 				float perkLevel = PERK_LEVEL_MAP.get(entity.getUUID());
 				if (perkLevel > 0) {

@@ -16,6 +16,7 @@ public interface IPerkItem {
 	 * Called When PerkOnHitArrow Hits An Entity
 	 */
 	void gainPerkLevel(LivingEntity entity, ItemStack stack);
+
 	/**
 	 * Used For Model Overrides
 	 */

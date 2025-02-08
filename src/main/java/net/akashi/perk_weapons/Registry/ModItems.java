@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Registry;
 
 import net.akashi.perk_weapons.Bows.*;
+import net.akashi.perk_weapons.Crossbows.OppressorItem;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
 import net.minecraft.world.item.BlockItem;
@@ -16,7 +17,7 @@ import static net.akashi.perk_weapons.Registry.ModCreativeTabs.BOW_TAB;
 import static net.akashi.perk_weapons.Registry.ModCreativeTabs.addToTab;
 
 public class ModItems {
-	//simple item registry
+	//Simple items
 	public static final DeferredRegister<Item> ITEMS =
 			DeferredRegister.create(ForgeRegistries.ITEMS, PerkWeapons.MODID);
 	public static final RegistryObject<Item> ANCIENT_SPIKE = addToTab(
@@ -41,12 +42,12 @@ public class ModItems {
 			ITEMS.register("totem_of_evoking",
 					() -> new Item(new Item.Properties().rarity(Rarity.EPIC))), INGREDIENTS_TAB);
 
-	//Block item registry
+	//Blocks
 	public static final RegistryObject<BlockItem> FURNACE_CORE = addToTab(
 			ITEMS.register("furnace_core",
 					() -> new BlockItem(ModBlocks.FURNACE_CORE.get(), new Item.Properties())), INGREDIENTS_TAB);
 
-	//Spear item registry
+	//Spears
 	public static final RegistryObject<BaseSpearItem> IRON_SPEAR = addToTab(
 			ITEMS.register("iron_spear",
 					() -> new BaseSpearItem(8, 1.1f,
@@ -93,37 +94,53 @@ public class ModItems {
 							10, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
 
-	//Bow item registry
+	//Bows
 	public static final RegistryObject<BaseBowItem> SHORT_BOW = addToTab(
 			ITEMS.register("short_bow",
-					() -> new BaseBowItem(12, 8, 2.25F, 1.0F, 0.0F, 0.05F,
+					() -> new BaseBowItem(12, 8, 2.25F, 1.0F,
+							0.0F, 0.05F, false,
 							new Item.Properties().durability(640))), BOW_TAB);
 	public static final RegistryObject<BaseBowItem> LONGBOW = addToTab(
 			ITEMS.register("longbow",
-					() -> new BaseBowItem(40, 15, 4.5F, 0.2F, -0.5F, 0.15F,
+					() -> new BaseBowItem(40, 15, 4.5F, 0.2F,
+							-0.5F, 0.15F, false,
 							new Item.Properties().durability(320))), BOW_TAB);
 	public static final RegistryObject<PurgatoryItem> PURGATORY = addToTab(
 			ITEMS.register("purgatory",
-					() -> new PurgatoryItem(50, 25, 4.5F, 0.2F, -1.0F, 1.0F, 0.15F,
+					() -> new PurgatoryItem(50, 25, 4.5F, 0.2F,
+							-1.0F, 1.0F, 0.15F, true,
 							new Item.Properties().durability(640))), BOW_TAB);
 	public static final RegistryObject<ForestKeeperItem> FOREST_KEEPER = addToTab(
 			ITEMS.register("forest_keeper",
-					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F, 0.0F, 0.0F,
+					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F,
+							0.0F, 0.0F, true,
 							new Item.Properties().durability(1280))), BOW_TAB);
 	public static final RegistryObject<ElfsHarpItem> ELFS_HARP = addToTab(
 			ITEMS.register("elfs_harp",
-					() -> new ElfsHarpItem(20, 10, 3.0F, 0.8F, 0.0F, 0.1F,
+					() -> new ElfsHarpItem(20, 10, 3.0F, 0.8F,
+							0.0F, 0.1F, true,
 							new Item.Properties().durability(960))), BOW_TAB);
 	public static final RegistryObject<FrostHunterItem> FROST_HUNTER = addToTab(
 			ITEMS.register("frost_hunter",
-					() -> new FrostHunterItem(24, 9, 3.0F, 0.8F, 0.0F, 0.1F,
+					() -> new FrostHunterItem(24, 9, 3.0F, 0.8F,
+							0.0F, 0.1F, true,
 							new Item.Properties().durability(960))), BOW_TAB);
 	public static final RegistryObject<HouYiItem> HOU_YI = addToTab(
 			ITEMS.register("hou_yi",
-					() -> new HouYiItem(40, 15, 4.5F, 0.2F, -0.5F, 0.15F,
+					() -> new HouYiItem(40, 15, 4.5F, 0.2F,
+							-0.5F, 0.15F, true,
 							new Item.Properties().durability(640))), BOW_TAB);
 	public static final RegistryObject<DevourerItem> DEVOURER = addToTab(
 			ITEMS.register("devourer",
-					() -> new DevourerItem(20, 7, 3.0F, 0.8F, 0.0F, 0.1F,
+					() -> new DevourerItem(20, 7, 3.0F, 0.8F,
+							0.0F, 0.1F, true,
 							new Item.Properties().durability(960))), BOW_TAB);
+
+	//Crossbows
+	public static final RegistryObject<OppressorItem> OPPRESSOR = addToTab(
+			ITEMS.register("oppressor",
+					() -> new OppressorItem(37, 12, 4.4F,
+							1.0F, -0.5F, true,
+							new Item.Properties().durability(640))), BOW_TAB);
+
 }

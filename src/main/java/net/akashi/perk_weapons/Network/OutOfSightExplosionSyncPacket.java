@@ -7,8 +7,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
@@ -38,23 +36,17 @@ public class OutOfSightExplosionSyncPacket {
 				buf.readInt());
 	}
 
-	@OnlyIn(Dist.CLIENT)
 	public static void handle(OutOfSightExplosionSyncPacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getDirection().getOriginationSide().isClient())
-				return;
-
-			Level level = Minecraft.getInstance().level;
-			if (level == null) {
-				return;
-			}
-			level.addAlwaysVisibleParticle(ParticleTypes.EXPLOSION_EMITTER, true,
-					packet.x, packet.y, packet.z, 0, 0, 0);
-
-			Entity entity = level.getEntity(packet.PlayerID);
+			Entity entity = Minecraft.getInstance().level.getEntity(packet.PlayerID);
 			if (entity instanceof Player player) {
+				Level level = player.level();
+				level.addAlwaysVisibleParticle(ParticleTypes.EXPLOSION_EMITTER, true,
+						packet.x, packet.y, packet.z, 0, 0, 0);
+
 				player.playSound(SoundEvents.GENERIC_EXPLODE, 0.1f, 0.7f);
 			}
+
 		});
 		context.get().setPacketHandled(true);
 	}

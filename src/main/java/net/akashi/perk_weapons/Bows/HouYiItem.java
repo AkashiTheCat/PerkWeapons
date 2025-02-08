@@ -22,8 +22,8 @@ public class HouYiItem extends BaseBowItem {
 	}
 
 	public HouYiItem(int drawTime, float projectileDamage, float velocity, float inaccuracy,
-	                 float speedModifier, float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	                 float speedModifier, float zoomFactor, boolean onlyMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 	}
 
 	@Override

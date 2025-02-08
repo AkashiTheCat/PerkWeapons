@@ -8,6 +8,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
+import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -26,15 +27,18 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
+public class BaseBowItem extends ProjectileWeaponItem implements Vanishable, IDoubleLineCrosshairItem {
 	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
+	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
+	public boolean onlyAllowMainHand = false;
 	public float VELOCITY = 3.0F;
 	public int DRAW_TIME = 20;
 	public float PROJECTILE_DAMAGE = 10;
@@ -55,14 +59,18 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 			ClientHelper.registerBowPropertyOverrides(this);
 	}
 
+	/**
+	 * To avoid a bug caused by the vanilla equipment update method, if speedModifier!=0, onlyAllowMainHand will be forced set true
+	 **/
 	public BaseBowItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
-	                   float zoomFactor, Properties properties) {
+	                   float zoomFactor, boolean onlyAllowMainHand, Properties properties) {
 		super(properties);
 		this.VELOCITY = velocity;
 		this.DRAW_TIME = drawTime;
 		this.PROJECTILE_DAMAGE = projectileDamage;
 		this.ZOOM_FACTOR = zoomFactor;
 		this.INACCURACY = inaccuracy;
+		this.onlyAllowMainHand = onlyAllowMainHand;
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerBowPropertyOverrides(this);
 		if (speedModifier != 0.0F) {
@@ -70,7 +78,20 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
 					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
 			this.AttributeModifiers = builder.build();
+			this.onlyAllowMainHand = true;
+		} else {
+			this.AttributeModifiers = ImmutableMultimap.of();
 		}
+	}
+
+	@Override
+	public @NotNull Predicate<ItemStack> getAllSupportedProjectiles() {
+		return BaseBowItem.SUPPORTED_PROJECTILE;
+	}
+
+	@Override
+	public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles() {
+		return BaseBowItem.SUPPORTED_PROJECTILE;
 	}
 
 	@Override
@@ -103,8 +124,7 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		return (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND) && AttributeModifiers != null ?
-				AttributeModifiers : super.getAttributeModifiers(slot, stack);
+		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : ImmutableMultimap.of();
 	}
 
 	@Override
@@ -135,7 +155,7 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 					//Power
 					int powerLevel = pStack.getEnchantmentLevel(POWER_ARROWS);
 					if (powerLevel > 0) {
-						abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() + (double) powerLevel * 0.5D + 0.5D);
+						abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() * (1 + 0.25 * powerLevel));
 					}
 					//Punch
 					int punchLevel = pStack.getEnchantmentLevel(PUNCH_ARROWS);
@@ -162,7 +182,7 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 							new ArrowVelocitySyncPacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
 				}
 
-				pLevel.playSound((Player) null, player.getX(), player.getY(), player.getZ(),
+				pLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
 						SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F,
 						1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + (float) 10 / DRAW_TIME);
 				if (!flag1 && !player.getAbilities().instabuild) {
@@ -190,6 +210,10 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
+		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
+			return InteractionResultHolder.pass(itemstack);
+		}
+
 		boolean flag = !pPlayer.getProjectile(itemstack).isEmpty();
 
 		InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, flag);
@@ -201,11 +225,6 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 			pPlayer.startUsingItem(pHand);
 			return InteractionResultHolder.consume(itemstack);
 		}
-	}
-
-	@Override
-	public Predicate<ItemStack> getAllSupportedProjectiles() {
-		return ARROW_ONLY;
 	}
 
 	@Override
@@ -246,18 +265,25 @@ public class BaseBowItem extends ProjectileWeaponItem implements Vanishable {
 		this.VELOCITY = properties.VELOCITY.get().floatValue();
 		this.ZOOM_FACTOR = properties.ZOOM_FACTOR.get().floatValue();
 		this.INACCURACY = properties.INACCURACY.get().floatValue();
+		this.onlyAllowMainHand = properties.ONLY_MAINHAND.get();
 		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
 		if (speedModifier != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
 					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
 			this.AttributeModifiers = builder.build();
+			this.onlyAllowMainHand = true;
+		} else {
+			this.AttributeModifiers = ImmutableMultimap.of();
 		}
-
 	}
 
 	public float getDrawProgress(LivingEntity shooter) {
 		return shooter.getTicksUsingItem() < DRAW_TIME ? (float) shooter.getTicksUsingItem() / DRAW_TIME : 1;
 	}
 
+	@Override
+	public float getChokeProgress(LivingEntity shooter, ItemStack stack) {
+		return getDrawProgress(shooter);
+	}
 }

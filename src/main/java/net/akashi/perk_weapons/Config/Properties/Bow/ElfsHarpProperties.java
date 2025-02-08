@@ -11,9 +11,10 @@ public class ElfsHarpProperties extends BowProperties {
 	                          int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                          double defaultInaccuracy, int defaultMaxPerkLevel,
 	                          int defaultGlowingTime, double defaultPerkBuff,
-	                          double defaultSpeedModifier, double defaultZoomFactor) {
+	                          double defaultSpeedModifier, double defaultZoomFactor,
+	                          boolean onlyMainHand) {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity,
-				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, false);
+				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand, false);
 		MAX_PERK_LEVEL = builder.comment("How Many Shots does " + name + " Need To Fire A Buffed Shot")
 				.defineInRange("MaxPerkLevel", defaultMaxPerkLevel, 0, 255);
 		GLOWING_TIME = builder.comment("How Long(In Ticks) Do Hit Entities Glow")

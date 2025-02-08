@@ -37,8 +37,8 @@ public class PurgatoryItem extends BaseBowItem {
 
 	public PurgatoryItem(int drawTime, float projectileDamage, float velocity, float inaccuracy,
 	                     float speedModifier, float knockBackResistance,
-	                     float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	                     float zoomFactor, boolean onlyMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
 				"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));

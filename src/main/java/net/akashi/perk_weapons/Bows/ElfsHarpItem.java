@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS;
+
 public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	public static byte MAX_PERK_LEVEL = 3;
 	public static float PERK_BUFF = 1.0F;
@@ -34,8 +36,9 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 			ClientHelper.registerPerkBowPropertyOverrides(this);
 	}
 
-	public ElfsHarpItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier, float zoomFactor, Properties properties) {
-		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, properties);
+	public ElfsHarpItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
+	                    float zoomFactor, boolean onlyMainHand, Properties properties) {
+		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerPerkBowPropertyOverrides(this);
 	}
@@ -72,12 +75,15 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		}
 		arrow.setBaseDamage(0.0F);
 		arrow.addEffect(new MobEffectInstance(MobEffects.GLOWING, GLOWING_TIME));
+
+		int powerLevel = bowStack.getEnchantmentLevel(POWER_ARROWS);
 		if (isPerkMax(player, bowStack)) {
-			arrow.setMagicDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF));
+			arrow.setMagicDamage((float) (PROJECTILE_DAMAGE * (1 + PERK_BUFF) *
+					(powerLevel > 0 ? 1 + 0.25 * powerLevel : 1)));
 			arrow.setRenderTrail(true);
 			initPerkLevel(player);
 		} else {
-			arrow.setMagicDamage(PROJECTILE_DAMAGE);
+			arrow.setMagicDamage((float) (PROJECTILE_DAMAGE * (powerLevel > 0 ? 1 + 0.25 * powerLevel : 1)));
 		}
 		return arrow;
 	}

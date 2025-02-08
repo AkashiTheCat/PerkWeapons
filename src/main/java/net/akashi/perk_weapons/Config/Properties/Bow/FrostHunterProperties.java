@@ -14,9 +14,10 @@ public class FrostHunterProperties extends BowProperties {
 	                             double defaultInaccuracy, int defaultFrozenTime,
 	                             int defaultCoolDown, int defaultHoundLifeTime,
 	                             int defaultHoundCount, boolean defaultHoundEffectEnabled,
-	                             double defaultSpeedModifier, double defaultZoomFactor) {
+	                             double defaultSpeedModifier, double defaultZoomFactor,
+	                             boolean onlyMainHand) {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity,
-				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, false);
+				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand,false);
 		FROZEN_TIME = builder.comment("Frozen Time(In Ticks) When Hit An Entity")
 				.defineInRange("FrozenTime", defaultFrozenTime, 0, Integer.MAX_VALUE);
 		ABILITY_COOLDOWN_TIME = builder.comment("How Long In Ticks Will The Crouch+Use Ability's CoolDown Be")

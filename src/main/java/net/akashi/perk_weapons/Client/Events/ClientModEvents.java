@@ -1,7 +1,7 @@
 package net.akashi.perk_weapons.Client.Events;
 
 import net.akashi.perk_weapons.Client.GUI.CoolDownIndicatorHud;
-import net.akashi.perk_weapons.Client.GUI.CustomCrossHair;
+import net.akashi.perk_weapons.Client.GUI.DoubleLineCrossHair;
 import net.akashi.perk_weapons.Client.GUI.PerkIndicatorHud;
 import net.akashi.perk_weapons.Client.Renderer.BaseArrowRenderer;
 import net.akashi.perk_weapons.Client.Renderer.ThrownSpearRenderer;
@@ -37,6 +37,6 @@ public class ClientModEvents {
 	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event){
 		event.registerAboveAll("perk_hud", PerkIndicatorHud.INDICATOR_BAR);
 		event.registerAboveAll("cooldown_hud", CoolDownIndicatorHud.INDICATOR_BAR);
-		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(),"crosshair", CustomCrossHair.CROSSHAIR);
+		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(),"crosshair", DoubleLineCrossHair.CROSSHAIR);
 	}
 }

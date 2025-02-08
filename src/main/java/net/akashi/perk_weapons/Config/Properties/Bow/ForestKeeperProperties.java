@@ -13,9 +13,9 @@ public class ForestKeeperProperties extends BowProperties {
 	                              double defaultInaccuracy, int defaultMaxPerkLevel,
 	                              int defaultPerkDropInterval, double defaultPerkDamageBuff,
 	                              boolean defaultSlowdownRemovalEnabled, double defaultSpeedModifier,
-	                              double defaultZoomFactor) {
+	                              double defaultZoomFactor, boolean onlyMainHand) {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity,
-				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, false);
+				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand, false);
 		MAX_PERK_LEVEL = builder.comment("The Max Perk Level Can " + name + " reach")
 				.defineInRange("MaxPerkLevel", defaultMaxPerkLevel, 0, 255);
 		PERK_DROP_INTERVAL = builder.comment("Perk Drop Interval(In Ticks) Of " + name)

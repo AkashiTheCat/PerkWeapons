@@ -1,9 +1,13 @@
 package net.akashi.perk_weapons.Config;
 
+import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
+import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
+import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -11,6 +15,8 @@ import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static net.minecraft.world.item.ProjectileWeaponItem.ARROW_ONLY;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModCommonConfigs {
@@ -20,6 +26,9 @@ public class ModCommonConfigs {
 	//General Configs
 	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue ENABLE_STAR_SHOOTER_ON_TABLE;
+	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
+	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
+	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_AS_FLYING;
 
 
@@ -44,6 +53,9 @@ public class ModCommonConfigs {
 	public static BowProperties HOU_YI_PROPERTIES;
 	public static DevourerProperties DEVOURER_PROPERTIES;
 
+	//Crossbow Configs
+	public static OppressorProperties OPPRESSOR_PROPERTIES;
+
 	static {
 		//General
 		BUILDER.push("General");
@@ -51,6 +63,12 @@ public class ModCommonConfigs {
 				.define("EnableMeltDownOnTable", true);
 		ENABLE_STAR_SHOOTER_ON_TABLE = BUILDER.comment("Set True To Allow Getting Star Shooter Enchantment From Enchanting Table")
 				.define("EnableStarShooterOnTable", true);
+		BOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Bows Use Tipped And Spectral Arrows As Ammo")
+				.define("BowAcceptAllArrow", true);
+		CROSSBOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Crossbows Use Tipped And Spectral Arrows As Ammo")
+				.define("CrossbowAcceptAllArrow", true);
+		CROSSBOW_ACCEPT_FIREWORK = BUILDER.comment("Set True To Allow Modded Crossbows Use Fireworks As Ammo")
+				.define("CrossbowAcceptFirework", true);
 		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
@@ -101,47 +119,56 @@ public class ModCommonConfigs {
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
 				12, 8,
 				2.25, 1.0,
-				0.0, 0.05,
+				0.0, 0.05, false,
 				true);
 		LONGBOW_PROPERTIES = new BowProperties(BUILDER, "Longbow",
 				40, 15,
 				4.5, 0.2,
-				-0.5, 0.15,
+				-0.5, 0.15, true,
 				true);
 		PURGATORY_PROPERTIES = new PurgatoryProperties(BUILDER, "Purgatory",
 				50, 25,
 				4.5, 0.2,
 				4, 30,
-				-1.0, 0.15);
+				-1.0, 0.15, true);
 		FOREST_KEEPER_PROPERTIES = new ForestKeeperProperties(BUILDER, "Forest Keeper",
 				12, 8,
 				2.25, 1.0,
 				5, 40,
 				0.1, true,
-				0.0, 0.0);
+				0.0, 0.0, false);
 		ELFS_HARP_PROPERTIES = new ElfsHarpProperties(BUILDER, "Elf's Harp",
 				20, 10.0,
 				3.0, 0.8,
 				3, 100,
 				1.0, 0.0,
-				0.1);
+				0.1, false);
 		FROST_HUNTER_PROPERTIES = new FrostHunterProperties(BUILDER, "Frost Hunter",
 				24, 9,
 				3.0, 0.8,
 				160, 1200,
 				400, 2,
 				true, 0.0,
-				0.1);
+				0.1, false);
 		HOU_YI_PROPERTIES = new BowProperties(BUILDER, "Hou Yi",
 				40, 15,
 				4.5, 0.2,
 				-0.5, 0.15,
-				true);
+				true, true);
 		DEVOURER_PROPERTIES = new DevourerProperties(BUILDER, "Devourer",
 				20, 7,
 				3.0, 0.8,
 				(byte) 2, 0.0,
-				0.1);
+				0.1, true);
+
+		//Crossbows
+		OPPRESSOR_PROPERTIES = new OppressorProperties(BUILDER, "Oppressor",
+				37, 12.0,
+				4.4, 0.5,
+				-0.5, (byte) 1,
+				32, true);
+
+
 		SPEC = BUILDER.build();
 	}
 
@@ -150,6 +177,18 @@ public class ModCommonConfigs {
 		if (event.getConfig().getSpec() != SPEC)
 			return;
 		StarShooterArrow.updateEntityTypeListFromConfig(ALWAYS_AS_FLYING.get());
+
+		if (BOW_ACCEPT_ALL_ARROW.get()) {
+			BaseBowItem.SUPPORTED_PROJECTILE = ARROW_ONLY;
+		}
+
+		if (CROSSBOW_ACCEPT_ALL_ARROW.get()) {
+			BaseCrossbowItem.SUPPORTED_PROJECTILE = ARROW_ONLY;
+		}
+		if (CROSSBOW_ACCEPT_FIREWORK.get()) {
+			BaseCrossbowItem.SUPPORTED_PROJECTILE = BaseCrossbowItem.SUPPORTED_PROJECTILE.or(
+					(ammoStack) -> ammoStack.is(Items.FIREWORK_ROCKET));
+		}
 
 		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
@@ -172,5 +211,7 @@ public class ModCommonConfigs {
 		ModItems.FROST_HUNTER.get().updateAttributesFromConfig(FROST_HUNTER_PROPERTIES);
 		ModItems.HOU_YI.get().updateAttributesFromConfig(HOU_YI_PROPERTIES);
 		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
+
+
 	}
 }
