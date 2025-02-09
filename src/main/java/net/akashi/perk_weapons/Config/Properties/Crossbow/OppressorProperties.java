@@ -17,5 +17,6 @@ public class OppressorProperties extends CrossbowProperties {
 				.defineInRange("SlownessLevel", defaultSlownessLevel, 0, 255);
 		AFFECT_RANGE = builder.comment("Max Affect Distance Of Crouch+Use Ability")
 				.defineInRange("AffectRange", defaultAffectRange, 0, 128);
+		builder.pop();
 	}
 }

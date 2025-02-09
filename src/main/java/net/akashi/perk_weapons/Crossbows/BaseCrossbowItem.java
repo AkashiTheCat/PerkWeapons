@@ -195,9 +195,9 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		if (shooter instanceof Player player && net.minecraftforge.event.ForgeEventFactory.onArrowLoose(crossbowStack,
 				shooter.level(), player, 1, true) < 0) return;
 
-		int multiShotLevel = crossbowStack.getEnchantmentLevel(MULTISHOT);
-		int pierceLevel = crossbowStack.getEnchantmentLevel(PIERCING);
-		int powerLevel = crossbowStack.getEnchantmentLevel(POWER_ARROWS);
+		int multiShotLevel = getCrossbowEnchantmentLevel(crossbowStack, MULTISHOT);
+		int pierceLevel = getCrossbowEnchantmentLevel(crossbowStack, PIERCING);
+		int powerLevel = getCrossbowEnchantmentLevel(crossbowStack, POWER_ARROWS);
 
 		int shotAmount = multiShotLevel * 2 + 1;
 		int angle = multiShotLevel * -10;
@@ -242,7 +242,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
-		int quickChargeLevel = crossbowStack.getEnchantmentLevel(QUICK_CHARGE);
+		int quickChargeLevel = getCrossbowEnchantmentLevel(crossbowStack, QUICK_CHARGE);
 		return Math.max(1, quickChargeLevel == 0 ? MAX_CHARGE_TICKS : MAX_CHARGE_TICKS - 5 * quickChargeLevel);
 	}
 
@@ -419,6 +419,10 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	public boolean RemoveConflictEnchant(Enchantment enchantment) {
 		return ConflictEnchants.remove(enchantment);
+	}
+
+	public int getCrossbowEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
+		return stack.getEnchantmentLevel(enchantment);
 	}
 
 	@Override

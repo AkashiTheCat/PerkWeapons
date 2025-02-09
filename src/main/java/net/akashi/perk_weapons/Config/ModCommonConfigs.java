@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Config;
 
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
+import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
@@ -26,6 +27,7 @@ public class ModCommonConfigs {
 	//General Configs
 	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue ENABLE_STAR_SHOOTER_ON_TABLE;
+	public static ForgeConfigSpec.BooleanValue ENABLE_REGICIDE_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
@@ -55,6 +57,7 @@ public class ModCommonConfigs {
 
 	//Crossbow Configs
 	public static OppressorProperties OPPRESSOR_PROPERTIES;
+	public static LiberatorProperties LIBERATOR_PROPERTIES;
 
 	static {
 		//General
@@ -63,6 +66,8 @@ public class ModCommonConfigs {
 				.define("EnableMeltDownOnTable", true);
 		ENABLE_STAR_SHOOTER_ON_TABLE = BUILDER.comment("Set True To Allow Getting Star Shooter Enchantment From Enchanting Table")
 				.define("EnableStarShooterOnTable", true);
+		ENABLE_REGICIDE_ON_TABLE = BUILDER.comment("Set True To Allow Getting Regicide Enchantment From Enchanting Table")
+				.define("EnableRegicideOnTable", true);
 		BOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Bows Use Tipped And Spectral Arrows As Ammo")
 				.define("BowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Crossbows Use Tipped And Spectral Arrows As Ammo")
@@ -167,6 +172,12 @@ public class ModCommonConfigs {
 				4.4, 0.5,
 				-0.5, (byte) 1,
 				32, true);
+		LIBERATOR_PROPERTIES = new LiberatorProperties(BUILDER, "Liberator",
+				50, 10.0,
+				2.4, 1.0,
+				-0.3, (byte) 1,
+				1, 2,
+				true);
 
 
 		SPEC = BUILDER.build();
@@ -211,6 +222,9 @@ public class ModCommonConfigs {
 		ModItems.FROST_HUNTER.get().updateAttributesFromConfig(FROST_HUNTER_PROPERTIES);
 		ModItems.HOU_YI.get().updateAttributesFromConfig(HOU_YI_PROPERTIES);
 		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
+
+		ModItems.OPPRESSOR.get().updateAttributesFromConfig(OPPRESSOR_PROPERTIES);
+		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
 
 
 	}

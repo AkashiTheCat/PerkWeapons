@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Registry;
 
 import net.akashi.perk_weapons.Bows.*;
+import net.akashi.perk_weapons.Crossbows.LiberatorItem;
 import net.akashi.perk_weapons.Crossbows.OppressorItem;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
@@ -140,7 +141,12 @@ public class ModItems {
 	public static final RegistryObject<OppressorItem> OPPRESSOR = addToTab(
 			ITEMS.register("oppressor",
 					() -> new OppressorItem(37, 12, 4.4F,
-							1.0F, -0.5F, true,
+							0.5F, -0.5F, true,
+							new Item.Properties().durability(640))), BOW_TAB);
+	public static final RegistryObject<LiberatorItem> LIBERATOR = addToTab(
+			ITEMS.register("liberator",
+					() -> new LiberatorItem(50, 10, 2.4F,
+							1.0F, -0.3F, true,
 							new Item.Properties().durability(640))), BOW_TAB);
 
 }

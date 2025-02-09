@@ -21,4 +21,9 @@ public class ModEnchantments {
 			ENCHANTMENTS.register("star_shooter",
 					() -> new StarShooterEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.BOW,
 							new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}));
+
+	public static final RegistryObject<StarShooterEnchantment> REGICIDE =
+			ENCHANTMENTS.register("regicide",
+					() -> new StarShooterEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.CROSSBOW,
+							new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}));
 }

@@ -1,6 +1,6 @@
 {
     "parent": "perk_weapons:item/base/base_crossbow",
     "textures": {
-        "layer0": "perk_weapons:item/crossbow/oppressor/oppressor_pulling_0"
+        "layer0": "perk_weapons:item/crossbow/liberator/liberator_firework"
     }
 }
