@@ -43,7 +43,6 @@ public class BaseSpearItem extends Item implements Vanishable {
 	public float BaseAttackSpeed;
 	public float BaseThrowDamage;
 
-	public boolean isAdvanced;
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
 			MOB_LOOTING,
@@ -139,7 +138,7 @@ public class BaseSpearItem extends Item implements Vanishable {
 					}
 
 					pLevel.addFreshEntity(thrownspear);
-					pLevel.playSound((Player) null, thrownspear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+					pLevel.playSound(null, thrownspear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
 					player.awardStat(Stats.ITEM_USED.get(this));
 					if (j > 0) {
 						float f7 = player.getYRot();
@@ -152,7 +151,7 @@ public class BaseSpearItem extends Item implements Vanishable {
 						f1 *= f5 / f4;
 						f2 *= f5 / f4;
 						f3 *= f5 / f4;
-						player.push((double) f1, (double) f2, (double) f3);
+						player.push(f1, f2, f3);
 						player.startAutoSpinAttack(20);
 						if (player.onGround()) {
 							float f6 = 1.1999999F;

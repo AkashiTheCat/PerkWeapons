@@ -27,7 +27,7 @@ public class ClientHelper {
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {
 		ItemProperties.register(crossbow, ModelOverrides.PULL, (stack, world, entity, value) -> {
 			if (entity != null)
-				return crossbow.getChargeProgress(entity.getTicksUsingItem(), stack);
+				return crossbow.getChargeProgress(entity, stack);
 			return 0.0f;
 		});
 		ItemProperties.register(crossbow, ModelOverrides.PULLING, (stack, world, entity, value) ->

@@ -111,6 +111,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
+			setCrossbowCharged(itemstack, false);
 			clearChargedProjectile(itemstack);
 			return InteractionResultHolder.consume(itemstack);
 		} else if (!pPlayer.getProjectile(itemstack).isEmpty()) {
@@ -130,7 +131,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			int quickChargeLevel = crossbowStack.getEnchantmentLevel(Enchantments.QUICK_CHARGE);
 			SoundEvent startSoundEvent = this.getStartSound(quickChargeLevel);
 			SoundEvent middleSoundEvent = quickChargeLevel == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
-			byte progress = getChargeProgressFrom0To10((crossbowStack.getUseDuration() - useTimeLeft), crossbowStack);
+			byte progress = getChargeProgressFrom0To10(livingEntity, crossbowStack);
 
 			if (progress == 2) {
 				level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
@@ -146,10 +147,11 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	@Override
 	public void releaseUsing(ItemStack crossbowStack, Level level, LivingEntity shooter, int useTimeLeft) {
-		float progress = getChargeProgress((crossbowStack.getUseDuration() - useTimeLeft), crossbowStack);
+		float progress = getChargeProgress(shooter, crossbowStack);
 
 		if (progress >= 1.0F && !isCrossbowCharged(crossbowStack)) {
 			if (tryLoadAmmo(shooter, crossbowStack)) {
+				setCrossbowCharged(crossbowStack, true);
 				SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
 				level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
 						SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F,
@@ -180,7 +182,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	@Override
 	public float getChokeProgress(LivingEntity shooter, ItemStack stack) {
-		return isCrossbowCharged(stack) ? 1.0f : getChargeProgress(shooter.getTicksUsingItem(), stack);
+		return isCrossbowCharged(stack) ? 1.0f : getChargeProgress(shooter, stack);
 	}
 
 
@@ -211,7 +213,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			angle += 10;
 		}
 
-		setCrossbowCharged(crossbowStack, false);
 		awardPlayerStats(level, shooter, crossbowStack);
 	}
 
@@ -237,7 +238,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 
 		setChargedProjectile(crossbowStack, ammoToLoad);
-		setCrossbowCharged(crossbowStack, true);
 		return true;
 	}
 
@@ -246,12 +246,12 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		return Math.max(1, quickChargeLevel == 0 ? MAX_CHARGE_TICKS : MAX_CHARGE_TICKS - 5 * quickChargeLevel);
 	}
 
-	public byte getChargeProgressFrom0To10(int useTicks, ItemStack crossbowStack) {
-		return (byte) Math.floor(getChargeProgress(useTicks, crossbowStack) * 10);
+	public byte getChargeProgressFrom0To10(LivingEntity shooter, ItemStack crossbowStack) {
+		return (byte) Math.floor(getChargeProgress(shooter, crossbowStack) * 10);
 	}
 
-	public float getChargeProgress(int useTicks, ItemStack crossbowStack) {
-		return Math.min((float) useTicks / (float) getMaxChargeTicks(crossbowStack), 1.0f);
+	public float getChargeProgress(LivingEntity shooter, ItemStack crossbowStack) {
+		return Math.min((float) shooter.getTicksUsingItem() / (float) getMaxChargeTicks(crossbowStack), 1.0f);
 	}
 
 	//Projectile / Charge state related

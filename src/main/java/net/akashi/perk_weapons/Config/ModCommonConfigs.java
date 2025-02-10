@@ -4,8 +4,10 @@ import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
+import net.akashi.perk_weapons.Config.Properties.Crossbow.TaintedFortuneProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
+import net.akashi.perk_weapons.Crossbows.TaintedFortuneItem;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
@@ -58,6 +60,8 @@ public class ModCommonConfigs {
 	//Crossbow Configs
 	public static OppressorProperties OPPRESSOR_PROPERTIES;
 	public static LiberatorProperties LIBERATOR_PROPERTIES;
+	public static TaintedFortuneProperties TAINTED_FORTUNE_PROPERTIES;
+
 
 	static {
 		//General
@@ -178,6 +182,11 @@ public class ModCommonConfigs {
 				-0.3, (byte) 1,
 				1, 2,
 				true);
+		TAINTED_FORTUNE_PROPERTIES = new TaintedFortuneProperties(BUILDER, "Tainted Fortune",
+				20, 10.0,
+				2.4, 1.2,
+				0.0, 1.0,
+				false);
 
 
 		SPEC = BUILDER.build();
@@ -225,7 +234,7 @@ public class ModCommonConfigs {
 
 		ModItems.OPPRESSOR.get().updateAttributesFromConfig(OPPRESSOR_PROPERTIES);
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
-
+		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
 
 	}
 }

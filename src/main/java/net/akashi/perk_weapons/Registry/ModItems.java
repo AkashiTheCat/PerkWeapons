@@ -3,6 +3,7 @@ package net.akashi.perk_weapons.Registry;
 import net.akashi.perk_weapons.Bows.*;
 import net.akashi.perk_weapons.Crossbows.LiberatorItem;
 import net.akashi.perk_weapons.Crossbows.OppressorItem;
+import net.akashi.perk_weapons.Crossbows.TaintedFortuneItem;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
 import net.minecraft.world.item.BlockItem;
@@ -148,5 +149,10 @@ public class ModItems {
 					() -> new LiberatorItem(50, 10, 2.4F,
 							1.0F, -0.3F, true,
 							new Item.Properties().durability(640))), BOW_TAB);
+	public static final RegistryObject<TaintedFortuneItem> TAINTED_FORTUNE = addToTab(
+			ITEMS.register("tainted_fortune",
+					() -> new TaintedFortuneItem(20, 8, 2.4F,
+							1.0F, 0.0F, false,
+							new Item.Properties().durability(1280))), BOW_TAB);
 
 }
