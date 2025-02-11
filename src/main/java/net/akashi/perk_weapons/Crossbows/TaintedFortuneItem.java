@@ -32,13 +32,6 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 	public TaintedFortuneItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
 	                          float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier, onlyAllowMainHand, pProperties);
-		if (speedModifier != 0.0F) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.onlyAllowMainHand = true;
-			this.AttributeModifiers = builder.build();
-		}
 		if (KNOCKBACK_MODIFIER != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
@@ -108,6 +101,12 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof TaintedFortuneProperties tProperties) {
 			KNOCKBACK_MODIFIER = tProperties.KNOCKBACK_MODIFIER.get().floatValue();
+			if (KNOCKBACK_MODIFIER != 0.0F) {
+				ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+				builder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
+						"Tool modifier", KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADDITION));
+				this.OffhandAttributeModifiers = builder.build();
+			}
 		}
 	}
 

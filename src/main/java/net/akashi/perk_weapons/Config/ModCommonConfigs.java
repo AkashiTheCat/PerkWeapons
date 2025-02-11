@@ -4,6 +4,7 @@ import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
+import net.akashi.perk_weapons.Config.Properties.Crossbow.SonicBlasterProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.TaintedFortuneProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
@@ -61,6 +62,7 @@ public class ModCommonConfigs {
 	public static OppressorProperties OPPRESSOR_PROPERTIES;
 	public static LiberatorProperties LIBERATOR_PROPERTIES;
 	public static TaintedFortuneProperties TAINTED_FORTUNE_PROPERTIES;
+	public static SonicBlasterProperties SONIC_BLASTER_PROPERTIES;
 
 
 	static {
@@ -122,7 +124,7 @@ public class ModCommonConfigs {
 				40, 2,
 				120, 0.3,
 				10, 3,
-				600, 255);
+				600, 127);
 
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
@@ -187,6 +189,13 @@ public class ModCommonConfigs {
 				2.4, 1.2,
 				0.0, 1.0,
 				false);
+		SONIC_BLASTER_PROPERTIES = new SonicBlasterProperties(BUILDER, "Sonic Blaster",
+				37, 20.0,
+				0.0, 0.0,
+				-0.5, 1.0,
+				24, 1.0,
+				-1, false,
+				0.6, true);
 
 
 		SPEC = BUILDER.build();
@@ -235,6 +244,7 @@ public class ModCommonConfigs {
 		ModItems.OPPRESSOR.get().updateAttributesFromConfig(OPPRESSOR_PROPERTIES);
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
 		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
+		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);
 
 	}
 }

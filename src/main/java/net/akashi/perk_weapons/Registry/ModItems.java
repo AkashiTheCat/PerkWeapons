@@ -3,6 +3,7 @@ package net.akashi.perk_weapons.Registry;
 import net.akashi.perk_weapons.Bows.*;
 import net.akashi.perk_weapons.Crossbows.LiberatorItem;
 import net.akashi.perk_weapons.Crossbows.OppressorItem;
+import net.akashi.perk_weapons.Crossbows.SonicBlasterItem;
 import net.akashi.perk_weapons.Crossbows.TaintedFortuneItem;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
@@ -154,5 +155,11 @@ public class ModItems {
 					() -> new TaintedFortuneItem(20, 8, 2.4F,
 							1.0F, 0.0F, false,
 							new Item.Properties().durability(1280))), BOW_TAB);
+
+	public static final RegistryObject<SonicBlasterItem> SONIC_BLASTER = addToTab(
+			ITEMS.register("sonic_blaster",
+					() -> new SonicBlasterItem(37, 20, 16F,
+							0.0F, -0.5F, true,
+							new Item.Properties().durability(640))), BOW_TAB);
 
 }

@@ -34,9 +34,9 @@ public class ClientModEvents {
 	}
 
 	@SubscribeEvent
-	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event){
+	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
 		event.registerAboveAll("perk_hud", PerkIndicatorHud.INDICATOR_BAR);
 		event.registerAboveAll("cooldown_hud", CoolDownIndicatorHud.INDICATOR_BAR);
-		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(),"crosshair", DoubleLineCrossHair.CROSSHAIR);
+		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "crosshair", DoubleLineCrossHair.CROSSHAIR);
 	}
 }

@@ -128,9 +128,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	@Override
 	public void onUseTick(Level level, LivingEntity livingEntity, ItemStack crossbowStack, int useTimeLeft) {
 		if (!level.isClientSide()) {
-			int quickChargeLevel = crossbowStack.getEnchantmentLevel(Enchantments.QUICK_CHARGE);
-			SoundEvent startSoundEvent = this.getStartSound(quickChargeLevel);
-			SoundEvent middleSoundEvent = quickChargeLevel == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
+			SoundEvent startSoundEvent = this.getStartSound(crossbowStack);
+			SoundEvent middleSoundEvent = this.getMiddleSound(crossbowStack);
 			byte progress = getChargeProgressFrom0To10(livingEntity, crossbowStack);
 
 			if (progress == 2) {
@@ -154,7 +153,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				setCrossbowCharged(crossbowStack, true);
 				SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
 				level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-						SoundEvents.CROSSBOW_LOADING_END, soundsource, 1.0F,
+						getEndSound(crossbowStack), soundsource, 1.0F,
 						1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
 			}
 		}
@@ -292,7 +291,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				new ArrowVelocitySyncPacket(projectile.getDeltaMovement(), projectile.getId()));
 
 		level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-				SoundEvents.CROSSBOW_SHOOT, SoundSource.PLAYERS, 1.0F, getShotPitch(shooter.getRandom()));
+				getShootSound(crossbowStack), SoundSource.PLAYERS, 1.0F, getShotPitch(shooter.getRandom()));
 	}
 
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
@@ -367,13 +366,25 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		return 1.0F / (pRandom.nextFloat() * 0.5F + 1.8F) + f;
 	}
 
-	protected SoundEvent getStartSound(int quickChargeLevel) {
-		return switch (quickChargeLevel) {
+	protected SoundEvent getStartSound(ItemStack crossbowStack) {
+		return switch (crossbowStack.getEnchantmentLevel(QUICK_CHARGE)) {
 			case 1 -> SoundEvents.CROSSBOW_QUICK_CHARGE_1;
 			case 2 -> SoundEvents.CROSSBOW_QUICK_CHARGE_2;
 			case 3 -> SoundEvents.CROSSBOW_QUICK_CHARGE_3;
 			default -> SoundEvents.CROSSBOW_LOADING_START;
 		};
+	}
+
+	protected SoundEvent getMiddleSound(ItemStack crossbowStack) {
+		return crossbowStack.getEnchantmentLevel(QUICK_CHARGE) == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
+	}
+
+	protected SoundEvent getEndSound(ItemStack crossbowStack) {
+		return SoundEvents.CROSSBOW_LOADING_END;
+	}
+
+	protected SoundEvent getShootSound(ItemStack crossbowStack) {
+		return SoundEvents.CROSSBOW_SHOOT;
 	}
 
 	protected void awardPlayerStats(Level level, LivingEntity shooter, ItemStack crossbowStack) {

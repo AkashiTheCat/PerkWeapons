@@ -13,7 +13,7 @@ public class DevourerProperties extends BowProperties {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity,
 				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand, false);
 		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name + "'s Arrow")
-				.defineInRange("PierceLevel", defaultPierceLevel, 0, 255);
+				.defineInRange("PierceLevel", defaultPierceLevel, 0, 127);
 		builder.pop();
 	}
 }

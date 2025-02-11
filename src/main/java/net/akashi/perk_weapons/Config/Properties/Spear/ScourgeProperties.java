@@ -41,7 +41,7 @@ public class ScourgeProperties extends SpearProperties {
 		ABILITY_COOLDOWN = builder.comment("How Long In Ticks Will The Crouch+Use Ability's CoolDown Be")
 				.defineInRange("AbilityCD", defaultAbilityCoolDownTime, 0, 6000);
 		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name)
-				.defineInRange("PierceLevel", defaultPiercingLevel, 0, 255);
+				.defineInRange("PierceLevel", defaultPiercingLevel, 0, 127);
 		builder.pop();
 	}
 }

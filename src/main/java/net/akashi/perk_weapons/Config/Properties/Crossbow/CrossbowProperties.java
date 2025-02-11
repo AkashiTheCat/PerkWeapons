@@ -16,6 +16,7 @@ public class CrossbowProperties {
 	                          double defaultSpeedModifier, boolean onlyAllowMainHand,
 	                          boolean shouldPop) {
 		builder.push(name);
+		topComment(builder, name);
 		CHARGE_TIME = builder.comment("Ammo Charging Time Of " + name + " In Ticks")
 				.defineInRange("ChargeTime", defaultChargeTime, 0, Integer.MAX_VALUE);
 		DAMAGE = builder.comment("Damage Of " + name)
@@ -29,9 +30,13 @@ public class CrossbowProperties {
 		ONLY_MAINHAND = builder.comment("Set True To Make " + name + " Only Can Be Used In Main Hand.")
 				.comment("This Will Be Automatically Set True If SpeedModifier!=0 To Avoid A Bug Caused By The " +
 						"Vanilla Equipment Update Method")
-				.define("onlyMainHand", false);
+				.define("OnlyMainHand", onlyAllowMainHand);
 		if (shouldPop) {
 			builder.pop();
 		}
+	}
+
+	public void topComment(ForgeConfigSpec.Builder builder, String name) {
+
 	}
 }
