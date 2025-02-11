@@ -35,7 +35,7 @@ import java.util.Map;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseSpearItem extends Item implements Vanishable {
+public class BaseSpearItem extends TridentItem implements Vanishable {
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ProjectileVelocity;
 	public float ThrowDamage;

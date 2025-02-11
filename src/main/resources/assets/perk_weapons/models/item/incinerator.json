@@ -1,0 +1,41 @@
+{
+    "parent": "perk_weapons:item/base/base_crossbow",
+    "textures": {
+        "layer0": "perk_weapons:item/crossbow/incinerator/incinerator_standby"
+    },
+    "overrides": [
+        {
+            "predicate": {
+                "pulling": 1
+            },
+            "model": "perk_weapons:item/incinerator_pulling_0"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 0.5
+            },
+            "model": "perk_weapons:item/incinerator_pulling_1"
+        },
+        {
+            "predicate": {
+                "perk_weapons:pulling": 1,
+                "perk_weapons:pull": 1.0
+            },
+            "model": "perk_weapons:item/incinerator_pulling_2"
+        },
+        {
+            "predicate": {
+                "perk_weapons:charged": 1
+            },
+            "model": "perk_weapons:item/incinerator_arrow"
+        },
+        {
+            "predicate": {
+                "perk_weapons:charged": 1,
+                "perk_weapons:firework": 1
+            },
+            "model": "perk_weapons:item/incinerator_firework"
+        }
+    ]
+}

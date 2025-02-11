@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseBowItem extends ProjectileWeaponItem implements Vanishable, IDoubleLineCrosshairItem {
+public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCrosshairItem {
 	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;

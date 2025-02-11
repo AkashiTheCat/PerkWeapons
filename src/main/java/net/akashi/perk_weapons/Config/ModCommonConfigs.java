@@ -2,12 +2,10 @@ package net.akashi.perk_weapons.Config;
 
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
-import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
-import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
-import net.akashi.perk_weapons.Config.Properties.Crossbow.SonicBlasterProperties;
-import net.akashi.perk_weapons.Config.Properties.Crossbow.TaintedFortuneProperties;
+import net.akashi.perk_weapons.Config.Properties.Crossbow.*;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
+import net.akashi.perk_weapons.Crossbows.IncineratorItem;
 import net.akashi.perk_weapons.Crossbows.TaintedFortuneItem;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
@@ -63,6 +61,7 @@ public class ModCommonConfigs {
 	public static LiberatorProperties LIBERATOR_PROPERTIES;
 	public static TaintedFortuneProperties TAINTED_FORTUNE_PROPERTIES;
 	public static SonicBlasterProperties SONIC_BLASTER_PROPERTIES;
+	public static IncineratorProperties INCINERATOR_PROPERTIES;
 
 
 	static {
@@ -191,11 +190,16 @@ public class ModCommonConfigs {
 				false);
 		SONIC_BLASTER_PROPERTIES = new SonicBlasterProperties(BUILDER, "Sonic Blaster",
 				37, 20.0,
-				0.0, 0.0,
+				0.1, 0.0,
 				-0.5, 1.0,
 				24, 1.0,
 				-1, false,
 				0.6, true);
+		INCINERATOR_PROPERTIES = new IncineratorProperties(BUILDER, "Incinerator",
+				80, 11.0,
+				3.2, 0.8,
+				-0.25, 7,
+				1, true);
 
 
 		SPEC = BUILDER.build();
@@ -245,6 +249,7 @@ public class ModCommonConfigs {
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
 		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
 		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);
+		ModItems.INCINERATOR.get().updateAttributesFromConfig(INCINERATOR_PROPERTIES);
 
 	}
 }

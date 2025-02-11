@@ -50,5 +50,6 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<FrostHunterArrow>> FROST_HUNTER_ARROW = ArrowRegistry("frost_hunter_arrow", FrostHunterArrow::new);
 	public static final RegistryObject<EntityType<StarShooterArrow>> STAR_SHOOTER_ARROW = ArrowRegistry("star_shooter_arrow", StarShooterArrow::new);
 	public static final RegistryObject<EntityType<DevourerArrow>> DEVOURER_ARROW = ArrowRegistry("devourer_arrow", DevourerArrow::new);
+	public static final RegistryObject<EntityType<IncineratorArrow>> INCINERATOR_ARROW = ArrowRegistry("incinerator_arrow", IncineratorArrow::new);
 
 }

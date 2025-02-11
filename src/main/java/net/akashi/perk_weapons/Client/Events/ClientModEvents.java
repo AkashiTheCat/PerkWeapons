@@ -31,6 +31,7 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.FROST_HUNTER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.STAR_SHOOTER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.DEVOURER_ARROW.get(), BaseArrowRenderer::new);
+		event.registerEntityRenderer(ModEntities.INCINERATOR_ARROW.get(), BaseArrowRenderer::new);
 	}
 
 	@SubscribeEvent

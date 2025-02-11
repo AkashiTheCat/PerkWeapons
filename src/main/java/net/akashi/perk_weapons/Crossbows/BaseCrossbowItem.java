@@ -19,7 +19,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,8 +31,6 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -60,14 +57,14 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	protected float VELOCITY = 4.0F;
 	protected float INACCURACY = 1.0F;
 
-	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+	protected final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			QUICK_CHARGE,
 			MULTISHOT,
 			PIERCING,
 			POWER_ARROWS
 	));
 
-	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
+	protected final List<Enchantment> ConflictEnchants = new ArrayList<>();
 
 
 	public BaseCrossbowItem(Properties pProperties) {

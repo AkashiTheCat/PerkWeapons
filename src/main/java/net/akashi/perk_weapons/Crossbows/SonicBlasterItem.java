@@ -90,6 +90,13 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 				this.onlyAllowMainHand = true;
 			}
 			this.AttributeModifiers = builder.build();
+
+			if (PIERCE_LEVEL == -1 && this.GeneralEnchants.contains(PIERCING)) {
+				RemoveGeneralEnchant(PIERCING);
+			}
+			if (PIERCE_LEVEL != -1 && !this.GeneralEnchants.contains(PIERCING)) {
+				AddGeneralEnchant(PIERCING);
+			}
 		}
 
 	}
