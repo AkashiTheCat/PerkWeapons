@@ -25,8 +25,4 @@ public class StarShooterEnchantment extends Enchantment {
 		return ModCommonConfigs.ENABLE_STAR_SHOOTER_ON_TABLE.get() && stack.getItem() instanceof HouYiItem;
 	}
 
-	@Override
-	public boolean isAllowedOnBooks() {
-		return true;
-	}
 }

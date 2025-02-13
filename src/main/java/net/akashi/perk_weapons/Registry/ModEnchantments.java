@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Registry;
 
+import net.akashi.perk_weapons.Enchantments.BlazeEnchantment;
 import net.akashi.perk_weapons.Enchantments.MeltDownEnchantment;
 import net.akashi.perk_weapons.Enchantments.StarShooterEnchantment;
 import net.akashi.perk_weapons.PerkWeapons;
@@ -21,9 +22,12 @@ public class ModEnchantments {
 			ENCHANTMENTS.register("star_shooter",
 					() -> new StarShooterEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.BOW,
 							new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}));
-
 	public static final RegistryObject<StarShooterEnchantment> REGICIDE =
 			ENCHANTMENTS.register("regicide",
 					() -> new StarShooterEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.CROSSBOW,
+							new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}));
+	public static final RegistryObject<BlazeEnchantment> BLAZE =
+			ENCHANTMENTS.register("blaze",
+					() -> new BlazeEnchantment(Enchantment.Rarity.RARE, EnchantmentCategory.CROSSBOW,
 							new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND}));
 }

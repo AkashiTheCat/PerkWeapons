@@ -3,6 +3,7 @@ package net.akashi.perk_weapons.Crossbows;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.IncineratorProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.IncineratorArrow;
+import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
@@ -18,7 +19,8 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class IncineratorItem extends BaseCrossbowItem {
 	public static int FIRE_ARROW_KNOCKBACK_BONUS = 1;
-	public static int AMMO_CAPACITY = 7;
+	public static int NORMAL_AMMO_CAPACITY = 7;
+	public static int BLAZE_AMMO_CAPACITY = 10;
 
 	public IncineratorItem(Properties pProperties) {
 		super(pProperties);
@@ -35,7 +37,8 @@ public class IncineratorItem extends BaseCrossbowItem {
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof IncineratorProperties IProperties) {
-			AMMO_CAPACITY = IProperties.AMMO_CAPACITY.get();
+			NORMAL_AMMO_CAPACITY = IProperties.NORMAL_AMMO_CAPACITY.get();
+			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
 		}
 	}
@@ -128,6 +131,6 @@ public class IncineratorItem extends BaseCrossbowItem {
 	}
 
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return AMMO_CAPACITY;
+		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ? BLAZE_AMMO_CAPACITY : NORMAL_AMMO_CAPACITY;
 	}
 }

@@ -29,6 +29,7 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue ENABLE_STAR_SHOOTER_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue ENABLE_REGICIDE_ON_TABLE;
+	public static ForgeConfigSpec.BooleanValue ENABLE_BLAZE_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
@@ -73,6 +74,8 @@ public class ModCommonConfigs {
 				.define("EnableStarShooterOnTable", true);
 		ENABLE_REGICIDE_ON_TABLE = BUILDER.comment("Set True To Allow Getting Regicide Enchantment From Enchanting Table")
 				.define("EnableRegicideOnTable", true);
+		ENABLE_BLAZE_ON_TABLE = BUILDER.comment("Set True To Allow Getting Blaze Enchantment From Enchanting Table")
+				.define("EnableBlazeOnTable", true);
 		BOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Bows Use Tipped And Spectral Arrows As Ammo")
 				.define("BowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Crossbows Use Tipped And Spectral Arrows As Ammo")
@@ -199,7 +202,8 @@ public class ModCommonConfigs {
 				80, 11.0,
 				3.2, 0.8,
 				-0.25, 7,
-				1, true);
+				10, 1,
+				true);
 
 
 		SPEC = BUILDER.build();
