@@ -16,7 +16,7 @@ import net.minecraft.world.level.Level;
 import static net.minecraft.world.item.enchantment.Enchantments.MULTISHOT;
 import static net.minecraft.world.item.enchantment.Enchantments.PIERCING;
 
-public class LiberatorItem extends BaseCrossbowItem {
+public class LiberatorItem extends MagFedCrossbowItem {
 	public static byte PIERCE_LEVEL = 1;
 	public static byte MULTISHOT_BONUS = 1;
 	public static byte AMMO_CAPACITY_REGICIDE = 2;
@@ -28,7 +28,8 @@ public class LiberatorItem extends BaseCrossbowItem {
 
 	public LiberatorItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
 	                     float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
-		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier, onlyAllowMainHand, pProperties);
+		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier,
+				1, onlyAllowMainHand, pProperties);
 		RemoveGeneralEnchant(PIERCING);
 	}
 
@@ -41,51 +42,6 @@ public class LiberatorItem extends BaseCrossbowItem {
 			AMMO_CAPACITY_REGICIDE = lProperties.CAPACITY_REGICIDE.get().byteValue();
 			MULTISHOT_BONUS = lProperties.MULTISHOT_BONUS.get().byteValue();
 		}
-	}
-
-	@Override
-	public void setCrossbowCharged(ItemStack crossbowStack, boolean charged) {
-		if (charged) {
-			super.setCrossbowCharged(crossbowStack, true);
-			return;
-		}
-		int amount = getAmmoAmount(crossbowStack);
-		if (amount > 1) {
-			setAmmoAmount(crossbowStack, amount - 1);
-			return;
-		}
-		super.setCrossbowCharged(crossbowStack, false);
-	}
-
-	@Override
-	public boolean tryLoadAmmo(LivingEntity shooter, ItemStack crossbowStack) {
-		ItemStack ammoStack = shooter.getProjectile(crossbowStack);
-		boolean isShooterPlayer = shooter instanceof Player;
-		boolean isCreative = isShooterPlayer && ((Player) shooter).getAbilities().instabuild;
-
-		if (ammoStack.isEmpty()) {
-			if (isCreative) {
-				ammoStack = new ItemStack(Items.ARROW);
-			} else {
-				return false;
-			}
-		}
-		ItemStack ammoToLoad = ItemStack.EMPTY;
-		int count = getAmmoCapacity(crossbowStack);
-
-		if (isShooterPlayer && !isCreative) {
-			if (ammoStack.getCount() >= count) {
-				ammoToLoad = ammoStack.copyWithCount(1);
-				ammoStack.shrink(count);
-			}
-			if (ammoStack.isEmpty())
-				((Player) shooter).getInventory().removeItem(ammoStack);
-		}
-
-		setChargedProjectile(crossbowStack, ammoToLoad);
-		setAmmoAmount(crossbowStack, count);
-		setCrossbowCharged(crossbowStack, true);
-		return true;
 	}
 
 	@Override
@@ -106,20 +62,9 @@ public class LiberatorItem extends BaseCrossbowItem {
 		return super.getEnchantmentLevel(stack, enchantment);
 	}
 
-	public void setAmmoAmount(ItemStack crossbowStack, int count) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		tag.putInt("ammo_count", count);
-	}
-
-	public int getAmmoAmount(ItemStack crossbowStack) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		if (tag.contains("ammo_count")) {
-			return tag.getInt("ammo_count");
-		}
-		return 0;
-	}
-
+	@Override
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return crossbowStack.getEnchantmentLevel(ModEnchantments.REGICIDE.get()) > 0 ? AMMO_CAPACITY_REGICIDE : 1;
+		return crossbowStack.getEnchantmentLevel(ModEnchantments.REGICIDE.get()) > 0 ?
+				AMMO_CAPACITY_REGICIDE : super.getAmmoCapacity(crossbowStack);
 	}
 }

@@ -50,8 +50,7 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
-			setCrossbowCharged(itemstack, false);
-			clearChargedProjectile(itemstack);
+			consumeAndSetCharged(itemstack);
 			return InteractionResultHolder.consume(itemstack);
 		} else {
 			return InteractionResultHolder.fail(itemstack);
@@ -65,7 +64,7 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 			return;
 		}
 
-		if (getChargedProjectile(stack).isEmpty() && tryLoadAmmo(player, stack)) {
+		if (getChargedProjectileAmount(stack) < AMMO_CAPACITY && tryLoadAmmo(player, stack)) {
 			setReloadBeginTime(stack, level.getGameTime());
 		}
 

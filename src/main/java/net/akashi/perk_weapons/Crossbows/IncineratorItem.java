@@ -17,9 +17,8 @@ import net.minecraft.world.level.Level;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class IncineratorItem extends BaseCrossbowItem {
+public class IncineratorItem extends MagFedCrossbowItem {
 	public static int FIRE_ARROW_KNOCKBACK_BONUS = 1;
-	public static int NORMAL_AMMO_CAPACITY = 7;
 	public static int BLAZE_AMMO_CAPACITY = 10;
 
 	public IncineratorItem(Properties pProperties) {
@@ -29,7 +28,8 @@ public class IncineratorItem extends BaseCrossbowItem {
 
 	public IncineratorItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
 	                       float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
-		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier, onlyAllowMainHand, pProperties);
+		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier,
+				7, onlyAllowMainHand, pProperties);
 		AddGeneralEnchant(FLAMING_ARROWS);
 	}
 
@@ -37,10 +37,11 @@ public class IncineratorItem extends BaseCrossbowItem {
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof IncineratorProperties IProperties) {
-			NORMAL_AMMO_CAPACITY = IProperties.NORMAL_AMMO_CAPACITY.get();
+			AMMO_CAPACITY = IProperties.NORMAL_AMMO_CAPACITY.get();
 			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
 		}
+		AddGeneralEnchant(ModEnchantments.BLAZE.get());
 	}
 
 	@Override
@@ -49,54 +50,9 @@ public class IncineratorItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public boolean tryLoadAmmo(LivingEntity shooter, ItemStack crossbowStack) {
-		ItemStack ammoStack = shooter.getProjectile(crossbowStack);
-		boolean isShooterPlayer = shooter instanceof Player;
-		boolean isCreative = isShooterPlayer && ((Player) shooter).getAbilities().instabuild;
-
-		if (ammoStack.isEmpty()) {
-			if (isCreative) {
-				ammoStack = new ItemStack(Items.ARROW);
-			} else {
-				return false;
-			}
-		}
-		ItemStack ammoToLoad = ItemStack.EMPTY;
-		int count = getAmmoCapacity(crossbowStack);
-
-		if (isShooterPlayer && !isCreative) {
-			if (ammoStack.getCount() >= count) {
-				ammoToLoad = ammoStack.copyWithCount(1);
-				ammoStack.shrink(count);
-			}
-			if (ammoStack.isEmpty())
-				((Player) shooter).getInventory().removeItem(ammoStack);
-		}
-
-		setChargedProjectile(crossbowStack, ammoToLoad);
-		setAmmoAmount(crossbowStack, count);
-		setCrossbowCharged(crossbowStack, true);
-		return true;
-	}
-
-	@Override
-	public void setCrossbowCharged(ItemStack crossbowStack, boolean charged) {
-		if (charged) {
-			super.setCrossbowCharged(crossbowStack, true);
-			return;
-		}
-		int amount = getAmmoAmount(crossbowStack);
-		if (amount > 1) {
-			setAmmoAmount(crossbowStack, amount - 1);
-			return;
-		}
-		super.setCrossbowCharged(crossbowStack, false);
-	}
-
-	@Override
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
-		ItemStack ammoStack = crossbowItem.getChargedProjectile(crossbowStack);
+		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
 		Item ammoItem = ammoStack.getItem();
 
 		if (ammoItem instanceof FireworkRocketItem) {
@@ -117,20 +73,8 @@ public class IncineratorItem extends BaseCrossbowItem {
 		return arrow;
 	}
 
-	public void setAmmoAmount(ItemStack crossbowStack, int count) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		tag.putInt("ammo_count", count);
-	}
-
-	public int getAmmoAmount(ItemStack crossbowStack) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		if (tag.contains("ammo_count")) {
-			return tag.getInt("ammo_count");
-		}
-		return 0;
-	}
-
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ? BLAZE_AMMO_CAPACITY : NORMAL_AMMO_CAPACITY;
+		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ?
+				BLAZE_AMMO_CAPACITY : super.getAmmoCapacity(crossbowStack);
 	}
 }

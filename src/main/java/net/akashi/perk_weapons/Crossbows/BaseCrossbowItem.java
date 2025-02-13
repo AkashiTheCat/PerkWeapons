@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Crossbows;
 
 import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
@@ -10,8 +11,12 @@ import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -36,6 +41,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -52,6 +58,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	public boolean onlyAllowMainHand = false;
 	private static final String TAG_CHARGED = "Charged";
 	private static final String TAG_CHARGED_PROJECTILES = "ChargedProjectiles";
+	protected int AMMO_CAPACITY = 1;
 	protected int MAX_CHARGE_TICKS = 25;
 	protected float DAMAGE = 10.0F;
 	protected float VELOCITY = 4.0F;
@@ -108,8 +115,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
-			setCrossbowCharged(itemstack, false);
-			clearChargedProjectile(itemstack);
+			consumeAndSetCharged(itemstack);
 			return InteractionResultHolder.consume(itemstack);
 		} else if (!pPlayer.getProjectile(itemstack).isEmpty()) {
 			if (!isCrossbowCharged(itemstack)) {
@@ -146,12 +152,38 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		float progress = getChargeProgress(shooter, crossbowStack);
 
 		if (progress >= 1.0F && !isCrossbowCharged(crossbowStack)) {
-			if (tryLoadAmmo(shooter, crossbowStack)) {
+			boolean loaded = false;
+			while (getChargedProjectileAmount(crossbowStack) < getAmmoCapacity(crossbowStack)) {
+				if (!tryLoadAmmo(shooter, crossbowStack)) {
+					break;
+				}
+				loaded = true;
+			}
+			if (loaded) {
 				setCrossbowCharged(crossbowStack, true);
 				SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
 				level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
 						getEndSound(crossbowStack), soundsource, 1.0F,
 						1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+			}
+		}
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag flag) {
+		ItemStack ammoStack = getLastChargedProjectile(stack);
+		if (isCrossbowCharged(stack) && !ammoStack.isEmpty()) {
+			tooltip.add(Component.translatable("item.minecraft.crossbow.projectile")
+					.append(CommonComponents.SPACE)
+					.append(ammoStack.getDisplayName()));
+			if (flag.isAdvanced() && ammoStack.is(Items.FIREWORK_ROCKET)) {
+				List<Component> list1 = Lists.newArrayList();
+				Items.FIREWORK_ROCKET.appendHoverText(ammoStack, pLevel, list1, flag);
+				if (!list1.isEmpty()) {
+					list1.replaceAll(pSibling -> Component.literal("  ")
+							.append(pSibling).withStyle(ChatFormatting.GRAY));
+					tooltip.addAll(list1);
+				}
 			}
 		}
 	}
@@ -233,7 +265,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				((Player) shooter).getInventory().removeItem(ammoStack);
 		}
 
-		setChargedProjectile(crossbowStack, ammoToLoad);
+		addChargedProjectile(crossbowStack, ammoToLoad);
 		return true;
 	}
 
@@ -293,7 +325,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
-		ItemStack ammoStack = crossbowItem.getChargedProjectile(crossbowStack);
+		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
 		Item ammoItem = ammoStack.getItem();
 
 		if (ammoItem instanceof FireworkRocketItem) {
@@ -311,28 +343,66 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		return arrow;
 	}
 
-	public ItemStack getChargedProjectile(ItemStack crossbowStack) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		if (!tag.contains(TAG_CHARGED_PROJECTILES)) {
-			return ItemStack.EMPTY;
+	public void addChargedProjectile(ItemStack crossbowStack, ItemStack ammoStack) {
+		CompoundTag compoundtag = crossbowStack.getOrCreateTag();
+		ListTag listtag;
+		if (compoundtag.contains(TAG_CHARGED_PROJECTILES, 9)) {
+			listtag = compoundtag.getList(TAG_CHARGED_PROJECTILES, 10);
+		} else {
+			listtag = new ListTag();
 		}
-		return ItemStack.of(tag.getCompound(TAG_CHARGED_PROJECTILES));
-	}
 
-	public void setChargedProjectile(ItemStack crossbowStack, ItemStack ammoStack) {
 		CompoundTag ammoTag = new CompoundTag();
 		ammoStack.save(ammoTag);
-
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		tag.put(TAG_CHARGED_PROJECTILES, ammoTag);
+		listtag.add(ammoTag);
+		compoundtag.put(TAG_CHARGED_PROJECTILES, listtag);
 	}
 
-	public void clearChargedProjectile(ItemStack crossbowStack) {
-		CompoundTag ammoTag = new CompoundTag();
-		ItemStack.EMPTY.save(ammoTag);
+	public List<ItemStack> getChargedProjectiles(ItemStack crossbowStack) {
+		List<ItemStack> list = Lists.newArrayList();
+		ListTag listtag = getChargedProjectileListTag(crossbowStack);
+		for (int i = 0; i < listtag.size(); ++i) {
+			CompoundTag ammoTag = listtag.getCompound(i);
+			list.add(ItemStack.of(ammoTag));
+		}
+		return list;
+	}
 
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		tag.put(TAG_CHARGED_PROJECTILES, ammoTag);
+	public ListTag getChargedProjectileListTag(ItemStack crossbowStack) {
+		CompoundTag compoundtag = crossbowStack.getOrCreateTag();
+		ListTag listtag;
+		if (compoundtag.contains(TAG_CHARGED_PROJECTILES, 9)) {
+			listtag = compoundtag.getList(TAG_CHARGED_PROJECTILES, 10);
+		} else {
+			listtag = new ListTag();
+		}
+		return listtag;
+	}
+
+	public int getChargedProjectileAmount(ItemStack crossbowStack) {
+		return getChargedProjectileListTag(crossbowStack).size();
+	}
+
+	public ItemStack getLastChargedProjectile(ItemStack crossbowStack) {
+		List<ItemStack> ammoList = getChargedProjectiles(crossbowStack);
+		int size = ammoList.size();
+		return size > 0 ? ammoList.get(ammoList.size() - 1) : ItemStack.EMPTY;
+	}
+
+	public void clearChargedProjectiles(ItemStack crossbowStack) {
+		CompoundTag compoundtag = crossbowStack.getOrCreateTag();
+		ListTag listtag = compoundtag.getList(TAG_CHARGED_PROJECTILES, 9);
+		listtag.clear();
+		compoundtag.put(TAG_CHARGED_PROJECTILES, listtag);
+	}
+
+	public void consumeAndSetCharged(ItemStack crossbowStack) {
+		ListTag listtag = getChargedProjectileListTag(crossbowStack);
+		if (!listtag.isEmpty())
+			listtag.remove(listtag.size() - 1);
+		if (listtag.isEmpty()) {
+			setCrossbowCharged(crossbowStack, false);
+		}
 	}
 
 	public boolean isCrossbowCharged(ItemStack crossbowStack) {
@@ -347,9 +417,13 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	public boolean isFireworkCharged(ItemStack crossbowStack) {
 		if (crossbowStack.getItem() instanceof BaseCrossbowItem crossbowItem) {
-			return crossbowItem.getChargedProjectile(crossbowStack).is(Items.FIREWORK_ROCKET);
+			return crossbowItem.getLastChargedProjectile(crossbowStack).is(Items.FIREWORK_ROCKET);
 		}
 		return false;
+	}
+
+	public int getAmmoCapacity(ItemStack crossbowStack) {
+		return AMMO_CAPACITY;
 	}
 
 	//Miscellaneous

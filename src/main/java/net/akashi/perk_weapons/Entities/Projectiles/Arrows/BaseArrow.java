@@ -38,10 +38,11 @@ public class BaseArrow extends AbstractArrow {
 	public static final ResourceLocation SPECTRAL_ARROW_LOCATION = new ResourceLocation("textures/entity/projectiles/spectral_arrow.png");
 	private static final EntityDataAccessor<Integer> ID_EFFECT_COLOR
 			= SynchedEntityData.defineId(BaseArrow.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Boolean> ID_IS_SPECTRAL
+			= SynchedEntityData.defineId(BaseArrow.class, EntityDataSerializers.BOOLEAN);
 	private Potion potion = Potions.EMPTY;
 	private final Set<MobEffectInstance> effects = Sets.newHashSet();
 	private boolean fixedColor;
-	private boolean isSpectralArrow = false;
 	private float magicDamage = 0.0F;
 
 	public BaseArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
@@ -57,7 +58,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	public void setSpectralArrow(boolean target) {
-		isSpectralArrow = target;
+		this.entityData.set(ID_IS_SPECTRAL, target);
 	}
 
 	public boolean isTipped() {
@@ -65,7 +66,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	public ResourceLocation getArrowTexture() {
-		if (isSpectralArrow) {
+		if (this.entityData.get(ID_IS_SPECTRAL)) {
 			return SPECTRAL_ARROW_LOCATION;
 		}
 		return isTipped() ? TIPPED_ARROW_LOCATION : NORMAL_ARROW_LOCATION;
@@ -119,6 +120,7 @@ public class BaseArrow extends AbstractArrow {
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.entityData.define(ID_EFFECT_COLOR, -1);
+		this.entityData.define(ID_IS_SPECTRAL, false);
 	}
 
 	@Override
@@ -136,7 +138,7 @@ public class BaseArrow extends AbstractArrow {
 				}
 			} else {
 				this.makeParticle(2);
-				if (isSpectralArrow) {
+				if (this.entityData.get(ID_IS_SPECTRAL)) {
 					this.level().addParticle(ParticleTypes.INSTANT_EFFECT, this.getX(), this.getY(), this.getZ(),
 							0.0D, 0.0D, 0.0D);
 				}
@@ -219,7 +221,6 @@ public class BaseArrow extends AbstractArrow {
 			this.updateColor();
 		}
 		this.magicDamage = pCompound.getFloat("magicDamage");
-
 	}
 
 	@Override
@@ -246,7 +247,7 @@ public class BaseArrow extends AbstractArrow {
 				pLiving.addEffect(mobeffectinstance1, entity);
 			}
 		}
-		if (isSpectralArrow) {
+		if (this.entityData.get(ID_IS_SPECTRAL)) {
 			MobEffectInstance mobeffectinstance = new MobEffectInstance(MobEffects.GLOWING, 200, 0);
 			pLiving.addEffect(mobeffectinstance, this.getEffectSource());
 		}
@@ -254,8 +255,8 @@ public class BaseArrow extends AbstractArrow {
 
 	@Override
 	protected ItemStack getPickupItem() {
-		if (isSpectralArrow) {
-			new ItemStack(Items.SPECTRAL_ARROW);
+		if (this.entityData.get(ID_IS_SPECTRAL)) {
+			return new ItemStack(Items.SPECTRAL_ARROW);
 		}
 		if (this.effects.isEmpty() && this.potion == Potions.EMPTY) {
 			return new ItemStack(Items.ARROW);

@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -42,11 +43,13 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		if (PIERCE_LEVEL == -1) {
 			RemoveGeneralEnchant(PIERCING);
 		}
+		AMMO_CAPACITY = 0;
 	}
 
 	public SonicBlasterItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
 	                        float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier, onlyAllowMainHand, pProperties);
+		AMMO_CAPACITY = 0;
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
 		RemoveGeneralEnchant(POWER_ARROWS);
@@ -102,13 +105,16 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public boolean tryLoadAmmo(LivingEntity shooter, ItemStack crossbowStack) {
-		return true;
-	}
+	public void releaseUsing(ItemStack crossbowStack, Level level, LivingEntity shooter, int useTimeLeft) {
+		float progress = getChargeProgress(shooter, crossbowStack);
 
-	@Override
-	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
-		return null;
+		if (progress >= 1.0F && !isCrossbowCharged(crossbowStack)) {
+			setCrossbowCharged(crossbowStack, true);
+			SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
+			level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
+					getEndSound(crossbowStack), soundsource, 1.0F,
+					1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+		}
 	}
 
 	@Override
