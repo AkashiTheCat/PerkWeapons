@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -93,15 +94,15 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	}
 
 	@Override
-	public float getCoolDownProgress(Level level, Player player) {
+	public float getCoolDownProgress(LivingEntity player, ItemStack stack) {
 		if (!AbilityUseTimeMap.containsKey(player.getUUID()))
 			return 1.0f;
 		else {
-			long timeInterval = level.getGameTime() - AbilityUseTimeMap.get(player.getUUID());
-			if (timeInterval > ABILITY_COOLDOWN_TIME) {
+			long timePassed = player.level().getGameTime() - AbilityUseTimeMap.get(player.getUUID());
+			if (timePassed > ABILITY_COOLDOWN_TIME) {
 				return 1.0f;
 			} else {
-				return (float) timeInterval / ABILITY_COOLDOWN_TIME;
+				return (float) timePassed / ABILITY_COOLDOWN_TIME;
 			}
 		}
 	}

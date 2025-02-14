@@ -35,6 +35,9 @@ import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ScourgeItem extends BaseSpearItem {
+	public static final String TAG_LAST_USED = "lastUsed";
+	public static final String TAG_SHOTS_REMAIN = "shotsRemain";
+	public static final String TAG_SPEED_BONUS = "speedBonus";
 	private static int ABILITY_COOLDOWN = 600;
 	public static int WITHER_DURATION = 40;
 	public static int WITHER_LEVEL = 3;
@@ -44,10 +47,7 @@ public class ScourgeItem extends BaseSpearItem {
 	public static float ABILITY_ATTACK_SPEED_BONUS = 0.3F;
 	public static int ABILITY_SHOTS_INTERVAL = 10;
 	public static int ABILITY_SHOTS_COUNT = 3;
-	public static int PIERCE_LEVEL = 255;
-
-	private static final Map<UUID, Integer> ABILITY_SHOT_MAP = new HashMap<>();
-	private static final Map<UUID, Integer> ABILITY_BUFF_TIME_MAP = new HashMap<>();
+	public static int PIERCE_LEVEL = 127;
 
 	public ScourgeItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -86,11 +86,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		CompoundTag tag = stack.getTag();
-		float speedMultiplier = 1.0F;
-		if (tag != null) {
-			speedMultiplier = tag.getFloat("speedBonus") + 1;
-		}
+		float speedMultiplier = 1.0F + getSpeedBonus(stack);
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", BaseAttackDamage - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", BaseAttackSpeed * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
@@ -99,23 +95,37 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (pPlayer.isCrouching()) {
+		Level level = pPlayer.level();
+		if (pPlayer.isCrouching() && !level.isClientSide()) {
+			ItemStack stack = pPlayer.getItemInHand(pHand);
+
+			shootAbilitySpear(level, pPlayer, stack);
+			setAbilityShotsRemain(stack, ABILITY_SHOTS_COUNT - 1);
+			setLastAbilityUsedTime(stack, level.getGameTime());
+			setSpeedBonus(stack, ABILITY_ATTACK_SPEED_BONUS);
+
 			pPlayer.getCooldowns().addCooldown(this, ABILITY_COOLDOWN);
-			if (pPlayer.level().isClientSide()) {
-				pLevel.playSound(pPlayer, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
-						SoundEvents.WITHER_AMBIENT, pPlayer.getSoundSource(),
-						1.0F, 1.0F);
-			} else {
-				ABILITY_SHOT_MAP.put(pPlayer.getUUID(), (ABILITY_SHOTS_COUNT - 1) * ABILITY_SHOTS_INTERVAL);
-				ABILITY_BUFF_TIME_MAP.put(pPlayer.getUUID(), ABILITY_BUFF_DURATION);
-				ItemStack itemStack = pPlayer.getItemInHand(pHand);
-				CompoundTag tag = itemStack.getTag();
-				if (tag != null) {
-					tag.putFloat("speedBonus", ABILITY_ATTACK_SPEED_BONUS);
-				}
-			}
+			pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
+					SoundEvents.WITHER_AMBIENT, pPlayer.getSoundSource(),
+					1.0F, 1.0F);
 		}
 		return super.use(pLevel, pPlayer, pHand);
+	}
+
+	@Override
+	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
+		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
+		if (!level.isClientSide()) {
+			long tickPassed = level.getGameTime() - getLastAbilityUsedTime(stack);
+			int shotsRemain = getAbilityShotsRemain(stack);
+			if (shotsRemain > 0 && tickPassed % ABILITY_SHOTS_INTERVAL == 0) {
+				shootAbilitySpear(level, player, stack);
+				setAbilityShotsRemain(stack, shotsRemain - 1);
+			}
+			if (getSpeedBonus(stack) != 0.0F && tickPassed > ABILITY_BUFF_DURATION) {
+				setSpeedBonus(stack, 0.0F);
+			}
+		}
 	}
 
 	@Override
@@ -126,7 +136,7 @@ public class ScourgeItem extends BaseSpearItem {
 		return spear;
 	}
 
-	private void ShootSpear(Level level, Player player, ItemStack stack) {
+	public void shootAbilitySpear(Level level, Player player, ItemStack stack) {
 		ThrownSpear thrownspear = this.createThrownSpear(level, player, stack);
 		if (thrownspear instanceof ThrownScourge scourge) {
 			scourge.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity, 1.0F);
@@ -136,48 +146,42 @@ public class ScourgeItem extends BaseSpearItem {
 		}
 	}
 
-	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		if (!event.side.isClient() && event.phase == TickEvent.Phase.END) {
-			Player player = event.player;
+	public void setLastAbilityUsedTime(ItemStack stack, Long time) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putLong(TAG_LAST_USED, time);
+	}
 
-			UUID playerID = player.getUUID();
-			ItemStack itemStack = ItemStack.EMPTY;
-			if (player.getMainHandItem().getItem() instanceof ScourgeItem) {
-				itemStack = player.getMainHandItem();
-			} else if (player.getOffhandItem().getItem() instanceof ScourgeItem) {
-				itemStack = player.getOffhandItem();
-			}
-
-			//Handle ability shots
-			if (ABILITY_SHOT_MAP.containsKey(playerID)) {
-				int timer = ABILITY_SHOT_MAP.get(playerID);
-				if (timer % ABILITY_SHOTS_INTERVAL == 0) {
-					if (itemStack != ItemStack.EMPTY) {
-						ScourgeItem item = (ScourgeItem) itemStack.getItem();
-						item.ShootSpear(player.level(), player, itemStack);
-					}
-				}
-				if (timer != -1) {
-					ABILITY_SHOT_MAP.put(playerID, timer - 1);
-				}
-			}
-
-			//Handle ability attributes buff
-			if (ABILITY_BUFF_TIME_MAP.containsKey(player.getUUID())) {
-				int time = ABILITY_BUFF_TIME_MAP.get(playerID);
-				if (time > 0) {
-					ABILITY_BUFF_TIME_MAP.put(playerID, time - 1);
-				} else {
-					if (itemStack != ItemStack.EMPTY) {
-						CompoundTag tag = itemStack.getTag();
-						if (tag.getFloat("speedBonus") == ABILITY_ATTACK_SPEED_BONUS) {
-							tag.putFloat("speedBonus", 0.0F);
-							itemStack.setTag(tag);
-						}
-					}
-				}
-			}
+	public long getLastAbilityUsedTime(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains(TAG_LAST_USED)) {
+			return tag.getLong(TAG_LAST_USED);
 		}
+		return 0;
+	}
+
+	public void setAbilityShotsRemain(ItemStack stack, int amount) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putInt(TAG_SHOTS_REMAIN, amount);
+	}
+
+	public int getAbilityShotsRemain(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains(TAG_SHOTS_REMAIN)) {
+			return tag.getInt(TAG_SHOTS_REMAIN);
+		}
+		return 0;
+	}
+
+	public void setSpeedBonus(ItemStack stack, float bonus) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putFloat(TAG_SPEED_BONUS, bonus);
+	}
+
+	public float getSpeedBonus(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains(TAG_SPEED_BONUS)) {
+			return tag.getFloat(TAG_SPEED_BONUS);
+		}
+		return 0;
 	}
 }

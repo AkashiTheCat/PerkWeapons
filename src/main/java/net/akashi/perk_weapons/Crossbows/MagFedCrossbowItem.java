@@ -1,6 +1,8 @@
 package net.akashi.perk_weapons.Crossbows;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -8,7 +10,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,18 +28,17 @@ public class MagFedCrossbowItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		if (pPlayer.isCrouching()) {
-			ItemStack itemstack = pPlayer.getItemInHand(pHand);
-			if (!pPlayer.getProjectile(itemstack).isEmpty() &&
-					getChargedProjectileAmount(itemstack) < getAmmoCapacity(itemstack)) {
-				setCrossbowCharged(itemstack, false);
-				pPlayer.startUsingItem(pHand);
-				return InteractionResultHolder.consume(itemstack);
-			}
-			return InteractionResultHolder.pass(itemstack);
+	public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag flag) {
+		if (pLevel != null && pLevel.isClientSide()) {
+			Minecraft mc = Minecraft.getInstance();
+			Component crouch = mc.options.keyShift.getTranslatedKeyMessage();
+			Component attack = mc.options.keyAttack.getTranslatedKeyMessage();
+			tooltip.add(Component.translatable("tooltip.perk_weapons.mag_fed_crossbow_hint",
+					crouch, attack));
 		}
-		return super.use(pLevel, pPlayer, pHand);
+		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_ammo_amount",
+				this.getChargedProjectileAmount(stack)));
+		super.appendHoverText(stack, pLevel, tooltip, flag);
 	}
 
 	@Override

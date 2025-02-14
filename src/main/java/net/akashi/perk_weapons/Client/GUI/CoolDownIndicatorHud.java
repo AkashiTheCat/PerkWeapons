@@ -56,7 +56,7 @@ public class CoolDownIndicatorHud {
 			}
 			int startY = Math.round((float) screenHeight / 2) - 10;
 
-			byte drawHeight = (byte) (coolDownItem.getCoolDownProgress(level, player) * 21);
+			byte drawHeight = (byte) (coolDownItem.getCoolDownProgress(player, stack) * 21);
 			guiGraphics.blit(HUD_TEXTURE, startX, startY, 0, 7, 2, 21);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.8F);
 			guiGraphics.blit(HUD_TEXTURE, startX, startY, 3, 7, 2, drawHeight);

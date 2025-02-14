@@ -6,5 +6,11 @@
   "perk_weapons.itemGroup.bow_tab": "Perk Weapons: Bows & Crossbows",
 
   "enchantment.perk_weapons.melt_down": "Melt Down",
-  "enchantment.perk_weapons.star_shooter": "Star Shooter"
+  "enchantment.perk_weapons.star_shooter": "Star Shooter",
+  "enchantment.perk_weapons.regicide": "Regicide",
+  "enchantment.perk_weapons.blaze": "Blaze",
+
+  "tooltip.perk_weapons.mag_fed_crossbow_hint": "Press %1$s + %2$s to unload ammo",
+  "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %1$s",
+  "tooltip.perk_weapons.conduit_guard": "Trident in water tracks enemies within %1$s meters"
 }

@@ -8,6 +8,8 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -16,14 +18,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -31,14 +36,14 @@ import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
+	public static final String TAG_LAST_USED = "lastUsed";
 	private static double MagicResistance = 0.5;
 	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
 	public static float MAX_AFFECT_CLOUD_RADIUS = 6.0F;
 	public static int AFFECT_CLOUD_DURATION = 60;
 	public static int EFFECT_DAMAGE = 5;
 	public static int RETURN_TIME = 40;
-	private static int AbilityCoolDownTime = 200;
-	private static final Map<UUID, Long> AbilityUseTimeMap = new HashMap<>();
+	private static int COOLDOWN_TICKS = 200;
 
 	public DragonStrikeItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
@@ -52,11 +57,17 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	}
 
 	@Override
+	public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag pIsAdvanced) {
+		tooltip.add(Component.translatable("tooltip.perk_weapons.dragon_strike", (float) COOLDOWN_TICKS / 20));
+		super.appendHoverText(pStack, pLevel, tooltip, pIsAdvanced);
+	}
+
+	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof DragonStrikeProperties dProperties) {
 			MagicResistance = dProperties.MAGIC_RESISTANCE.get();
-			AbilityCoolDownTime = dProperties.ABILITY_COOLDOWN_TIME.get();
+			COOLDOWN_TICKS = dProperties.ABILITY_COOLDOWN_TIME.get();
 			INIT_AFFECT_CLOUD_RADIUS = dProperties.INIT_AFFECT_RADIUS.get().floatValue();
 			MAX_AFFECT_CLOUD_RADIUS = dProperties.MAX_AFFECT_RADIUS.get().floatValue();
 			AFFECT_CLOUD_DURATION = dProperties.AFFECT_DURATION.get();
@@ -75,9 +86,8 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		boolean flag = !AbilityUseTimeMap.containsKey(pPlayer.getUUID());
-		if ((flag || pLevel.getGameTime() - AbilityUseTimeMap.get(pPlayer.getUUID()) > AbilityCoolDownTime)
-				&& pPlayer.isCrouching()) {
+		ItemStack stack = pPlayer.getItemInHand(pHand);
+		if (getCoolDownProgress(pPlayer, stack) == 1.0 && pPlayer.isCrouching()) {
 			double x = pPlayer.getX();
 			double y = pPlayer.getY();
 			double z = pPlayer.getZ();
@@ -92,12 +102,12 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 						entity.setDeltaMovement(knockbackDirection.x, 0.5, knockbackDirection.z);
 					}
 				}
-				AbilityUseTimeMap.put(pPlayer.getUUID(), pLevel.getGameTime());
+				setLastAbilityUsedTime(stack, pLevel.getGameTime());
+				pLevel.playSound(null, x, y, z, SoundEvents.ENDER_DRAGON_GROWL, pPlayer.getSoundSource(),
+						1.0F, 1.0F);
 			} else {
 				pLevel.addParticle(ParticleTypes.EXPLOSION_EMITTER, x, y, z,
 						1.0, 0.0, 0.0);
-				pLevel.playSound(pPlayer, x, y, z, SoundEvents.ENDER_DRAGON_GROWL, pPlayer.getSoundSource(),
-						1.0F, 1.0F);
 			}
 		}
 		return super.use(pLevel, pPlayer, pHand);
@@ -116,16 +126,20 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	}
 
 	@Override
-	public float getCoolDownProgress(Level level, Player player) {
-		if (!AbilityUseTimeMap.containsKey(player.getUUID()))
-			return 1.0f;
-		else {
-			long timeInterval = level.getGameTime() - AbilityUseTimeMap.get(player.getUUID());
-			if (timeInterval > AbilityCoolDownTime) {
-				return 1.0f;
-			} else {
-				return (float) timeInterval / AbilityCoolDownTime;
-			}
+	public float getCoolDownProgress(LivingEntity entity, ItemStack stack) {
+		return (float) Math.min((double) (entity.level().getGameTime() - getLastAbilityUsedTime(stack)) / COOLDOWN_TICKS, 1.0);
+	}
+
+	public void setLastAbilityUsedTime(ItemStack stack, Long time) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putLong(TAG_LAST_USED, time);
+	}
+
+	public long getLastAbilityUsedTime(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains(TAG_LAST_USED)) {
+			return tag.getLong(TAG_LAST_USED);
 		}
+		return 0;
 	}
 }
