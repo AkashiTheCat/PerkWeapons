@@ -41,7 +41,7 @@ public class ModCommonConfigs {
 	public static SpearProperties GOLDEN_SPEAR_PROPERTIES;
 	public static SpearProperties DIAMOND_SPEAR_PROPERTIES;
 	public static SpearProperties NETHERITE_SPEAR_PROPERTIES;
-	public static SpearProperties MEGALODON_PROPERTIES;
+	public static MegalodonProperties MEGALODON_PROPERTIES;
 	public static ConduitGuardProperties CONDUIT_GUARD_PROPERTIES;
 	public static PiglinsWarSpearProperties PIGLINS_WARSPEAR_PROPERTIES;
 	public static DragonStrikeProperties DRAGON_STRIKE_PROPERTIES;
@@ -100,9 +100,12 @@ public class ModCommonConfigs {
 		NETHERITE_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Netherite Spear",
 				10, 1.1,
 				9, 2.5F, true);
-		MEGALODON_PROPERTIES = new SpearProperties(BUILDER, "Megalodon",
+		MEGALODON_PROPERTIES = new MegalodonProperties(BUILDER, "Megalodon",
 				9, 1.2,
-				6, 2.5F, true);
+				6, 2.5F,
+				1, 120,
+				1, 120,
+				1, 120);
 		CONDUIT_GUARD_PROPERTIES = new ConduitGuardProperties(BUILDER, "Conduit Guard",
 				9, 1.2,
 				6, 2.5F,

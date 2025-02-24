@@ -6,6 +6,8 @@ import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownConduitGuard;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
@@ -34,12 +37,6 @@ public class ConduitGuardItem extends BaseSpearItem {
 	}
 
 	@Override
-	public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag pIsAdvanced) {
-		tooltip.add(Component.translatable("tooltip.perk_weapons.conduit_guard", TRACKING_RANGE));
-		super.appendHoverText(pStack, pLevel, tooltip, pIsAdvanced);
-	}
-
-	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
 		return new ThrownConduitGuard(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_CONDUIT_GUARD.get())
 				.setBaseDamage(this.ThrowDamage);
@@ -53,5 +50,22 @@ public class ConduitGuardItem extends BaseSpearItem {
 			TRACKING_THRESHOLD = cProperties.getMaxTrackingAngleInDotProductForm();
 			RETURN_TIME = cProperties.RETURN_TIME.get();
 		}
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		Component trackingRange = Component.literal(String.valueOf(TRACKING_RANGE)).withStyle(ChatFormatting.WHITE);
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_1",
+				trackingRange)));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_2")));
+
+		return list;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.conduit_guard"));
 	}
 }

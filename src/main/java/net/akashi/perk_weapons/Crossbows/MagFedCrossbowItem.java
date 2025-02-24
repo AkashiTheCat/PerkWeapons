@@ -1,8 +1,10 @@
 package net.akashi.perk_weapons.Crossbows;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,16 +31,22 @@ public class MagFedCrossbowItem extends BaseCrossbowItem {
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag flag) {
-		if (pLevel != null && pLevel.isClientSide()) {
-			Minecraft mc = Minecraft.getInstance();
-			Component crouch = mc.options.keyShift.getTranslatedKeyMessage();
-			Component attack = mc.options.keyAttack.getTranslatedKeyMessage();
-			tooltip.add(Component.translatable("tooltip.perk_weapons.mag_fed_crossbow_hint",
-					crouch, attack));
-		}
-		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_ammo_amount",
-				this.getChargedProjectileAmount(stack)));
 		super.appendHoverText(stack, pLevel, tooltip, flag);
+		if (pLevel == null || !pLevel.isClientSide())
+			return;
+
+		Component quantity = Component.literal(String.valueOf(this.getChargedProjectileAmount(stack)))
+				.withStyle(ChatFormatting.GRAY);
+		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_ammo_amount", quantity)
+				.withStyle(ChatFormatting.DARK_AQUA));
+
+		Minecraft mc = Minecraft.getInstance();
+		Component crouch = mc.options.keyShift.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		Component attack = mc.options.keyAttack.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		tooltip.add(Component.translatable("tooltip.perk_weapons.mag_fed_crossbow_hint",
+				crouch, attack).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	@Override

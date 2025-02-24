@@ -5,7 +5,11 @@ import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -27,6 +31,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +51,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
 			MOB_LOOTING,
-			LOYALTY
+			LOYALTY,
+			MENDING
 	));
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>(Arrays.asList(
 			SMITE,
@@ -285,5 +291,26 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
 		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get())
 				.setBaseDamage(this.ThrowDamage);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+		if (level == null || !level.isClientSide()) {
+			super.appendHoverText(stack, level, tooltip, isAdvanced);
+			return;
+		}
+
+		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
+		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
+
+		super.appendHoverText(stack, level, tooltip, isAdvanced);
+	}
+
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		return List.of();
+	}
+
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return Component.empty();
 	}
 }

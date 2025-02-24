@@ -11,6 +11,7 @@ import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.nbt.CompoundTag;
@@ -68,7 +69,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			QUICK_CHARGE,
 			MULTISHOT,
 			PIERCING,
-			POWER_ARROWS
+			POWER_ARROWS,
+			MENDING
 	));
 
 	protected final List<Enchantment> ConflictEnchants = new ArrayList<>();
@@ -165,25 +167,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
 						getEndSound(crossbowStack), soundsource, 1.0F,
 						1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
-			}
-		}
-	}
-
-	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag flag) {
-		ItemStack ammoStack = getLastChargedProjectile(stack);
-		if (isCrossbowCharged(stack) && !ammoStack.isEmpty()) {
-			tooltip.add(Component.translatable("item.minecraft.crossbow.projectile")
-					.append(CommonComponents.SPACE)
-					.append(ammoStack.getDisplayName()));
-			if (flag.isAdvanced() && ammoStack.is(Items.FIREWORK_ROCKET)) {
-				List<Component> list1 = Lists.newArrayList();
-				Items.FIREWORK_ROCKET.appendHoverText(ammoStack, pLevel, list1, flag);
-				if (!list1.isEmpty()) {
-					list1.replaceAll(pSibling -> Component.literal("  ")
-							.append(pSibling).withStyle(ChatFormatting.GRAY));
-					tooltip.addAll(list1);
-				}
 			}
 		}
 	}
@@ -447,7 +430,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	protected SoundEvent getMiddleSound(ItemStack crossbowStack) {
-		return crossbowStack.getEnchantmentLevel(QUICK_CHARGE) == 0 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
+		return getMaxChargeTicks(crossbowStack) > 20 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
 	}
 
 	protected SoundEvent getEndSound(ItemStack crossbowStack) {
@@ -533,5 +516,47 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			return false;
 		}
 		return true;
+	}
+
+	//Tooltip descriptions
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+		if (level == null || !level.isClientSide()) {
+			super.appendHoverText(stack, level, tooltip, isAdvanced);
+			return;
+		}
+
+		if (onlyAllowMainHand) {
+			tooltip.add(Component.translatable("tooltip.perk_weapons.only_mainhand")
+					.withStyle(ChatFormatting.RED));
+		}
+
+		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
+		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
+
+		ItemStack ammoStack = getLastChargedProjectile(stack);
+		if (isCrossbowCharged(stack) && !ammoStack.isEmpty()) {
+			Component ammo = ammoStack.getDisplayName().copy().withStyle(ChatFormatting.GRAY);
+			tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_projectile", ammo)
+					.withStyle(ChatFormatting.DARK_AQUA));
+			if (isAdvanced.isAdvanced() && ammoStack.is(Items.FIREWORK_ROCKET)) {
+				List<Component> list1 = Lists.newArrayList();
+				Items.FIREWORK_ROCKET.appendHoverText(ammoStack, level, list1, isAdvanced);
+				if (!list1.isEmpty()) {
+					list1.replaceAll(pSibling -> Component.literal("  ")
+							.append(pSibling).withStyle(ChatFormatting.GRAY));
+					tooltip.addAll(list1);
+				}
+			}
+		}
+	}
+
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		return List.of();
+	}
+
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return Component.empty();
 	}
 }

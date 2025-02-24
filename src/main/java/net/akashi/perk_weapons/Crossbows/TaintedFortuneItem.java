@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.TaintedFortuneProperties;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -117,5 +118,10 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 	public void setReloadBeginTime(ItemStack crossbowStack, long reloadBeginTime) {
 		CompoundTag tag = crossbowStack.getOrCreateTag();
 		tag.putLong(TAG_RELOAD_BEGIN, reloadBeginTime);
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return super.getWeaponDescription(stack, level);
 	}
 }

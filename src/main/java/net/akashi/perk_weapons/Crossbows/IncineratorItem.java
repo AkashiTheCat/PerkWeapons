@@ -5,7 +5,10 @@ import net.akashi.perk_weapons.Config.Properties.Crossbow.IncineratorProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.IncineratorArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +17,9 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -76,5 +82,21 @@ public class IncineratorItem extends MagFedCrossbowItem {
 	public int getAmmoCapacity(ItemStack crossbowStack) {
 		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ?
 				BLAZE_AMMO_CAPACITY : super.getAmmoCapacity(crossbowStack);
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.incinerator"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1",
+				Component.literal(String.valueOf(getAmmoCapacity(stack))).withStyle(ChatFormatting.AQUA))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2")));
+
+		return list;
 	}
 }

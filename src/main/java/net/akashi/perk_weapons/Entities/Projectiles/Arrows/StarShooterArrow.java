@@ -47,8 +47,8 @@ public class StarShooterArrow extends BaseArrow {
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity livingEntity) {
-			BlockPos pos = livingEntity.getOnPos();
-			if (FLYING_ENTITY.stream().anyMatch((entity) -> livingEntity.getType() == entity)) {
+			if (FLYING_ENTITY.stream().anyMatch((entity) -> livingEntity.getType() == entity)
+					|| !livingEntity.onGround()) {
 				this.setBaseDamage(getBaseDamage() * 2);
 			} else {
 				this.setBaseDamage(getBaseDamage() / 2);

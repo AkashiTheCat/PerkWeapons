@@ -9,6 +9,9 @@ import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -28,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -49,7 +53,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			INFINITY_ARROWS,
 			FLAMING_ARROWS,
 			POWER_ARROWS,
-			PUNCH_ARROWS
+			PUNCH_ARROWS,
+			MENDING
 	));
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
 
@@ -285,5 +290,31 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	@Override
 	public float getChokeProgress(LivingEntity shooter, ItemStack stack) {
 		return getDrawProgress(shooter);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+		if (level == null || !level.isClientSide()) {
+			super.appendHoverText(stack, level, tooltip, isAdvanced);
+			return;
+		}
+
+		if (onlyAllowMainHand) {
+			tooltip.add(Component.translatable("tooltip.perk_weapons.only_mainhand")
+					.withStyle(ChatFormatting.RED));
+		}
+
+		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
+		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
+
+		super.appendHoverText(stack, level, tooltip, isAdvanced);
+	}
+
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		return List.of();
+	}
+
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return Component.empty();
 	}
 }

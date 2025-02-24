@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Spears;
 
+import net.akashi.perk_weapons.Spears.MegalodonItem;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -22,10 +23,16 @@ public class ThrownMegalodon extends ThrownSpear {
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		Entity entity1 = this.getOwner();
-		if (entity1 instanceof Player){
-			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,120,0));
-			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,120,0));
-			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE,120,0));
+		if (entity1 instanceof Player) {
+			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DIG_SPEED,
+					MegalodonItem.HASTE_TICKS,
+					MegalodonItem.HASTE_LEVEL - 1));
+			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST,
+					MegalodonItem.STRENGTH_TICKS,
+					MegalodonItem.STRENGTH_LEVEL - 1));
+			((Player) entity1).addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE,
+					MegalodonItem.DOLPHINS_GRACE_TICKS,
+					MegalodonItem.DOLPHINS_GRACE_LEVEL - 1));
 		}
 		super.onHitEntity(pResult);
 	}

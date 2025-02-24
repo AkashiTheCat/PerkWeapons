@@ -10,7 +10,27 @@
   "enchantment.perk_weapons.regicide": "Regicide",
   "enchantment.perk_weapons.blaze": "Blaze",
 
-  "tooltip.perk_weapons.mag_fed_crossbow_hint": "Press %1$s + %2$s to unload ammo",
-  "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %1$s",
-  "tooltip.perk_weapons.conduit_guard": "Trident in water tracks enemies within %1$s meters"
+  "tooltip.perk_weapons.mag_fed_crossbow_hint": "Press %s + %s to unload ammo",
+  "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %d",
+  "tooltip.perk_weapons.crossbow_projectile": "Projectile: %s",
+
+  "tooltip.perk_weapons.key_shift": "SHIFT",
+  "tooltip.perk_weapons.only_mainhand": "Only usable in Main Hand",
+  "tooltip.perk_weapons.effect_format": "%s %s - %f s",
+
+  "tooltip.perk_weapons.weapon_description_title": "Description:",
+  "tooltip.perk_weapons.description_key_hint": "[Press %s to show description]",
+  "tooltip.perk_weapons.perk_description_title": "Perks:",
+  "tooltip.perk_weapons.perk_description_key_hint": "[Press %s to show perks]",
+
+  "tooltip.perk_weapons.conduit_guard_perk_1": "Trident in water tracks enemies within %f meters",
+  "tooltip.perk_weapons.conduit_guard_perk_2": "Trident swims back to its owner",
+  "tooltip.perk_weapons.conduit_guard": "\"Its duty never changed\"",
+
+  "tooltip.perk_weapons.megalodon": "\"The hunt persists in its throw — at least in form. This spear bears their toothless grudge.\"",
+  "tooltip.perk_weapons.megalodon_perk_1": "Applies following effects to owner when spear hits an entity:",
+
+  "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
+  "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
+  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire"
 }
