@@ -1,6 +1,47 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "perk_weapons:block/furnace_core"
-  }
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "perk_weapons:block/furnace_core",
+		"particle": "perk_weapons:block/furnace_core"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 14, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 2]},
+			"faces": {
+				"north": {"uv": [1, 1, 15, 15], "texture": "#0"},
+				"east": {"uv": [1, 1, 15, 15], "texture": "#0"},
+				"south": {"uv": [1, 1, 15, 15], "texture": "#0"},
+				"west": {"uv": [1, 1, 15, 15], "texture": "#0"},
+				"up": {"uv": [15, 15, 1, 1], "texture": "#0"},
+				"down": {"uv": [15, 1, 1, 15], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [-20, 0, -45],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [-20, 0, -45],
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -40, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -40, 0],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"ground": {
+			"scale": [0.4, 0.4, 0.4]
+		},
+		"gui": {
+			"rotation": [25, 45, 0],
+			"scale": [0.6, 0.6, 0.6]
+		}
+	}
 }

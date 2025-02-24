@@ -29,8 +29,8 @@ public class ModItems {
 	public static final RegistryObject<Item> GILDED_BLACKSTONE_HANDLE = addToTab(
 			ITEMS.register("gilded_blackstone_handle",
 					() -> new Item(new Item.Properties().rarity(Rarity.RARE))), INGREDIENTS_TAB);
-	public static final RegistryObject<Item> PRISMARINE_FIN = addToTab(
-			ITEMS.register("prismarine_fin",
+	public static final RegistryObject<Item> GUARDIANS_EYE = addToTab(
+			ITEMS.register("guardians_eye",
 					() -> new Item(new Item.Properties().rarity(Rarity.RARE))), INGREDIENTS_TAB);
 	public static final RegistryObject<Item> DRAGON_FANG = addToTab(
 			ITEMS.register("dragon_fang",
