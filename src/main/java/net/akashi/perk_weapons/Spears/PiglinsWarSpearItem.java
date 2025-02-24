@@ -30,7 +30,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class PiglinsWarSpearItem extends BaseSpearItem {
-	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS;
+	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS = new ArrayList<>();
 	public static String TAG_ARMOR_COUNT = "armor_count";
 	public static float DAMAGE_BONUS = 0.1f;
 	public static float SPEED_BONUS = 0.1f;
