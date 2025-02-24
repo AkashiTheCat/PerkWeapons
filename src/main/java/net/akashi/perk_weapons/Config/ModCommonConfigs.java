@@ -205,8 +205,8 @@ public class ModCommonConfigs {
 				80, 11.0,
 				3.2, 0.8,
 				-0.25, 7,
-				10, 1,
-				true);
+				10, 10,
+				1, true);
 
 
 		SPEC = BUILDER.build();

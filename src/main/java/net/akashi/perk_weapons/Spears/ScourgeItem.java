@@ -8,7 +8,11 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownScourge;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -27,9 +31,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import javax.tools.Tool;
+import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
@@ -183,5 +186,39 @@ public class ScourgeItem extends BaseSpearItem {
 			return tag.getFloat(TAG_SPEED_BONUS);
 		}
 		return 0;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.scourge"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_perk_1",
+				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_perk_2")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.WITHER.getDisplayName(),
+				TooltipHelper.getRomanNumeral(WITHER_LEVEL),
+				TooltipHelper.convertTicksToSeconds(WITHER_DURATION))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.MOVEMENT_SLOWDOWN.getDisplayName(),
+				TooltipHelper.getRomanNumeral(SLOWNESS_LEVEL),
+				TooltipHelper.convertTicksToSeconds(SLOWNESS_DURATION))));
+
+		list.add(Component.empty());
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		list.add(TooltipHelper.getCoolDownTip(ABILITY_COOLDOWN));
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_ability_1",
+				TooltipHelper.convertToEmbeddedElement(ABILITY_SHOTS_COUNT))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_ability_2",
+				TooltipHelper.getPercentage(ABILITY_ATTACK_SPEED_BONUS),
+				TooltipHelper.convertTicksToSeconds(ABILITY_BUFF_DURATION))));
+
+		return list;
 	}
 }

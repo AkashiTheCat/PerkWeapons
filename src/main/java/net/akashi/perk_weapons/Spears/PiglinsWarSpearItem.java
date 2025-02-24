@@ -5,7 +5,9 @@ import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -14,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -64,7 +67,7 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 			speedMultiplier = tag.getFloat("speedMultiplier");
 			damageMultiplier = tag.getFloat("damageMultiplier");
 		}
-		if(speedMultiplier==1.0F && damageMultiplier==1.0F){
+		if (speedMultiplier == 1.0F && damageMultiplier == 1.0F) {
 			super.getAttributeModifiers(slot, stack);
 		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -107,5 +110,23 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 			}
 		}
 		return count;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_1")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_2",
+				TooltipHelper.getPercentage(SPEED_BONUS))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_3",
+				TooltipHelper.getPercentage(DAMAGE_BONUS))));
+
+		return list;
 	}
 }

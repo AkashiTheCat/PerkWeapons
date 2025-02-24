@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Util;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -48,6 +49,14 @@ public class TooltipHelper {
 		return ROMAN_NUMERAL_LIST.get(i - 1);
 	}
 
+	public static float convertTicksToSeconds(int ticks) {
+		return (float) ticks / 20;
+	}
+
+	public static String getPercentage(float f) {
+		return String.format("%.1f%%", f * 100);
+	}
+
 	public static void addWeaponDescription(List<Component> tooltip, Component description) {
 		if (description.equals(Component.empty()))
 			return;
@@ -86,6 +95,41 @@ public class TooltipHelper {
 		}
 
 		tooltip.add(Component.empty());
+	}
+
+	public static MutableComponent getCrouchUseAbilityHint() {
+		Minecraft mc = Minecraft.getInstance();
+		Component crouch = mc.options.keyShift.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		Component use = mc.options.keyUse.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		return setKeyHintStyle(Component.translatable("tooltip.perk_weapons.crouch_use_key",
+				crouch, use));
+	}
+
+	public static MutableComponent getCoolDownTip(int cd_ticks) {
+		return Component.translatable("tooltip.perk_weapons.cd", convertTicksToSeconds(cd_ticks))
+				.withStyle(ChatFormatting.GRAY);
+	}
+
+	public static MutableComponent convertToEmbeddedElement(int n) {
+		return TooltipHelper.setEmbeddedElementStyle(Component.literal(String.valueOf(n)));
+	}
+
+	public static MutableComponent convertToEmbeddedElement(float f) {
+		return TooltipHelper.setEmbeddedElementStyle(Component.literal(String.format("%.1f", f)));
+	}
+
+	public static MutableComponent convertToEmbeddedElement(double d) {
+		return convertToEmbeddedElement((float) d);
+	}
+
+	public static MutableComponent setEmbeddedElementStyle(MutableComponent component) {
+		return component.withStyle(ChatFormatting.YELLOW);
+	}
+
+	public static MutableComponent setKeyHintStyle(MutableComponent component) {
+		return component.withStyle(ChatFormatting.DARK_GRAY);
 	}
 
 	public static MutableComponent setPerkStyle(MutableComponent component) {

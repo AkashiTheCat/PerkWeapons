@@ -18,6 +18,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 
+import javax.tools.Tool;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 public class IncineratorItem extends MagFedCrossbowItem {
 	public static int FIRE_ARROW_KNOCKBACK_BONUS = 1;
 	public static int BLAZE_AMMO_CAPACITY = 10;
+	public static int BLAZE_RELOAD_ADDITION = 10;
 
 	public IncineratorItem(Properties pProperties) {
 		super(pProperties);
@@ -45,6 +47,7 @@ public class IncineratorItem extends MagFedCrossbowItem {
 		if (properties instanceof IncineratorProperties IProperties) {
 			AMMO_CAPACITY = IProperties.NORMAL_AMMO_CAPACITY.get();
 			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
+			BLAZE_RELOAD_ADDITION = IProperties.BLAZE_RELOAD_INCREMENT.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
 		}
 		AddGeneralEnchant(ModEnchantments.BLAZE.get());
@@ -79,6 +82,14 @@ public class IncineratorItem extends MagFedCrossbowItem {
 		return arrow;
 	}
 
+	@Override
+	public int getMaxChargeTicks(ItemStack crossbowStack) {
+		if (crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0) {
+			return super.getMaxChargeTicks(crossbowStack) + BLAZE_RELOAD_ADDITION;
+		}
+		return super.getMaxChargeTicks(crossbowStack);
+	}
+
 	public int getAmmoCapacity(ItemStack crossbowStack) {
 		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ?
 				BLAZE_AMMO_CAPACITY : super.getAmmoCapacity(crossbowStack);
@@ -94,8 +105,14 @@ public class IncineratorItem extends MagFedCrossbowItem {
 		List<Component> list = new ArrayList<>();
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1",
-				Component.literal(String.valueOf(getAmmoCapacity(stack))).withStyle(ChatFormatting.AQUA))));
+				TooltipHelper.setEmbeddedElementStyle(TooltipHelper.convertToEmbeddedElement(getAmmoCapacity(stack))))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_3",
+				TooltipHelper.setEmbeddedElementStyle(ModEnchantments.BLAZE.get().getFullname(1).copy()))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_4",
+				BLAZE_AMMO_CAPACITY - AMMO_CAPACITY)));
+		list.add(Component.translatable("tooltip.perk_weapons.incinerator_perk_5",
+				TooltipHelper.convertTicksToSeconds(BLAZE_RELOAD_ADDITION)).withStyle(ChatFormatting.DARK_RED));
 
 		return list;
 	}

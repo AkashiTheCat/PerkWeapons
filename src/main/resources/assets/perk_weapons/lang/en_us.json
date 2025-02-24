@@ -14,9 +14,11 @@
   "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %d",
   "tooltip.perk_weapons.crossbow_projectile": "Projectile: %s",
 
+  "tooltip.perk_weapons.crouch_use_key": "[%s + %s]:",
   "tooltip.perk_weapons.key_shift": "SHIFT",
   "tooltip.perk_weapons.only_mainhand": "Only usable in Main Hand",
   "tooltip.perk_weapons.effect_format": "%s %s - %f s",
+  "tooltip.perk_weapons.cd": "Cool Down: %s s",
 
   "tooltip.perk_weapons.weapon_description_title": "Description:",
   "tooltip.perk_weapons.description_key_hint": "[Press %s to show description]",
@@ -32,5 +34,24 @@
 
   "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
   "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
-  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire"
+  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire",
+  "tooltip.perk_weapons.incinerator_perk_3": "When %s enchanted:",
+  "tooltip.perk_weapons.incinerator_perk_4": "Ammo capacity + %d",
+  "tooltip.perk_weapons.incinerator_perk_5": "Reload Time + %f s",
+
+  "tooltip.perk_weapons.piglins_warspear": "\"Waaaaaaaaaaaaaaaaaaagh!!!\"",
+  "tooltip.perk_weapons.piglins_warspear_perk_1": "Each golden armor worn provides:",
+  "tooltip.perk_weapons.piglins_warspear_perk_2": "+ %s Attack speed",
+  "tooltip.perk_weapons.piglins_warspear_perk_3": "+ %s Attack damage",
+
+  "tooltip.perk_weapons.scourge": "\"Look on the bright side: you don't have to decide which head to sneeze with.\"",
+  "tooltip.perk_weapons.scourge_perk_1": "Spear pierces through up to %d entities",
+  "tooltip.perk_weapons.scourge_perk_2": "Applies following effects to hit entities:",
+  "tooltip.perk_weapons.scourge_ability_1": "Throw out %d spears at a time",
+  "tooltip.perk_weapons.scourge_ability_2": "+ %s Attack speed - %s s",
+
+  "tooltip.perk_weapons.dragon_strike": "\"Here you come... My Fated Nemesis\"",
+  "tooltip.perk_weapons.dragon_strike_perk_1": "Thrown spear isn't affected by gravity",
+  "tooltip.perk_weapons.dragon_strike_perk_2": "Creates a dragon breath effect cloud on hit",
+  "tooltip.perk_weapons.dragon_strike_ability_1": "Knockback surrounding entities"
 }

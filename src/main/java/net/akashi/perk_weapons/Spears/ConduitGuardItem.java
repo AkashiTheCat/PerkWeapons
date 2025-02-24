@@ -56,9 +56,8 @@ public class ConduitGuardItem extends BaseSpearItem {
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
 		List<Component> list = new ArrayList<>();
 
-		Component trackingRange = Component.literal(String.valueOf(TRACKING_RANGE)).withStyle(ChatFormatting.WHITE);
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_1",
-				trackingRange)));
+				TooltipHelper.convertToEmbeddedElement(TRACKING_RANGE))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_2")));
 
 		return list;

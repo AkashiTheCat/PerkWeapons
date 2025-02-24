@@ -7,6 +7,9 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -27,10 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
@@ -54,12 +54,6 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	                        boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 		this.RemoveGeneralEnchant(LOYALTY);
-	}
-
-	@Override
-	public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag pIsAdvanced) {
-		tooltip.add(Component.translatable("tooltip.perk_weapons.dragon_strike", (float) COOLDOWN_TICKS / 20));
-		super.appendHoverText(pStack, pLevel, tooltip, pIsAdvanced);
 	}
 
 	@Override
@@ -141,5 +135,24 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 			return tag.getLong(TAG_LAST_USED);
 		}
 		return 0;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.dragon_strike"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_2")));
+
+		list.add(Component.empty());
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		list.add(TooltipHelper.getCoolDownTip(COOLDOWN_TICKS));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_ability_1")));
+
+		return list;
 	}
 }
