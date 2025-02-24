@@ -30,8 +30,10 @@ import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class PiglinsWarSpearItem extends BaseSpearItem {
-	private static float DAMAGE_BONUS = 0.1f;
-	private static float SPEED_BONUS = 0.1f;
+	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS;
+	public static String TAG_ARMOR_COUNT = "armor_count";
+	public static float DAMAGE_BONUS = 0.1f;
+	public static float SPEED_BONUS = 0.1f;
 	private static List<Item> allowedArmor = new ArrayList<>(Arrays.asList(
 			Items.GOLDEN_HELMET,
 			Items.GOLDEN_CHESTPLATE,
@@ -41,11 +43,24 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	public PiglinsWarSpearItem(boolean isAdvanced, Properties pProperties) {
 		super(isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
+		buildAttributeModifiers();
 	}
 
 	public PiglinsWarSpearItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity, boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
+		buildAttributeModifiers();
+	}
+
+	private void buildAttributeModifiers() {
+		for (int i = 0; i < 4; i++) {
+			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+					BaseAttackDamage * (1 + i * DAMAGE_BONUS) - 1, AttributeModifier.Operation.ADDITION));
+			builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+					BaseAttackSpeed * (1 + i * DAMAGE_BONUS) - 4, AttributeModifier.Operation.ADDITION));
+			MODIFIERS.add(builder.build());
+		}
 	}
 
 	@Override
@@ -56,24 +71,16 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 			SPEED_BONUS = pProperties.SPEED_BONUS.get().floatValue();
 			allowedArmor = PiglinsWarSpearProperties.convertStringsToItems(pProperties.getArmorList());
 		}
+		buildAttributeModifiers();
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		CompoundTag tag = stack.getTag();
-		float speedMultiplier = 1.0F;
-		float damageMultiplier = 1.0F;
-		if (tag != null) {
-			speedMultiplier = tag.getFloat("speedMultiplier");
-			damageMultiplier = tag.getFloat("damageMultiplier");
+		CompoundTag tag = stack.getOrCreateTag();
+		if (tag.contains(TAG_ARMOR_COUNT) && slot == EquipmentSlot.MAINHAND) {
+			return MODIFIERS.get(tag.getInt(TAG_ARMOR_COUNT));
 		}
-		if (speedMultiplier == 1.0F && damageMultiplier == 1.0F) {
-			super.getAttributeModifiers(slot, stack);
-		}
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", BaseAttackDamage * damageMultiplier - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", BaseAttackSpeed * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
-		return slot == EquipmentSlot.MAINHAND ? builder.build() : super.getAttributeModifiers(slot, stack);
+		return super.getAttributeModifiers(slot, stack);
 	}
 
 	@SubscribeEvent
@@ -87,17 +94,8 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 			}
 			if (itemStack != ItemStack.EMPTY) {
 				int count = getArmorCount(player);
-				float damageMultiplier = 1 + DAMAGE_BONUS * count;
-				float speedMultiplier = 1 + SPEED_BONUS * count;
-				CompoundTag tag = itemStack.getTag();
-				if (tag != null) {
-					if (tag.getFloat("damageMultiplier") != damageMultiplier ||
-							tag.getFloat("speedMultiplier") != speedMultiplier) {
-						tag.putFloat("damageMultiplier", damageMultiplier);
-						tag.putFloat("speedMultiplier", speedMultiplier);
-						itemStack.setTag(tag);
-					}
-				}
+				CompoundTag tag = itemStack.getOrCreateTag();
+				tag.putInt(TAG_ARMOR_COUNT, count);
 			}
 		}
 	}
