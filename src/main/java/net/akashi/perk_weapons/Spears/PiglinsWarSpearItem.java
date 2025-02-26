@@ -120,9 +120,9 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		List<Component> list = new ArrayList<>();
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_1")));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_2",
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.attack_speed_buff",
 				TooltipHelper.getPercentage(SPEED_BONUS))));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_3",
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.attack_damage_buff",
 				TooltipHelper.getPercentage(DAMAGE_BONUS))));
 
 		return list;

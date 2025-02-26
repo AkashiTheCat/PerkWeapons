@@ -147,6 +147,8 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 		List<Component> list = new ArrayList<>();
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_2")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_3",
+				TooltipHelper.setEmbeddedElementStyle(Component.literal(TooltipHelper.getPercentage((float) MagicResistance))))));
 
 		list.add(Component.empty());
 		list.add(TooltipHelper.getCrouchUseAbilityHint());

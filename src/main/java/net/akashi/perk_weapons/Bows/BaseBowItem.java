@@ -307,6 +307,16 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
+						TooltipHelper.convertToEmbeddedElement(PROJECTILE_DAMAGE))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
+						TooltipHelper.convertToEmbeddedElement(VELOCITY))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_draw_time",
+						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(DRAW_TIME)))
+				.withStyle(ChatFormatting.DARK_AQUA));
+
 		super.appendHoverText(stack, level, tooltip, isAdvanced);
 	}
 

@@ -535,6 +535,17 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
+						TooltipHelper.convertToEmbeddedElement(DAMAGE))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
+						TooltipHelper.convertToEmbeddedElement(VELOCITY))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_charge_time",
+						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(MAX_CHARGE_TICKS)))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.empty());
+
 		ItemStack ammoStack = getLastChargedProjectile(stack);
 		if (isCrossbowCharged(stack) && !ammoStack.isEmpty()) {
 			Component ammo = ammoStack.getDisplayName().copy().withStyle(ChatFormatting.GRAY);

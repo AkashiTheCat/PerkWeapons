@@ -6,7 +6,9 @@ import net.akashi.perk_weapons.Config.Properties.Bow.ElfsHarpProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,10 +27,10 @@ import java.util.UUID;
 import static net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS;
 
 public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
+	public static String TAG_PERK_LEVEL = "perk_level";
 	public static byte MAX_PERK_LEVEL = 3;
 	public static float PERK_BUFF = 1.0F;
 	public static int GLOWING_TIME = 100;
-	private static final Map<UUID, Byte> PERK_LEVEL_MAP = new HashMap<>();
 
 	public ElfsHarpItem(Properties properties) {
 		super(properties);
@@ -50,7 +52,13 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
-		return PERK_LEVEL_MAP.getOrDefault(entity.getUUID(), (byte) 0);
+		CompoundTag tag = stack.getOrCreateTag();
+		return tag.contains(TAG_PERK_LEVEL) ? tag.getInt(TAG_PERK_LEVEL) : 0;
+	}
+
+	public void setPerkLevel(ItemStack stack, float level) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putFloat(TAG_PERK_LEVEL, level);
 	}
 
 	@Override
@@ -60,11 +68,8 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
-		if (PERK_LEVEL_MAP.containsKey(entity.getUUID())) {
-			PERK_LEVEL_MAP.put(entity.getUUID(), (byte) (PERK_LEVEL_MAP.get(entity.getUUID()) + 1));
-		} else {
-			PERK_LEVEL_MAP.put(entity.getUUID(), (byte) 1);
-		}
+		float level = getPerkLevel(entity, stack);
+		setPerkLevel(stack, level + 1);
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 			arrow.setMagicDamage((float) (PROJECTILE_DAMAGE * (1 + PERK_BUFF) *
 					(powerLevel > 0 ? 1 + 0.25 * powerLevel : 1)));
 			arrow.setRenderTrail(true);
-			initPerkLevel(player);
+			setPerkLevel(bowStack, 0);
 		} else {
 			arrow.setMagicDamage((float) (PROJECTILE_DAMAGE * (powerLevel > 0 ? 1 + 0.25 * powerLevel : 1)));
 		}
@@ -98,7 +103,4 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		}
 	}
 
-	public void initPerkLevel(Player player) {
-		PERK_LEVEL_MAP.put(player.getUUID(), (byte) 0);
-	}
 }

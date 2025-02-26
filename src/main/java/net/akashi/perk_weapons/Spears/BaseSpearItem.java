@@ -303,6 +303,13 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_ranged_damage",
+						TooltipHelper.convertToEmbeddedElement(BaseThrowDamage))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
+						TooltipHelper.convertToEmbeddedElement(ProjectileVelocity))
+				.withStyle(ChatFormatting.DARK_AQUA));
+
 		super.appendHoverText(stack, level, tooltip, isAdvanced);
 	}
 

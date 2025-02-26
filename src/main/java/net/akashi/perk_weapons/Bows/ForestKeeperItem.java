@@ -1,13 +1,17 @@
 package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Client.ClientHelper;
+import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -23,9 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
@@ -127,23 +129,32 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 		}
 	}
 
-
-	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-		if (!event.side.isClient() && event.phase == TickEvent.Phase.END) {
-			Player player = event.player;
-			if (PERK_LEVEL_MAP.containsKey(player.getUUID())) {
-				float perkLevel = PERK_LEVEL_MAP.get(player.getUUID());
-				if (perkLevel > 0) {
-					PERK_LEVEL_MAP.put(player.getUUID(), perkLevel - PERK_DROP_PER_TICK);
-				} else if (perkLevel != 0F) {
-					initPerkLevel(player);
-				}
-			}
-		}
-	}
-
 	public static void initPerkLevel(LivingEntity entity) {
 		PERK_LEVEL_MAP.put(entity.getUUID(), 0.0F);
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.forest_keeper"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_2",
+				TooltipHelper.convertToEmbeddedElement(1))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_3",
+				TooltipHelper.convertToEmbeddedElement(getMaxPerkLevel()))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_4",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(PERK_DROP_INTERVAL)))));
+		list.add((Component.translatable("tooltip.perk_weapons.forest_keeper_perk_5")
+				.withStyle(ChatFormatting.DARK_RED)));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_6")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.arrow_damage_buff",
+				TooltipHelper.getPercentage(PERK_BUFF))));
+
+		return list;
 	}
 }

@@ -8,6 +8,9 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -19,8 +22,11 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
@@ -91,4 +97,25 @@ public class PurgatoryItem extends BaseBowItem {
 		return arrow;
 	}
 
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.purgatory"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_2",
+				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
+				TooltipHelper.setEmbeddedElementStyle(ModEnchantments.MELT_DOWN_ARROW.get().getFullname(1).copy()))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3"))
+				.withStyle(ChatFormatting.DARK_RED));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_5",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FUSE_TIME)))));
+
+		return list;
+	}
 }
