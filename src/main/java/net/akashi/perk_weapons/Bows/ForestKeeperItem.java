@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.INoUseSlowdownItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
@@ -32,7 +33,7 @@ import java.util.*;
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
+public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSlowdownItem {
 	public static byte MAX_PERK_LEVEL = 5;
 	public static float PERK_BUFF = 0.1F;
 	public static int PERK_DROP_INTERVAL = 40;
