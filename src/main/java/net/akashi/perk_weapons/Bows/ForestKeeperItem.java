@@ -107,7 +107,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	}
 
 	@SubscribeEvent
-	public static void onPlayerHurt(LivingHurtEvent event) {
+	public static void onEntityHurt(LivingHurtEvent event) {
 		if (!event.getEntity().level().isClientSide()) {
 			ForestKeeperItem.initPerkLevel(event.getEntity());
 		}
