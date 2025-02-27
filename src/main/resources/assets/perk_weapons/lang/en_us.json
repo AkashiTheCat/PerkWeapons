@@ -81,10 +81,6 @@
   "tooltip.perk_weapons.megalodon": "\"The hunt persists in its throw — at least in form. This spear bears their toothless grudge.\"",
   "tooltip.perk_weapons.megalodon_perk_1": "Applies following effects to owner when spear hits an entity:",
 
-  "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
-  "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
-  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire",
-
   "tooltip.perk_weapons.piglins_warspear": "\"Waaaaaaaaaaaaaaaaaaagh!!!\"",
   "tooltip.perk_weapons.piglins_warspear_perk_1": "Each golden armor worn provides:",
 
@@ -149,5 +145,9 @@
 
   "tooltip.perk_weapons.sonic_blaster": "\"§kSCULK§r? §kWARDEN§r, §kDEEP DARK§r, §kLISTEN§r... §kHE§r §kCOMES§r.\"",
   "tooltip.perk_weapons.sonic_blaster_perk_1": "Fires sonic boom instead of arrows",
-  "tooltip.perk_weapons.sonic_blaster_perk_2": "Max Attack Range: %d"
+  "tooltip.perk_weapons.sonic_blaster_perk_2": "Max Attack Range: %d",
+
+  "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
+  "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
+  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire"
 }
