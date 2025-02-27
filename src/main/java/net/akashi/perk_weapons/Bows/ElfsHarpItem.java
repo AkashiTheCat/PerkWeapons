@@ -20,9 +20,7 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS;
 
@@ -103,4 +101,31 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		}
 	}
 
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.elfs_harp"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_2",
+				TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+						MobEffects.GLOWING.getDisplayName(), 1,
+						TooltipHelper.convertTicksToSeconds(GLOWING_TIME))))));
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_3",
+				TooltipHelper.convertToEmbeddedElement(1))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_4",
+				TooltipHelper.convertToEmbeddedElement(MAX_PERK_LEVEL))));
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_5")));
+		list.add(TooltipHelper.getArrowDamageModifier(PERK_BUFF));
+
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_6")));
+
+		return list;
+	}
 }

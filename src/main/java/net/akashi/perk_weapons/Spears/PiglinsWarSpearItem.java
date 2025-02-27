@@ -32,8 +32,8 @@ import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 public class PiglinsWarSpearItem extends BaseSpearItem {
 	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS = new ArrayList<>();
 	public static String TAG_ARMOR_COUNT = "armor_count";
-	public static float DAMAGE_BONUS = 0.1f;
-	public static float SPEED_BONUS = 0.1f;
+	public static float DAMAGE_RATIO_BONUS = 0.1f;
+	public static float SPEED_RATIO_BONUS = 0.1f;
 	private static List<Item> allowedArmor = new ArrayList<>(Arrays.asList(
 			Items.GOLDEN_HELMET,
 			Items.GOLDEN_CHESTPLATE,
@@ -56,9 +56,9 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		for (int i = 0; i < 4; i++) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-					BaseAttackDamage * (1 + i * DAMAGE_BONUS) - 1, AttributeModifier.Operation.ADDITION));
+					BaseAttackDamage * (1 + i * DAMAGE_RATIO_BONUS) - 1, AttributeModifier.Operation.ADDITION));
 			builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-					BaseAttackSpeed * (1 + i * DAMAGE_BONUS) - 4, AttributeModifier.Operation.ADDITION));
+					BaseAttackSpeed * (1 + i * DAMAGE_RATIO_BONUS) - 4, AttributeModifier.Operation.ADDITION));
 			MODIFIERS.add(builder.build());
 		}
 	}
@@ -67,8 +67,8 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	public void updateAttributesFromConfig(SpearProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof PiglinsWarSpearProperties pProperties) {
-			DAMAGE_BONUS = pProperties.DAMAGE_BONUS.get().floatValue();
-			SPEED_BONUS = pProperties.SPEED_BONUS.get().floatValue();
+			DAMAGE_RATIO_BONUS = pProperties.DAMAGE_BONUS.get().floatValue();
+			SPEED_RATIO_BONUS = pProperties.SPEED_BONUS.get().floatValue();
 			allowedArmor = PiglinsWarSpearProperties.convertStringsToItems(pProperties.getArmorList());
 		}
 		buildAttributeModifiers();
@@ -120,10 +120,8 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		List<Component> list = new ArrayList<>();
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_1")));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.attack_speed_buff",
-				TooltipHelper.getPercentage(SPEED_BONUS))));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.attack_damage_buff",
-				TooltipHelper.getPercentage(DAMAGE_BONUS))));
+		list.add(TooltipHelper.getAttackSpeedModifier(SPEED_RATIO_BONUS));
+		list.add(TooltipHelper.getAttackDamageModifier(DAMAGE_RATIO_BONUS));
 
 		return list;
 	}

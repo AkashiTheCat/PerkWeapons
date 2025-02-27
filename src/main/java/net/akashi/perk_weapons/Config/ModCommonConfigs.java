@@ -54,7 +54,7 @@ public class ModCommonConfigs {
 	public static ForestKeeperProperties FOREST_KEEPER_PROPERTIES;
 	public static ElfsHarpProperties ELFS_HARP_PROPERTIES;
 	public static FrostHunterProperties FROST_HUNTER_PROPERTIES;
-	public static BowProperties HOU_YI_PROPERTIES;
+	public static HouYiProperties HOU_YI_PROPERTIES;
 	public static DevourerProperties DEVOURER_PROPERTIES;
 
 	//Crossbow Configs
@@ -166,11 +166,12 @@ public class ModCommonConfigs {
 				400, 2,
 				true, 0.0,
 				0.1, false);
-		HOU_YI_PROPERTIES = new BowProperties(BUILDER, "Hou Yi",
+		HOU_YI_PROPERTIES = new HouYiProperties(BUILDER, "Hou Yi",
 				40, 15,
 				4.5, 0.2,
 				-0.5, 0.15,
-				true, true);
+				-0.5,1.0,
+				true);
 		DEVOURER_PROPERTIES = new DevourerProperties(BUILDER, "Devourer",
 				20, 7,
 				3.0, 0.8,

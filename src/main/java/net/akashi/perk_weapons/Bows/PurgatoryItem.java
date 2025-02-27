@@ -109,9 +109,8 @@ public class PurgatoryItem extends BaseBowItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_2",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
-				TooltipHelper.setEmbeddedElementStyle(ModEnchantments.MELT_DOWN_ARROW.get().getFullname(1).copy()))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3"))
-				.withStyle(ChatFormatting.DARK_RED));
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.MELT_DOWN_ARROW.get(), 1))));
+		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_5",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FUSE_TIME)))));

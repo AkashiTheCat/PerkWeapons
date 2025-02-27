@@ -2,10 +2,14 @@ package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
+import net.akashi.perk_weapons.Config.Properties.Bow.HouYiProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -16,7 +20,13 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HouYiItem extends BaseBowItem {
+	public static float DAMAGE_MODIFIER_STAR_SHOOTER = -0.5f;
+	public static float DAMAGE_MODIFIER_AIR_STAR_SHOOTER = 1.0f;
+
 	public HouYiItem(Properties properties) {
 		super(properties);
 	}
@@ -48,5 +58,29 @@ public class HouYiItem extends BaseBowItem {
 	public void updateAttributesFromConfig(BowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		AddGeneralEnchant(ModEnchantments.STAR_SHOOTER.get());
+		if (properties instanceof HouYiProperties hProperties) {
+			DAMAGE_MODIFIER_STAR_SHOOTER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER.get().floatValue();
+			DAMAGE_MODIFIER_AIR_STAR_SHOOTER = hProperties.STAR_SHOOTER_AIR_DAMAGE_MODIFIER.get().floatValue();
+		}
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.hou_yi"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.hou_yi_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.STAR_SHOOTER.get(), 1))));
+
+		list.add(TooltipHelper.getArrowDamageModifier(DAMAGE_MODIFIER_STAR_SHOOTER));
+		list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.hou_yi_perk_2",
+				DAMAGE_MODIFIER_AIR_STAR_SHOOTER));
+
+		return list;
 	}
 }

@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.FrostHunterArrow;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,9 +23,7 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	public static int FROZEN_TIME = 160;
@@ -105,5 +104,27 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 				return (float) timePassed / ABILITY_COOLDOWN_TIME;
 			}
 		}
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.frost_hunter"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_1",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FROZEN_TIME)))));
+
+		list.add(Component.empty());
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		list.add(TooltipHelper.getCoolDownTip(ABILITY_COOLDOWN_TIME));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_ability_1",
+				TooltipHelper.convertToEmbeddedElement(HOUND_COUNT),
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(HOUND_LIFETIME)))));
+
+		return list;
 	}
 }

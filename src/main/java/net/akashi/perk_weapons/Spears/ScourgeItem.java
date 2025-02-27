@@ -215,9 +215,9 @@ public class ScourgeItem extends BaseSpearItem {
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_ability_1",
 				TooltipHelper.convertToEmbeddedElement(ABILITY_SHOTS_COUNT))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_ability_2",
-				TooltipHelper.getPercentage(ABILITY_ATTACK_SPEED_BONUS),
-				TooltipHelper.convertTicksToSeconds(ABILITY_BUFF_DURATION))));
+		list.add(TooltipHelper.getAttackSpeedModifier(ABILITY_ATTACK_SPEED_BONUS)
+				.append(Component.translatable("tooltip.perk_weapons.seconds_append",
+						TooltipHelper.convertTicksToSeconds(ABILITY_BUFF_DURATION))));
 
 		return list;
 	}

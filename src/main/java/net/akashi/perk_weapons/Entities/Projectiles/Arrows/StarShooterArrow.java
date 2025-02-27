@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
+import net.akashi.perk_weapons.Bows.HouYiItem;
 import net.akashi.perk_weapons.Util.EntityTypeListReader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -16,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StarShooterArrow extends BaseArrow {
-	private static List<EntityType<? extends Mob>> FLYING_ENTITY = new ArrayList<>(Arrays.asList(
+	private static List<EntityType<?>> FLYING_ENTITY = new ArrayList<>(Arrays.asList(
 			EntityType.PHANTOM,
 			EntityType.ENDER_DRAGON,
 			EntityType.BLAZE
@@ -47,17 +48,17 @@ public class StarShooterArrow extends BaseArrow {
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity livingEntity) {
-			if (FLYING_ENTITY.stream().anyMatch((entity) -> livingEntity.getType() == entity)
-					|| !livingEntity.onGround()) {
-				this.setBaseDamage(getBaseDamage() * 2);
+			if (!livingEntity.onGround() || FLYING_ENTITY.stream().anyMatch(
+					(entity) -> livingEntity.getType() == entity)) {
+				this.setBaseDamage(getBaseDamage() * (1 + HouYiItem.DAMAGE_MODIFIER_STAR_SHOOTER));
 			} else {
-				this.setBaseDamage(getBaseDamage() / 2);
+				this.setBaseDamage(getBaseDamage() * (1 + HouYiItem.DAMAGE_MODIFIER_AIR_STAR_SHOOTER));
 			}
 		}
 		super.onHitEntity(pResult);
 	}
 
 	public static void updateEntityTypeListFromConfig(List<? extends String> EntityTypeStringList) {
-		FLYING_ENTITY = EntityTypeListReader.convertStringsToEntityType((List<String>) EntityTypeStringList);
+		FLYING_ENTITY = EntityTypeListReader.convertStringsToEntityType(EntityTypeStringList);
 	}
 }

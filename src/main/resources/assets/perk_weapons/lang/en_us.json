@@ -20,16 +20,19 @@
   "tooltip.perk_weapons.effect_format": "%s %s - %f s",
   "tooltip.perk_weapons.cd": "Cool Down: %s s",
   "tooltip.perk_weapons.when_enchanted": "When %s enchanted:",
+  "tooltip.perk_weapons.seconds_append": " - %s s",
 
-  "tooltip.perk_weapons.attack_speed_buff": "+ %s Attack speed",
-  "tooltip.perk_weapons.attack_damage_buff": "+ %s Attack damage",
-  "tooltip.perk_weapons.arrow_damage_buff": "+ %s Arrow damage",
+  "tooltip.perk_weapons.attack_speed_modifier": "%s Attack Speed",
+  "tooltip.perk_weapons.attack_damage_modifier": "%s Attack Damage",
+  "tooltip.perk_weapons.arrow_damage_modifier": "%s Arrow Damage",
+  "tooltip.perk_weapons.ammo_capacity_modifier": "Ammo Capacity %s",
+  "tooltip.perk_weapons.reload_time_modifier": "Reload Time %s s",
 
   "tooltip.perk_weapons.attribute_damage": "Damage: %f",
-  "tooltip.perk_weapons.attribute_ranged_damage": "Ranged damage: %f",
+  "tooltip.perk_weapons.attribute_ranged_damage": "Ranged Damage: %f",
   "tooltip.perk_weapons.attribute_velocity": "Velocity: %f",
-  "tooltip.perk_weapons.attribute_draw_time": "Draw time: %s s",
-  "tooltip.perk_weapons.attribute_charge_time": "Charge time: %s s",
+  "tooltip.perk_weapons.attribute_draw_time": "Draw Time: %s s",
+  "tooltip.perk_weapons.attribute_charge_time": "Charge Time: %s s",
 
   "tooltip.perk_weapons.weapon_description_title": "Description:",
   "tooltip.perk_weapons.description_key_hint": "[Press %s to show description]",
@@ -46,8 +49,6 @@
   "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
   "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
   "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire",
-  "tooltip.perk_weapons.incinerator_perk_4": "Ammo capacity + %d",
-  "tooltip.perk_weapons.incinerator_perk_5": "Reload Time + %f s",
 
   "tooltip.perk_weapons.piglins_warspear": "\"Waaaaaaaaaaaaaaaaaaagh!!!\"",
   "tooltip.perk_weapons.piglins_warspear_perk_1": "Each golden armor worn provides:",
@@ -56,13 +57,12 @@
   "tooltip.perk_weapons.scourge_perk_1": "Spear pierces through up to %d entities",
   "tooltip.perk_weapons.scourge_perk_2": "Applies following effects to hit entities:",
   "tooltip.perk_weapons.scourge_ability_1": "Throw out %d spears at a time",
-  "tooltip.perk_weapons.scourge_ability_2": "+ %s Attack speed - %s s",
 
   "tooltip.perk_weapons.dragon_strike": "\"Here you come... My Fated Nemesis.\"",
   "tooltip.perk_weapons.dragon_strike_perk_1": "Thrown spear isn't affected by gravity",
   "tooltip.perk_weapons.dragon_strike_perk_2": "Creates dragon breath on hit",
   "tooltip.perk_weapons.dragon_strike_ability_1": "Knockback surrounding entities",
-  "tooltip.perk_weapons.dragon_strike_perk_3": "+ %f Magic Resistance when held in hand",
+  "tooltip.perk_weapons.dragon_strike_perk_3": "%f Magic Resistance when held in hand",
 
   "tooltip.perk_weapons.purgatory": "\"Forged in the eternal inferno.\"",
   "tooltip.perk_weapons.purgatory_perk_1": "Sets hit entities on fire",
@@ -76,7 +76,28 @@
   "tooltip.perk_weapons.forest_keeper_perk_2": "Gain %d perk level when arrow hit an entity",
   "tooltip.perk_weapons.forest_keeper_perk_3": "Max perk level: %d",
   "tooltip.perk_weapons.forest_keeper_perk_4": "Perk level drops every %f seconds",
-  "tooltip.perk_weapons.forest_keeper_perk_5": "Perk level will be cleared when owner receive any damage",
-  "tooltip.perk_weapons.forest_keeper_perk_6": "Each Perk level provides:"
+  "tooltip.perk_weapons.forest_keeper_perk_5": "Perk level will be reset when owner receive any damage",
+  "tooltip.perk_weapons.forest_keeper_perk_6": "Each Perk level provides:",
 
+  "tooltip.perk_weapons.elfs_harp": "\"Plucks chords of stolen breath, singing arrows to their mark.\"",
+  "tooltip.perk_weapons.elfs_harp_perk_1": "Arrow deals magic damage",
+  "tooltip.perk_weapons.elfs_harp_perk_2": "Applies %s to hit entities",
+  "tooltip.perk_weapons.elfs_harp_perk_3": "Gain %d perk level when arrow hit an entity",
+  "tooltip.perk_weapons.elfs_harp_perk_4": "Max perk level: %d",
+  "tooltip.perk_weapons.elfs_harp_perk_5": "When reach max perk level:",
+  "tooltip.perk_weapons.elfs_harp_perk_6": "Resets perk level after a buffed shot",
+
+  "tooltip.perk_weapons.frost_hunter": "\"Draws frostbitten vows — a ghostpack bound to the hunter's moon.\"",
+  "tooltip.perk_weapons.frost_hunter_perk_1": "Freezes enemy for %f seconds on hit",
+  "tooltip.perk_weapons.frost_hunter_ability_1": "Summon %d tamed wolfs, despawn after %f seconds",
+
+  "tooltip.perk_weapons.hou_yi": "\"A relic forged in the radiance of a dying sun.\"",
+  "tooltip.perk_weapons.hou_yi_perk_1": "Arrow isn't affected by gravity",
+  "tooltip.perk_weapons.hou_yi_perk_2": "%s Arrow Damage to entities in air",
+
+  "tooltip.perk_weapons.devourer": "\"FEED ME...\"",
+  "tooltip.perk_weapons.devourer_perk_1": "Arrow pierces through up to %d entities",
+  "tooltip.perk_weapons.devourer_perk_2": "When arrow hit an entity:",
+  "tooltip.perk_weapons.devourer_perk_3": "Immobilize the target for a short period",
+  "tooltip.perk_weapons.devourer_perk_4": "Summon an Evoker Fang under the target"
 }

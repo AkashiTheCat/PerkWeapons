@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,58 @@ public class TooltipHelper {
 
 	public static String getPercentage(float f) {
 		return String.format("%.1f%%", f * 100);
+	}
+
+	public static String getPercentageWithSign(float f) {
+		String s = String.format("%.1f%%", f * 100);
+		return f >= 0 ? "+" + s : s;
+	}
+
+	public static String getDeltaWithSign(float f) {
+		String s = String.format("%.1f", f);
+		return f >= 0 ? "+" + s : s;
+	}
+
+	public static String getDeltaWithSign(int n) {
+		String s = String.valueOf(n);
+		return n >= 0 ? "+" + s : s;
+	}
+
+	public static MutableComponent getAttackDamageModifier(float deltaRatio) {
+		return getRatioModifierWithStyle("tooltip.perk_weapons.attack_damage_modifier", deltaRatio);
+	}
+
+	public static MutableComponent getAttackSpeedModifier(float deltaRatio) {
+		return getRatioModifierWithStyle("tooltip.perk_weapons.attack_speed_modifier", deltaRatio);
+	}
+
+	public static MutableComponent getArrowDamageModifier(float deltaRatio) {
+		return getRatioModifierWithStyle("tooltip.perk_weapons.arrow_damage_modifier", deltaRatio);
+	}
+
+	public static MutableComponent getRatioModifierWithStyle(String key, float deltaRatio) {
+		MutableComponent component = Component.translatable(key, getPercentageWithSign(deltaRatio));
+		return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(String key, int delta) {
+		MutableComponent component = Component.translatable(key, getDeltaWithSign(delta));
+		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(String key, float delta) {
+		MutableComponent component = Component.translatable(key, getDeltaWithSign(delta));
+		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
+	public static MutableComponent getAmmoCapacityModifier(int delta) {
+		return getDeltaModifierWithStyle("tooltip.perk_weapons.ammo_capacity_modifier", delta);
+	}
+
+	public static MutableComponent getReloadTimeModifier(int deltaTicks) {
+		MutableComponent component = Component.translatable("tooltip.perk_weapons.reload_time_modifier",
+				getDeltaWithSign(convertTicksToSeconds(deltaTicks)));
+		return deltaTicks <= 0 ? setBuffStyle(component) : setDebuffStyle(component);
 	}
 
 	public static void addWeaponDescription(List<Component> tooltip, Component description) {
@@ -124,6 +177,18 @@ public class TooltipHelper {
 		return convertToEmbeddedElement((float) d);
 	}
 
+	public static MutableComponent convertToEmbeddedElement(Enchantment enchantment, int level) {
+		return setEmbeddedElementStyle(enchantment.getFullname(level).copy());
+	}
+
+	public static MutableComponent convertToEmbeddedPercentage(double d) {
+		return setEmbeddedElementStyle(Component.literal(getPercentage((float) d)));
+	}
+
+	public static MutableComponent convertToEmbeddedPercentage(float f) {
+		return setEmbeddedElementStyle(Component.literal(getPercentage(f)));
+	}
+
 	public static MutableComponent setEmbeddedElementStyle(MutableComponent component) {
 		return component.withStyle(ChatFormatting.YELLOW);
 	}
@@ -138,6 +203,14 @@ public class TooltipHelper {
 
 	public static MutableComponent setSubPerkStyle(MutableComponent component) {
 		return component.withStyle(ChatFormatting.DARK_AQUA);
+	}
+
+	public static MutableComponent setBuffStyle(MutableComponent component) {
+		return component.withStyle(ChatFormatting.DARK_GREEN);
+	}
+
+	public static MutableComponent setDebuffStyle(MutableComponent component) {
+		return component.withStyle(ChatFormatting.RED);
 	}
 
 	public static MutableComponent setCommentStyle(MutableComponent component) {

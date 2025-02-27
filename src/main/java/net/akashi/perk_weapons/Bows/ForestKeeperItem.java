@@ -28,6 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
+import javax.tools.Tool;
 import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
@@ -150,11 +151,9 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 				TooltipHelper.convertToEmbeddedElement(getMaxPerkLevel()))));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_4",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(PERK_DROP_INTERVAL)))));
-		list.add((Component.translatable("tooltip.perk_weapons.forest_keeper_perk_5")
-				.withStyle(ChatFormatting.DARK_RED)));
+		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_5")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_6")));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.arrow_damage_buff",
-				TooltipHelper.getPercentage(PERK_BUFF))));
+		list.add(TooltipHelper.getArrowDamageModifier(PERK_BUFF));
 
 		return list;
 	}

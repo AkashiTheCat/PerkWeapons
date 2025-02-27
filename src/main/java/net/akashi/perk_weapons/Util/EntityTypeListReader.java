@@ -9,13 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EntityTypeListReader {
-	public static List<EntityType<? extends Mob>> convertStringsToEntityType(List<String> entityTypeIds) {
-		List<EntityType<? extends Mob>> entityTypes = new ArrayList<>();
+	public static List<EntityType<?>> convertStringsToEntityType(List<? extends String> entityTypeIds) {
+		List<EntityType<?>> entityTypes = new ArrayList<>();
 
 		for (String entityTypeID : entityTypeIds) {
 			ResourceLocation resourceLocation = new ResourceLocation(entityTypeID);
-			EntityType<? extends Mob> entityType = (EntityType<? extends Mob>)
-					ForgeRegistries.ENTITY_TYPES.getValue(resourceLocation);
+			EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(resourceLocation);
 			if (entityType != null) {
 				entityTypes.add(entityType);
 			}
