@@ -3,7 +3,9 @@ package net.akashi.perk_weapons.Crossbows;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -11,7 +13,11 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.MULTISHOT;
 import static net.minecraft.world.item.enchantment.Enchantments.PIERCING;
@@ -66,5 +72,26 @@ public class LiberatorItem extends MagFedCrossbowItem {
 	public int getAmmoCapacity(ItemStack crossbowStack) {
 		return crossbowStack.getEnchantmentLevel(ModEnchantments.REGICIDE.get()) > 0 ?
 				AMMO_CAPACITY_REGICIDE : super.getAmmoCapacity(crossbowStack);
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.liberator"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.liberator_perk_1",
+				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
+		list.add(TooltipHelper.setBuffStyle(Component.translatable("tooltip.perk_weapons.liberator_perk_2",
+				MULTISHOT_BONUS, TooltipHelper.convertToEmbeddedElement(MULTISHOT, 1))));
+
+		list.add(Component.empty());
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.REGICIDE.get(), 1))));
+		list.add(TooltipHelper.getAmmoCapacityModifier(AMMO_CAPACITY_REGICIDE - 1));
+		return list;
 	}
 }

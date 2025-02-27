@@ -113,7 +113,8 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_2",
 				TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-						MobEffects.GLOWING.getDisplayName(), 1,
+						MobEffects.GLOWING.getDisplayName(),
+						TooltipHelper.getRomanNumeral(1),
 						TooltipHelper.convertTicksToSeconds(GLOWING_TIME))))));
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_3",

@@ -3,24 +3,26 @@ package net.akashi.perk_weapons.Crossbows;
 import com.google.common.collect.ImmutableMultimap;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.SonicBlasterProperties;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +75,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
 		super.updateAttributesFromConfig(properties);
+		VELOCITY = -1;
 		if (properties instanceof SonicBlasterProperties sProperties) {
 			MAX_ATTACK_RANGE = sProperties.MAX_RANGE.get();
 			DAMAGE_RADIUS = sProperties.DAMAGE_RADIUS.get();
@@ -191,5 +194,19 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + crossbowStack.getEnchantmentLevel(PIERCING);
 	}
 
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return Component.translatable("tooltip.perk_weapons.sonic_blaster").withStyle(ChatFormatting.GRAY);
+	}
 
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.sonic_blaster_perk_1")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.sonic_blaster_perk_2",
+				TooltipHelper.convertToEmbeddedElement(MAX_ATTACK_RANGE))));
+
+		return list;
+	}
 }

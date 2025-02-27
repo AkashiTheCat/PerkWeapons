@@ -10,6 +10,41 @@
   "enchantment.perk_weapons.regicide": "Regicide",
   "enchantment.perk_weapons.blaze": "Blaze",
 
+  "block.perk_weapons.furnace_core": "Furnace Core",
+
+  "item.perk_weapons.ancient_spike": "Ancient Spike",
+  "item.perk_weapons.wither_spine": "Wither Spine",
+  "item.perk_weapons.gilded_blackstone_handle": "Gilded Blackstone Handle",
+  "item.perk_weapons.guardians_eye": "Guardian's Eye",
+  "item.perk_weapons.dragon_fang": "Dragon Fang",
+  "item.perk_weapons.hunters_remains": "Hunter's Remains",
+  "item.perk_weapons.totem_of_evoking": "Totem Of Evoking",
+
+  "item.perk_weapons.iron_spear": "Iron Spear",
+  "item.perk_weapons.golden_spear": "Golden Spear",
+  "item.perk_weapons.diamond_spear": "Diamond Spear",
+  "item.perk_weapons.netherite_spear": "Netherite Spear",
+  "item.perk_weapons.megalodon": "Megalodon",
+  "item.perk_weapons.conduit_guard": "Conduit Guard",
+  "item.perk_weapons.piglins_warspear": "Piglin's Warspear",
+  "item.perk_weapons.dragon_strike": "Dragon Strike",
+  "item.perk_weapons.scourge": "Scourge",
+
+  "item.perk_weapons.short_bow": "Short Bow",
+  "item.perk_weapons.longbow": "Longbow",
+  "item.perk_weapons.purgatory": "Purgatory",
+  "item.perk_weapons.forest_keeper": "Forest Keeper",
+  "item.perk_weapons.elfs_harp": "Elf's Harp",
+  "item.perk_weapons.frost_hunter": "Frost Hunter",
+  "item.perk_weapons.hou_yi": "Hou Yi",
+  "item.perk_weapons.devourer": "Devourer",
+
+  "item.perk_weapons.oppressor": "Oppressor",
+  "item.perk_weapons.liberator": "Liberator",
+  "item.perk_weapons.tainted_fortune": "Tainted Fortune",
+  "item.perk_weapons.sonic_blaster": "Sonic Blaster",
+  "item.perk_weapons.incinerator": "Incinerator",
+
   "tooltip.perk_weapons.mag_fed_crossbow_hint": "Press %s + %s to unload ammo",
   "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %d",
   "tooltip.perk_weapons.crossbow_projectile": "Projectile: %s",
@@ -25,8 +60,8 @@
   "tooltip.perk_weapons.attack_speed_modifier": "%s Attack Speed",
   "tooltip.perk_weapons.attack_damage_modifier": "%s Attack Damage",
   "tooltip.perk_weapons.arrow_damage_modifier": "%s Arrow Damage",
-  "tooltip.perk_weapons.ammo_capacity_modifier": "Ammo Capacity %s",
-  "tooltip.perk_weapons.reload_time_modifier": "Reload Time %s s",
+  "tooltip.perk_weapons.ammo_capacity_modifier": "%s Ammo Capacity",
+  "tooltip.perk_weapons.reload_time_modifier": "%s s Reload Time",
 
   "tooltip.perk_weapons.attribute_damage": "Damage: %f",
   "tooltip.perk_weapons.attribute_ranged_damage": "Ranged Damage: %f",
@@ -99,5 +134,20 @@
   "tooltip.perk_weapons.devourer_perk_1": "Arrow pierces through up to %d entities",
   "tooltip.perk_weapons.devourer_perk_2": "When arrow hit an entity:",
   "tooltip.perk_weapons.devourer_perk_3": "Immobilize the target for a short period",
-  "tooltip.perk_weapons.devourer_perk_4": "Summon an Evoker Fang under the target"
+  "tooltip.perk_weapons.devourer_perk_4": "Summon an Evoker Fang under the target",
+
+  "tooltip.perk_weapons.oppressor": "\"He shrouds the firmament in his palm, scorning creation's breath — believing no mortal coil could ever bind his thunder.\"",
+  "tooltip.perk_weapons.oppressor_perk_1": "When Crouching:",
+  "tooltip.perk_weapons.oppressor_perk_2": "Applies following effects to entity being aimed at:",
+
+  "tooltip.perk_weapons.liberator": "\"...But blind to the tides that capsize thrones — rebellion's wave swells not in foreign courts, but in the shadow of his own iron-shod feet.\"",
+  "tooltip.perk_weapons.liberator_perk_1": "Arrow pierces through up to %d entities",
+  "tooltip.perk_weapons.liberator_perk_2": "+%d %s level",
+
+  "tooltip.perk_weapons.tainted_fortune": "\"Not tainted actually.\"",
+  "tooltip.perk_weapons.tainted_fortune_perk_1": "Automatically reloads ammo",
+
+  "tooltip.perk_weapons.sonic_blaster": "\"§kSCULK§r? §kWARDEN§r, §kDEEP DARK§r, §kLISTEN§r... §kHE§r §kCOMES§r.\"",
+  "tooltip.perk_weapons.sonic_blaster_perk_1": "Fires sonic boom instead of arrows",
+  "tooltip.perk_weapons.sonic_blaster_perk_2": "Max Attack Range: %d"
 }

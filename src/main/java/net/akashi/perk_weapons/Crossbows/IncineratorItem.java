@@ -107,6 +107,7 @@ public class IncineratorItem extends MagFedCrossbowItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1",
 				TooltipHelper.setEmbeddedElementStyle(TooltipHelper.convertToEmbeddedElement(getAmmoCapacity(stack))))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2")));
+		list.add(Component.empty());
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
 				TooltipHelper.convertToEmbeddedElement(ModEnchantments.BLAZE.get(), 1))));
 		list.add(TooltipHelper.getAmmoCapacityModifier(BLAZE_AMMO_CAPACITY - AMMO_CAPACITY));

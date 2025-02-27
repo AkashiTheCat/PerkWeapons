@@ -2,7 +2,9 @@ package net.akashi.perk_weapons.Crossbows;
 
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class OppressorItem extends BaseCrossbowItem {
@@ -119,5 +123,26 @@ public class OppressorItem extends BaseCrossbowItem {
 			AFFECT_RANGE = oProperties.AFFECT_RANGE.get();
 			SLOWNESS_LEVEL = oProperties.SLOWNESS_LEVEL.get();
 		}
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.oppressor"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		List<Component> list = new ArrayList<>();
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.oppressor_perk_1")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.oppressor_perk_2")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.MOVEMENT_SLOWDOWN.getDisplayName(),
+				TooltipHelper.getRomanNumeral(SLOWNESS_LEVEL), 2.0)));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.GLOWING.getDisplayName(),
+				TooltipHelper.getRomanNumeral(1), 2.0)));
+
+		return list;
 	}
 }
