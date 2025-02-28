@@ -149,5 +149,21 @@
 
   "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
   "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
-  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire"
+  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire",
+
+  "entity.perk_weapons.thrown_spear": "Spear",
+  "entity.perk_weapons.thrown_megalodon": "Megalodon",
+  "entity.perk_weapons.thrown_conduit_guard": "Conduit Guard",
+  "entity.perk_weapons.thrown_scourge": "Scourge",
+  "entity.perk_weapons.arrow": "Arrow",
+  "entity.perk_weapons.purgatory_arrow": "Purgatory Arrow",
+  "entity.perk_weapons.explosive_arrow": "Explosive Arrow",
+  "entity.perk_weapons.perk_arrow": "Perk Arrow",
+  "entity.perk_weapons.frost_hunter_arrow": "Frost Hunter Arrow",
+  "entity.perk_weapons.star_shooter_arrow": "Star Shooter Arrow",
+  "entity.perk_weapons.devourer_arrow": "Devourer Arrow",
+  "entity.perk_weapons.incinerator_arrow": "Incinerator Arrow",
+  "entity.perk_weapons.hound": "Hound",
+
+  "effect.perk_weapons.harm_all": "Harming"
 }
