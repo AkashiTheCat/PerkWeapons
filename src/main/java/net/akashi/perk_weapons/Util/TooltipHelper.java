@@ -104,8 +104,8 @@ public class TooltipHelper {
 		return getDeltaModifierWithStyle("tooltip.perk_weapons.ammo_capacity_modifier", delta);
 	}
 
-	public static MutableComponent getReloadTimeModifier(int deltaTicks) {
-		MutableComponent component = Component.translatable("tooltip.perk_weapons.reload_time_modifier",
+	public static MutableComponent getChargeTimeModifier(int deltaTicks) {
+		MutableComponent component = Component.translatable("tooltip.perk_weapons.charge_time_modifier",
 				getDeltaWithSign(convertTicksToSeconds(deltaTicks)));
 		return deltaTicks <= 0 ? setBuffStyle(component) : setDebuffStyle(component);
 	}

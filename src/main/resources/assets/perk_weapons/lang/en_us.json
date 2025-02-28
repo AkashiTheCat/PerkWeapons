@@ -61,7 +61,7 @@
   "tooltip.perk_weapons.attack_damage_modifier": "%s Attack Damage",
   "tooltip.perk_weapons.arrow_damage_modifier": "%s Arrow Damage",
   "tooltip.perk_weapons.ammo_capacity_modifier": "%s Ammo Capacity",
-  "tooltip.perk_weapons.reload_time_modifier": "%s s Reload Time",
+  "tooltip.perk_weapons.charge_time_modifier": "%s s Charge Time",
 
   "tooltip.perk_weapons.attribute_damage": "Damage: %f",
   "tooltip.perk_weapons.attribute_ranged_damage": "Ranged Damage: %f",
@@ -93,7 +93,7 @@
   "tooltip.perk_weapons.dragon_strike_perk_1": "Thrown spear isn't affected by gravity",
   "tooltip.perk_weapons.dragon_strike_perk_2": "Creates dragon breath on hit",
   "tooltip.perk_weapons.dragon_strike_ability_1": "Knockback surrounding entities",
-  "tooltip.perk_weapons.dragon_strike_perk_3": "%f Magic Resistance when held in hand",
+  "tooltip.perk_weapons.dragon_strike_perk_3": "%s Magic Resistance when held in hand",
 
   "tooltip.perk_weapons.purgatory": "\"Forged in the eternal inferno.\"",
   "tooltip.perk_weapons.purgatory_perk_1": "Sets hit entities on fire",

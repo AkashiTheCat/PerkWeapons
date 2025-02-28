@@ -1,0 +1,169 @@
+{
+  "item.perk_weapons.placeholder": "Placeholder",
+
+  "perk_weapons.itemGroup.ingredients_tab": "特性武器库: 材料",
+  "perk_weapons.itemGroup.spear_tab": "特性武器库: 投矛",
+  "perk_weapons.itemGroup.bow_tab": "特性武器库: 弓 & 弩",
+
+  "enchantment.perk_weapons.melt_down": "融毁",
+  "enchantment.perk_weapons.star_shooter": "射日",
+  "enchantment.perk_weapons.regicide": "弑君",
+  "enchantment.perk_weapons.blaze": "炽魂",
+
+  "block.perk_weapons.furnace_core": "熔炉核心",
+
+  "item.perk_weapons.ancient_spike": "远古针刺",
+  "item.perk_weapons.wither_spine": "凋灵脊髓",
+  "item.perk_weapons.gilded_blackstone_handle": "镶金黑石手柄",
+  "item.perk_weapons.guardians_eye": "守卫者之眼",
+  "item.perk_weapons.dragon_fang": "龙牙",
+  "item.perk_weapons.hunters_remains": "猎人遗物",
+  "item.perk_weapons.totem_of_evoking": "唤魔图腾",
+
+  "item.perk_weapons.iron_spear": "铁投矛",
+  "item.perk_weapons.golden_spear": "金投矛",
+  "item.perk_weapons.diamond_spear": "钻石投矛",
+  "item.perk_weapons.netherite_spear": "下界合金投矛",
+  "item.perk_weapons.megalodon": "巨齿鲨",
+  "item.perk_weapons.conduit_guard": "潮涌守卫",
+  "item.perk_weapons.piglins_warspear": "战猪长枪",
+  "item.perk_weapons.dragon_strike": "龙袭",
+  "item.perk_weapons.scourge": "天灾",
+
+  "item.perk_weapons.short_bow": "短弓",
+  "item.perk_weapons.longbow": "长弓",
+  "item.perk_weapons.purgatory": "炼狱",
+  "item.perk_weapons.forest_keeper": "守林人",
+  "item.perk_weapons.elfs_harp": "精灵竖琴",
+  "item.perk_weapons.frost_hunter": "凛冬猎手",
+  "item.perk_weapons.hou_yi": "后羿",
+  "item.perk_weapons.devourer": "吞噬者",
+
+  "item.perk_weapons.oppressor": "暴君",
+  "item.perk_weapons.liberator": "解放者",
+  "item.perk_weapons.tainted_fortune": "不义之财",
+  "item.perk_weapons.sonic_blaster": "音爆",
+  "item.perk_weapons.incinerator": "焚烬",
+
+  "tooltip.perk_weapons.mag_fed_crossbow_hint": "按下 %s + %s 来取出装载的弹药",
+  "tooltip.perk_weapons.crossbow_ammo_amount": "装载弹药数: %d",
+  "tooltip.perk_weapons.crossbow_projectile": "弹药: %s",
+
+  "tooltip.perk_weapons.crouch_use_key": "[%s + %s]:",
+  "tooltip.perk_weapons.key_shift": "SHIFT",
+  "tooltip.perk_weapons.only_mainhand": "仅可在主手使用",
+  "tooltip.perk_weapons.effect_format": "%s %s - %f s",
+  "tooltip.perk_weapons.cd": "冷却: %s s",
+  "tooltip.perk_weapons.when_enchanted": "当附魔 %s 时:",
+  "tooltip.perk_weapons.seconds_append": " - %s s",
+
+  "tooltip.perk_weapons.attack_speed_modifier": "%s 攻击速度",
+  "tooltip.perk_weapons.attack_damage_modifier": "%s 攻击伤害",
+  "tooltip.perk_weapons.arrow_damage_modifier": "%s 箭矢伤害",
+  "tooltip.perk_weapons.ammo_capacity_modifier": "%s 弹容量",
+  "tooltip.perk_weapons.charge_time_modifier": "%s s 装弹时间",
+
+  "tooltip.perk_weapons.attribute_damage": "伤害: %f",
+  "tooltip.perk_weapons.attribute_ranged_damage": "远程伤害: %f",
+  "tooltip.perk_weapons.attribute_velocity": "弹速: %f",
+  "tooltip.perk_weapons.attribute_draw_time": "拉弓时间: %s s",
+  "tooltip.perk_weapons.attribute_charge_time": "装弹时间: %s s",
+
+  "tooltip.perk_weapons.weapon_description_title": "描述:",
+  "tooltip.perk_weapons.description_key_hint": "[按 %s 查看描述]",
+  "tooltip.perk_weapons.perk_description_title": "特性:",
+  "tooltip.perk_weapons.perk_description_key_hint": "[按 %s 查看武器特性]",
+
+  "tooltip.perk_weapons.conduit_guard_perk_1": "在水中对附近 %s 米的敌人有追踪效果",
+  "tooltip.perk_weapons.conduit_guard_perk_2": "投矛会自行游回持有者身边",
+  "tooltip.perk_weapons.conduit_guard": "\"它的工作从未改变，只是换了个新的支配者。\"",
+
+  "tooltip.perk_weapons.megalodon": "\"至少能在行为上模仿那群家伙对你的穷追不舍:(\"",
+  "tooltip.perk_weapons.megalodon_perk_1": "当投矛命中生物时对持有者施加以下效果:",
+
+  "tooltip.perk_weapons.piglins_warspear": "\"Waaaaaaaaaaaaaaaaaaagh!!!\"",
+  "tooltip.perk_weapons.piglins_warspear_perk_1": "每件身穿的金质盔甲提供:",
+
+  "tooltip.perk_weapons.scourge": "\"往好处想，你不需要在打喷嚏时考虑用哪个头。\"",
+  "tooltip.perk_weapons.scourge_perk_1": "投矛能够穿透至多 %d 个生物",
+  "tooltip.perk_weapons.scourge_perk_2": "对命中的生物施加以下效果:",
+  "tooltip.perk_weapons.scourge_ability_1": "向前连续投掷 %d 支投矛",
+
+  "tooltip.perk_weapons.dragon_strike": "\"来了吗...吾之宿敌！\"",
+  "tooltip.perk_weapons.dragon_strike_perk_1": "投矛不受重力影响",
+  "tooltip.perk_weapons.dragon_strike_perk_2": "命中时产生龙息效果云",
+  "tooltip.perk_weapons.dragon_strike_ability_1": "击飞周围的生物",
+  "tooltip.perk_weapons.dragon_strike_perk_3": "手持时 %f 魔法伤害抗性",
+
+  "tooltip.perk_weapons.purgatory": "\"于永恒的炽焰中锻造。\"",
+  "tooltip.perk_weapons.purgatory_perk_1": "命中生物时点燃生物",
+  "tooltip.perk_weapons.purgatory_perk_2": "箭矢能够穿透至多 %d 个生物",
+  "tooltip.perk_weapons.purgatory_perk_3": "箭矢不再穿透生物",
+  "tooltip.perk_weapons.purgatory_perk_4": "箭矢在命中时产生爆炸",
+  "tooltip.perk_weapons.purgatory_perk_5": "箭矢会在 %f 秒后自动引爆",
+
+  "tooltip.perk_weapons.forest_keeper": "\"游荡在林间，让人捉摸不透。\"",
+  "tooltip.perk_weapons.forest_keeper_perk_1": "拉弓时不会产生减速效果",
+  "tooltip.perk_weapons.forest_keeper_perk_2": "每次命中增加 %d 层充能",
+  "tooltip.perk_weapons.forest_keeper_perk_3": "最大充能: %d",
+  "tooltip.perk_weapons.forest_keeper_perk_4": "每 %f 秒降低1层充能",
+  "tooltip.perk_weapons.forest_keeper_perk_5": "持有者受到任意伤害会失去失去所有充能",
+  "tooltip.perk_weapons.forest_keeper_perk_6": "每层充能提供:",
+
+  "tooltip.perk_weapons.elfs_harp": "\"拨动窃息之弦，吟箭贯其宿命。\"",
+  "tooltip.perk_weapons.elfs_harp_perk_1": "箭矢造成魔法伤害",
+  "tooltip.perk_weapons.elfs_harp_perk_2": "命中时对目标施加 %s 效果",
+  "tooltip.perk_weapons.elfs_harp_perk_3": "每次命中增加 %d 层充能",
+  "tooltip.perk_weapons.elfs_harp_perk_4": "最大充能: %d",
+  "tooltip.perk_weapons.elfs_harp_perk_5": "当充能达到最大后:",
+  "tooltip.perk_weapons.elfs_harp_perk_6": "射出强化箭矢后重置充能层数",
+
+  "tooltip.perk_weapons.frost_hunter": "\"拉响冰封誓约，幽狼群缚于猎月。\"",
+  "tooltip.perk_weapons.frost_hunter_perk_1": "命中冰冻目标 %s 秒",
+  "tooltip.perk_weapons.frost_hunter_ability_1": "召唤 %d 只猎犬, 猎犬存在时间:%f 秒",
+
+  "tooltip.perk_weapons.hou_yi": "\"于逝去恒星的光辉中锻造的遗物。\"",
+  "tooltip.perk_weapons.hou_yi_perk_1": "箭矢不受重力影响",
+  "tooltip.perk_weapons.hou_yi_perk_2": "%s 对位于空中的生物的伤害",
+
+  "tooltip.perk_weapons.devourer": "\"以骨肉...供奉我...\"",
+  "tooltip.perk_weapons.devourer_perk_1": "箭矢能够穿透至多 %d 个生物",
+  "tooltip.perk_weapons.devourer_perk_2": "当箭矢命中生物时:",
+  "tooltip.perk_weapons.devourer_perk_3": "让目标在短时间内无法移动",
+  "tooltip.perk_weapons.devourer_perk_4": "在目标脚下生成一个唤魔者尖牙",
+
+  "tooltip.perk_weapons.oppressor": "\"他一手遮天、傲睨万物，相信世间再无人可与之匹敌...\"",
+  "tooltip.perk_weapons.oppressor_perk_1": "蹲下时:",
+  "tooltip.perk_weapons.oppressor_perk_2": "对瞄准的生物施加以下效果:",
+
+  "tooltip.perk_weapons.liberator": "\"...却不知覆舟之水从不在敌营宝座之上，而在自己身下。\"",
+  "tooltip.perk_weapons.liberator_perk_1": "箭矢能够穿透至多 %d 个生物",
+  "tooltip.perk_weapons.liberator_perk_2": "+%d %s 等级",
+
+  "tooltip.perk_weapons.tainted_fortune": "\"并非不义。\"",
+  "tooltip.perk_weapons.tainted_fortune_perk_1": "自动装填弹药",
+
+  "tooltip.perk_weapons.sonic_blaster": "\"§k何人敢闯地城§r? §k幽暗深处异动起§r， §k且听§r， §k腐土噬魂守亡魂§r。\"",
+  "tooltip.perk_weapons.sonic_blaster_perk_1": "发射音爆攻击而非箭矢",
+  "tooltip.perk_weapons.sonic_blaster_perk_2": "最大伤害距离: %d",
+
+  "tooltip.perk_weapons.incinerator": "\"你的战士之魂在轮回业火中永恒燃烧。\"",
+  "tooltip.perk_weapons.incinerator_perk_1": "弹匣供弹 - 弹容量: %d",
+  "tooltip.perk_weapons.incinerator_perk_2": "箭矢对着火的生物造成额外击退",
+
+  "entity.perk_weapons.thrown_spear": "投矛",
+  "entity.perk_weapons.thrown_megalodon": "巨齿鲨",
+  "entity.perk_weapons.thrown_conduit_guard": "潮涌守卫",
+  "entity.perk_weapons.thrown_scourge": "天灾",
+  "entity.perk_weapons.arrow": "箭",
+  "entity.perk_weapons.purgatory_arrow": "箭-炼狱",
+  "entity.perk_weapons.explosive_arrow": "爆炸箭",
+  "entity.perk_weapons.perk_arrow": "箭",
+  "entity.perk_weapons.frost_hunter_arrow": "箭-凛冬猎手",
+  "entity.perk_weapons.star_shooter_arrow": "箭-射日",
+  "entity.perk_weapons.devourer_arrow": "箭-吞噬者",
+  "entity.perk_weapons.incinerator_arrow": "箭-焚烬",
+  "entity.perk_weapons.hound": "猎犬",
+
+  "effect.perk_weapons.harm_all": "全体伤害"
+}
