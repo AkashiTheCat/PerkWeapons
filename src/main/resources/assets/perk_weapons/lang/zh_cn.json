@@ -1,9 +1,9 @@
 {
   "item.perk_weapons.placeholder": "Placeholder",
 
-  "perk_weapons.itemGroup.ingredients_tab": "特性武器库: 材料",
-  "perk_weapons.itemGroup.spear_tab": "特性武器库: 投矛",
-  "perk_weapons.itemGroup.bow_tab": "特性武器库: 弓 & 弩",
+  "perk_weapons.itemGroup.ingredients_tab": "特异武器库: 材料",
+  "perk_weapons.itemGroup.spear_tab": "特异武器库: 投矛",
+  "perk_weapons.itemGroup.bow_tab": "特异武器库: 弓 & 弩",
 
   "enchantment.perk_weapons.melt_down": "融毁",
   "enchantment.perk_weapons.star_shooter": "射日",
@@ -122,7 +122,7 @@
   "tooltip.perk_weapons.frost_hunter_perk_1": "命中冰冻目标 %s 秒",
   "tooltip.perk_weapons.frost_hunter_ability_1": "召唤 %d 只猎犬, 猎犬存在时间:%f 秒",
 
-  "tooltip.perk_weapons.hou_yi": "\"于逝去恒星的光辉中锻造的遗物。\"",
+  "tooltip.perk_weapons.hou_yi": "\"于正在消亡的恒星的光辉中锻造的遗物。\"",
   "tooltip.perk_weapons.hou_yi_perk_1": "箭矢不受重力影响",
   "tooltip.perk_weapons.hou_yi_perk_2": "%s 对位于空中的生物的伤害",
 
