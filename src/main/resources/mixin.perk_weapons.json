@@ -7,5 +7,6 @@
     "LocalPlayerMixin"
   ],
   "server": [
-  ]
+  ],
+  "mixins": ["AnvilMenuMixin"]
 }

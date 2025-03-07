@@ -34,6 +34,8 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
 	public static ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_AS_FLYING;
+	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
+	public static ForgeConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
 
 
 	//Spear Configs
@@ -85,6 +87,10 @@ public class ModCommonConfigs {
 		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
+		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required Of One Repairer To Repair Something On Anvil")
+				.defineInRange("RepairerCost", 5, 0, 255);
+		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Percentage Of Durability Repaired By Each Repairer")
+				.defineInRange("RepairPercentage", 0.2, 0, 1);
 		BUILDER.pop();
 
 		//Spears
@@ -170,7 +176,7 @@ public class ModCommonConfigs {
 				40, 15,
 				4.5, 0.2,
 				-0.5, 0.15,
-				-0.5,1.0,
+				-0.5, 1.0,
 				true);
 		DEVOURER_PROPERTIES = new DevourerProperties(BUILDER, "Devourer",
 				20, 7,

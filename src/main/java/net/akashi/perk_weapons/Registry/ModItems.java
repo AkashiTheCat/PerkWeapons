@@ -43,6 +43,10 @@ public class ModItems {
 			ITEMS.register("totem_of_evoking",
 					() -> new Item(new Item.Properties().rarity(Rarity.EPIC))), INGREDIENTS_TAB);
 
+	public static final RegistryObject<Item> REPAIRER = addToTab(
+			ITEMS.register("repairer", () -> new Item(new Item.Properties()
+					.rarity(Rarity.UNCOMMON).stacksTo(1))), INGREDIENTS_TAB);
+
 	//Blocks
 	public static final RegistryObject<BlockItem> FURNACE_CORE = addToTab(
 			ITEMS.register("furnace_core", () -> new BlockItem(ModBlocks.FURNACE_CORE.get(),

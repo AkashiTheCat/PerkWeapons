@@ -28,6 +28,7 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -57,6 +58,11 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			MENDING
 	));
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
+
+	@Override
+	public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
+		return super.isValidRepairItem(pStack, pRepairCandidate);
+	}
 
 	public BaseBowItem(Properties properties) {
 		super(properties);

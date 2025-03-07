@@ -26,7 +26,9 @@ public class PerkWeapons {
 
 		ModPackets.registerPackets();
 
-		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC, PerkWeapons.MODID + "-common.toml");
-		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModClientConfigs.SPEC, PerkWeapons.MODID + "-client.toml");
+		ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfigs.SPEC,
+				PerkWeapons.MODID + "-common.toml");
+		ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ModClientConfigs.SPEC,
+				PerkWeapons.MODID + "-client.toml");
 	}
 }
