@@ -1,13 +1,7 @@
 package net.akashi.perk_weapons.mixin;
 
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
-import net.akashi.perk_weapons.PerkWeapons;
-import net.akashi.perk_weapons.Registry.ModItems;
 import net.akashi.perk_weapons.Registry.ModTags;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
