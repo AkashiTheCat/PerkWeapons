@@ -57,13 +57,9 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 			}
 
 			int delta = (int) (ModCommonConfigs.REPAIRER_REPAIR_PERCENTAGE.get() * firstStack.getMaxDamage());
-			int count;
-			for (count = 0; damage > 0 && count < secondStack.getCount(); count++) {
-				damage = Math.max(damage - delta, 0);
-			}
-			firstStack.setDamageValue(damage);
-			this.cost.set(ModCommonConfigs.REPAIRER_LEVEL_COST.get() * count);
-			this.repairItemCountCost = count;
+			firstStack.setDamageValue(Math.max(damage - delta, 0));
+			this.cost.set(ModCommonConfigs.REPAIRER_LEVEL_COST.get());
+			this.repairItemCountCost = 1;
 
 			this.resultSlots.setItem(0, firstStack);
 			this.broadcastChanges();

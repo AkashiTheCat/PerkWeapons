@@ -45,7 +45,7 @@ public class ModItems {
 
 	public static final RegistryObject<Item> REPAIRER = addToTab(
 			ITEMS.register("repairer", () -> new Item(new Item.Properties()
-					.rarity(Rarity.UNCOMMON).stacksTo(1))), INGREDIENTS_TAB);
+					.rarity(Rarity.UNCOMMON).stacksTo(16))), INGREDIENTS_TAB);
 
 	//Blocks
 	public static final RegistryObject<BlockItem> FURNACE_CORE = addToTab(
