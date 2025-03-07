@@ -87,7 +87,7 @@ public class ModCommonConfigs {
 		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
-		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required Of One Repairer To Repair Something On Anvil")
+		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required By Each Repairer To Repair Something On Anvil")
 				.defineInRange("RepairerCost", 5, 0, 255);
 		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Percentage Of Durability Repaired By Each Repairer")
 				.defineInRange("RepairPercentage", 0.2, 0, 1);
