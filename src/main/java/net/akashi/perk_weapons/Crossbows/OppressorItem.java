@@ -51,24 +51,24 @@ public class OppressorItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
-		if (slotIndex != selectedIndex || !player.isCrouching()) {
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+		super.inventoryTick(stack, level, entity, slotId, isSelected);
+		if (!isSelected || !entity.isCrouching()) {
 			return;
 		}
 
-		Vec3 viewVec = player.getViewVector(1.0F).normalize();
-		Vec3 from = player.getEyePosition();
+		Vec3 viewVec = entity.getViewVector(1.0F).normalize();
+		Vec3 from = entity.getEyePosition();
 
 		Vec3 to = from.add(viewVec.scale(AFFECT_RANGE));
-		AABB searchBox = player.getBoundingBox().expandTowards(
+		AABB searchBox = entity.getBoundingBox().expandTowards(
 				viewVec.scale(AFFECT_RANGE)).inflate(1.0D, 1.0D, 1.0D);
 		BlockHitResult blockResult = level.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER,
-				ClipContext.Fluid.NONE, player));
+				ClipContext.Fluid.NONE, entity));
 		if (blockResult.getType() == HitResult.Type.BLOCK) {
 			to = blockResult.getLocation();
 		}
-		EntityHitResult entityResult = ProjectileUtil.getEntityHitResult(player, from, to, searchBox,
+		EntityHitResult entityResult = ProjectileUtil.getEntityHitResult(entity, from, to, searchBox,
 				isVisible, AFFECT_RANGE * AFFECT_RANGE);
 		if (entityResult == null) {
 			return;
@@ -79,7 +79,7 @@ public class OppressorItem extends BaseCrossbowItem {
 				target.getBoundingBox().clip(from, to).isPresent()) {
 			if (!level.isClientSide()) {
 				if (level.getGameTime() % 5 == 0) {
-					level.playSound(null, player.getX(), player.getY(), player.getZ(),
+					level.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
 							SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.7F, 0.8F);
 				}
 				if (level.getGameTime() % 20 == 0) {
@@ -95,8 +95,8 @@ public class OppressorItem extends BaseCrossbowItem {
 				}
 			} else {
 				//Render particle trail
-				Vec3 particleXYZ = new Vec3(player.getX(), player.getBoundingBox().getYsize() * 0.5 + player.getY(),
-						player.getZ());
+				Vec3 particleXYZ = new Vec3(entity.getX(), entity.getBoundingBox().getYsize() * 0.5 + entity.getY(),
+						entity.getZ());
 				Vec3 targetXYZ = new Vec3(target.getX(), target.getBoundingBox().getYsize() * 0.5 + target.getY(),
 						target.getZ());
 				float interval = 1.2F;

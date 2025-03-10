@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -116,9 +117,9 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
-		if (!level.isClientSide()) {
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+		super.inventoryTick(stack, level, entity, slotId, isSelected);
+		if (!level.isClientSide() && entity instanceof Player player) {
 			long tickPassed = level.getGameTime() - getLastAbilityUsedTime(stack);
 			int shotsRemain = getAbilityShotsRemain(stack);
 			if (shotsRemain > 0 && tickPassed % ABILITY_SHOTS_INTERVAL == 0) {

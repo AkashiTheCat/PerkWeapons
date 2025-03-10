@@ -9,6 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -62,22 +63,22 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
-		if (level.isClientSide()) {
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+		super.inventoryTick(stack, level, entity, slotId, isSelected);
+		if (level.isClientSide() || !(entity instanceof LivingEntity e)) {
 			return;
 		}
 
-		if (getChargedProjectileAmount(stack) < AMMO_CAPACITY && tryLoadAmmo(player, stack)) {
+		if (getChargedProjectileAmount(stack) < AMMO_CAPACITY && tryLoadAmmo(e, stack)) {
 			setReloadBeginTime(stack, level.getGameTime());
 		}
 
 		if (!isCrossbowCharged(stack)) {
-			if (slotIndex == selectedIndex || player.getOffhandItem().is(this)) {
-				this.onUseTick(level, player, stack, 0);
+			if (isSelected || e.getOffhandItem().is(this)) {
+				this.onUseTick(level, e, stack, 0);
 			}
 
-			if (getChargeProgress(player, stack) >= 1.0f)
+			if (getChargeProgress(e, stack) >= 1.0f)
 				setCrossbowCharged(stack, true);
 		}
 	}
