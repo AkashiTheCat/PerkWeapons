@@ -6,6 +6,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownDragonStrike;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Registry.ModItems;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
@@ -45,8 +46,8 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	public static int RETURN_TIME = 40;
 	private static int COOLDOWN_TICKS = 200;
 
-	public DragonStrikeItem(boolean isAdvanced, Properties pProperties) {
-		super(isAdvanced, pProperties);
+	public DragonStrikeItem(Properties pProperties) {
+		super(pProperties);
 		this.RemoveGeneralEnchant(LOYALTY);
 	}
 
@@ -73,9 +74,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownDragonStrike(pLevel, player, pStack, RETURN_TIME,
-				ModEntities.THROWN_DRAGON_STRIKE.get())
-				.setBaseDamage(this.ThrowDamage);
+		return new ThrownDragonStrike(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_DRAGON_STRIKE.get());
 	}
 
 	@Override
@@ -93,7 +92,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 				for (Entity entity : pLevel.getEntities(pPlayer, explosionArea)) {
 					if (entity instanceof LivingEntity && entity != pPlayer) {
 						Vec3 knockbackDirection = entity.position().subtract(x, y, z).normalize().scale(1.0);
-						entity.setDeltaMovement(knockbackDirection.x, 0.5, knockbackDirection.z);
+						entity.push(knockbackDirection.x, 0.5, knockbackDirection.z);
 					}
 				}
 				setLastAbilityUsedTime(stack, pLevel.getGameTime());
@@ -105,18 +104,6 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 			}
 		}
 		return super.use(pLevel, pPlayer, pHand);
-	}
-
-	@SubscribeEvent
-	public static void onPlayerHurt(LivingHurtEvent event) {
-		if (event.getEntity() instanceof Player player) {
-			if (event.getSource().is(DamageTypes.MAGIC)) {
-				if (player.getMainHandItem().getItem() instanceof DragonStrikeItem) {
-					float reducedDamage = event.getAmount() * (1 - (float) MagicResistance);
-					event.setAmount(reducedDamage);
-				}
-			}
-		}
 	}
 
 	@Override
@@ -156,5 +143,14 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_ability_1")));
 
 		return list;
+	}
+
+	@SubscribeEvent
+	public static void onPlayerHurt(LivingHurtEvent event) {
+		if (event.getEntity() instanceof Player player && event.getSource().is(DamageTypes.MAGIC)
+				&& player.getMainHandItem().is(ModItems.DRAGON_STRIKE.get())) {
+			float reducedDamage = event.getAmount() * (1F - (float) MagicResistance);
+			event.setAmount(reducedDamage);
+		}
 	}
 }

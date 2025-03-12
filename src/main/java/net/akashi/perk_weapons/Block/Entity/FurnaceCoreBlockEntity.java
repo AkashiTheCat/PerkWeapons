@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCoreBlockEntity extends AbstractFurnaceBlockEntity {
 	public FurnaceCoreBlockEntity(BlockPos pPos, BlockState pBlockState) {
@@ -18,18 +19,17 @@ public class FurnaceCoreBlockEntity extends AbstractFurnaceBlockEntity {
 	}
 
 	@Override
-	protected Component getDefaultName() {
-		return Component.translatable("container.furnace_core", PerkWeapons.MODID);
+	protected @NotNull Component getDefaultName() {
+		return Component.translatable("container.perk_weapons.furnace_core");
 	}
 
-
 	@Override
-	protected int getBurnDuration(ItemStack pFuel) {
+	protected int getBurnDuration(@NotNull ItemStack pFuel) {
 		return Integer.MAX_VALUE;
 	}
 
 	@Override
-	protected AbstractContainerMenu createMenu(int pContainerId, Inventory pInventory) {
+	protected @NotNull AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory pInventory) {
 		return new BlastFurnaceMenu(pContainerId, pInventory, this, this.dataAccess);
 	}
 }

@@ -114,7 +114,7 @@ public class ModCommonConfigs {
 				1, 120);
 		CONDUIT_GUARD_PROPERTIES = new ConduitGuardProperties(BUILDER, "Conduit Guard",
 				9, 1.2,
-				6, 2.5F,
+				9, 2.5F,
 				5.0F, 45,
 				0.5, 80);
 		PIGLINS_WARSPEAR_PROPERTIES = new PiglinsWarSpearProperties(BUILDER, "Piglin's WarSpear",

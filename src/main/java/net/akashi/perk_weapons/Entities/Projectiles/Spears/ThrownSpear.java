@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Spears;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -34,6 +35,8 @@ public class ThrownSpear extends AbstractArrow {
 	private static final EntityDataAccessor<Byte> ID_FIRE_ASPECT = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.BYTE);
 	private static final EntityDataAccessor<Boolean> ID_FOIL = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<ItemStack> ID_SPEAR_ITEM = SynchedEntityData.defineId(ThrownSpear.class, EntityDataSerializers.ITEM_STACK);
+	@Nullable
+	protected IntOpenHashSet piercedEntities;
 	public boolean dealtDamage;
 	private int ReturnSlot;
 	public int clientSideReturnSpearTickCount;
@@ -76,6 +79,12 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
+	protected boolean canHitEntity(Entity entity) {
+		return super.canHitEntity(entity) && (this.piercedEntities == null ||
+				!this.piercedEntities.contains(entity.getId()));
+	}
+
+	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		Entity entity = pResult.getEntity();
 		float f = baseDamage;
@@ -91,8 +100,7 @@ public class ThrownSpear extends AbstractArrow {
 				return;
 			}
 
-			if (entity instanceof LivingEntity) {
-				LivingEntity livingentity = (LivingEntity) entity;
+			if (entity instanceof LivingEntity livingentity) {
 				if (getKnockback() > 0) {
 					double d0 = Math.max(0.0D, 1.0D - livingentity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
 					Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double) getKnockback() * 0.6D * d0);
@@ -112,13 +120,19 @@ public class ThrownSpear extends AbstractArrow {
 				this.doPostHurtEffects(livingentity);
 			}
 		}
+
 		byte pierceLevel = this.getPierceLevel();
-		if (pierceLevel == 0) {
+		if (pierceLevel > 0) {
+			if (piercedEntities == null) {
+				piercedEntities = new IntOpenHashSet(16);
+			}
+			piercedEntities.add(entity.getId());
+			this.setPierceLevel(--pierceLevel);
+		} else {
 			this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
 			this.dealtDamage = true;
-		} else {
-			this.setPierceLevel(--pierceLevel);
 		}
+
 		float f1 = 1.0F;
 		if (this.level() instanceof ServerLevel && this.level().isThundering() && this.isChanneling()) {
 			BlockPos blockpos = entity.blockPosition();

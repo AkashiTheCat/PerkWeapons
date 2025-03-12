@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -42,11 +44,10 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class BaseSpearItem extends TridentItem implements Vanishable {
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
-	public float ProjectileVelocity;
-	public float ThrowDamage;
-	public float BaseAttackDamage;
-	public float BaseAttackSpeed;
-	public float BaseThrowDamage;
+	public float VELOCITY = 2.5F;
+	public float MELEE_DAMAGE = 5F;
+	public float MELEE_SPEED = 1.1F;
+	public float THROW_DAMAGE = 5F;
 
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
 			KNOCKBACK,
@@ -60,44 +61,36 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 			SHARPNESS
 	));
 
-	public BaseSpearItem(boolean isAdvanced, Properties pProperties) {
+	public BaseSpearItem(Properties pProperties) {
 		super(pProperties);
-		this.ProjectileVelocity = 2.5F;
-		this.ThrowDamage = 5;
-		this.BaseThrowDamage = 5;
-		this.BaseAttackDamage = 5;
-		this.BaseAttackSpeed = 1.1F;
-		if (isAdvanced) {
-			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
-			ConflictEnchants.add(IMPALING);
-		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", 5 - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", 1.1 - 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				5 - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				1.1 - 4, AttributeModifier.Operation.ADDITION));
 		this.AttributeModifiers = builder.build();
 	}
 
-	public BaseSpearItem(float attackDamage,
-	                     float attackSpeed,
-	                     float throwDamage,
-	                     float projectileVelocity,
-	                     boolean isAdvanced,
-	                     Properties pProperties) {
+	public BaseSpearItem(float attackDamage, float attackSpeed, float throwDamage,
+	                     float projectileVelocity, boolean isAdvanced, Properties pProperties) {
 		super(pProperties);
-		this.ProjectileVelocity = projectileVelocity;
-		this.ThrowDamage = throwDamage;
-		this.BaseThrowDamage = throwDamage;
-		this.BaseAttackDamage = attackDamage;
-		this.BaseAttackSpeed = attackSpeed;
+		this.VELOCITY = projectileVelocity;
+		this.THROW_DAMAGE = throwDamage;
+		this.MELEE_DAMAGE = attackDamage;
+		this.MELEE_SPEED = attackSpeed;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
 		}
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				attackDamage - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				attackSpeed - 4, AttributeModifier.Operation.ADDITION));
 		this.AttributeModifiers = builder.build();
 	}
+
+	//General Overrides
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
@@ -105,38 +98,29 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	}
 
 	@Override
-	public boolean canAttackBlock(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer) {
-		return !pPlayer.isCreative();
-	}
-
-	@Override
-	public UseAnim getUseAnimation(ItemStack pStack) {
+	public @NotNull UseAnim getUseAnimation(@NotNull ItemStack pStack) {
 		return UseAnim.SPEAR;
-	}
-
-	@Override
-	public int getUseDuration(ItemStack pStack) {
-		return 72000;
 	}
 
 	@Override
 	public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
-			int i = this.getUseDuration(pStack) - pTimeLeft;
-			if (i >= 10) {
-				int j = EnchantmentHelper.getRiptide(pStack);
-				if (j <= 0 || player.isInWaterOrRain()) {
+			int usedTicks = this.getUseDuration(pStack) - pTimeLeft;
+			if (usedTicks >= 10) {
+				int riptideLevel = EnchantmentHelper.getRiptide(pStack);
+				if (riptideLevel <= 0 || player.isInWaterOrRain()) {
 					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
-					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity + (float) j * 0.5F, 1.0F);
+					thrownspear.setBaseDamage(getProjectileBaseDamage(pStack));
+
+					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
+							VELOCITY + (float) riptideLevel * 0.5F, 1.0F);
+
 					if (!pLevel.isClientSide) {
 						pStack.hurtAndBreak(1, player, (pOnBroken) -> {
 							pOnBroken.broadcastBreakEvent(pEntityLiving.getUsedItemHand());
 						});
-						if (j == 0) {
-
-							if (!player.getAbilities().instabuild) {
-								player.getInventory().removeItem(pStack);
-							}
+						if (riptideLevel == 0 && !player.getAbilities().instabuild) {
+							player.getInventory().removeItem(pStack);
 						}
 					}
 					if (player.getAbilities().instabuild) {
@@ -144,36 +128,38 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 					}
 
 					pLevel.addFreshEntity(thrownspear);
-					pLevel.playSound(null, thrownspear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+					pLevel.playSound(null, thrownspear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
+							1.0F, 1.0F);
 					player.awardStat(Stats.ITEM_USED.get(this));
-					if (j > 0) {
+
+					if (riptideLevel > 0) {
 						float f7 = player.getYRot();
 						float f = player.getXRot();
 						float f1 = -Mth.sin(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
 						float f2 = -Mth.sin(f * ((float) Math.PI / 180F));
 						float f3 = Mth.cos(f7 * ((float) Math.PI / 180F)) * Mth.cos(f * ((float) Math.PI / 180F));
 						float f4 = Mth.sqrt(f1 * f1 + f2 * f2 + f3 * f3);
-						float f5 = 3.0F * ((1.0F + (float) j) / 4.0F);
+						float f5 = 3.0F * ((1.0F + (float) riptideLevel) / 4.0F);
 						f1 *= f5 / f4;
 						f2 *= f5 / f4;
 						f3 *= f5 / f4;
 						player.push(f1, f2, f3);
 						player.startAutoSpinAttack(20);
 						if (player.onGround()) {
-							float f6 = 1.1999999F;
 							player.move(MoverType.SELF, new Vec3(0.0D, (double) 1.1999999F, 0.0D));
 						}
 
 						SoundEvent soundevent;
-						if (j >= 3) {
+						if (riptideLevel >= 3) {
 							soundevent = SoundEvents.TRIDENT_RIPTIDE_3;
-						} else if (j == 2) {
+						} else if (riptideLevel == 2) {
 							soundevent = SoundEvents.TRIDENT_RIPTIDE_2;
 						} else {
 							soundevent = SoundEvents.TRIDENT_RIPTIDE_1;
 						}
 
-						pLevel.playSound((Player) null, player, soundevent, SoundSource.PLAYERS, 1.0F, 1.0F);
+						pLevel.playSound(null, player, soundevent, SoundSource.PLAYERS,
+								1.0F, 1.0F);
 					}
 
 				}
@@ -194,75 +180,16 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		}
 	}
 
-	@Override
-	public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
-		pStack.hurtAndBreak(1, pAttacker, (Player) -> {
-			Player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-		});
-		return true;
-	}
-
-	@Override
-	public boolean mineBlock(ItemStack pStack, Level pLevel, BlockState pState, BlockPos pPos, LivingEntity pEntityLiving) {
-		if ((double) pState.getDestroySpeed(pLevel, pPos) != 0.0D) {
-			pStack.hurtAndBreak(2, pEntityLiving, (Player) -> {
-				Player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-			});
-		}
-
-		return true;
-	}
+	//Enchantments
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
-			return true;
-		}
-		if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
-			return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
-		}
-		return false;
+		return EnchantmentValidator.canApplyAtTable(stack, enchantment, GeneralEnchants, ConflictEnchants);
 	}
 
 	@Override
 	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		Map<Enchantment, Integer> enchantments = book.getAllEnchantments();
-		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-			Enchantment enchantment = entry.getKey();
-			if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
-				continue;
-			} else if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
-				if (ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)) {
-					continue;
-				}
-			}
-			return false;
-		}
-		return true;
-	}
-
-	@Override
-	public int getEnchantmentValue() {
-		return 1;
-	}
-
-	public void updateAttributesFromConfig(SpearProperties properties) {
-		this.BaseAttackDamage = properties.MELEE_DAMAGE.get().floatValue();
-		this.BaseAttackSpeed = properties.ATTACK_SPEED.get().floatValue();
-		this.BaseThrowDamage = properties.RANGED_DAMAGE.get().floatValue();
-		updateAttributes(this.BaseAttackDamage,
-				this.BaseAttackSpeed,
-				this.BaseThrowDamage,
-				properties.VELOCITY.get().floatValue());
-	}
-
-	public void updateAttributes(float attackDamage, float attackSpeed, float throwDamage, float velocity) {
-		ProjectileVelocity = velocity;
-		ThrowDamage = throwDamage;
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", attackDamage - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-		AttributeModifiers = builder.build();
+		return EnchantmentValidator.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
 	}
 
 	public boolean AddGeneralEnchant(Enchantment enchantment) {
@@ -281,17 +208,31 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		return ConflictEnchants.remove(enchantment);
 	}
 
-	public void updateAttributes(float damageMultiplier, float speedMultiplier) {
-		this.updateAttributes(this.BaseAttackDamage * damageMultiplier,
-				this.BaseAttackSpeed * speedMultiplier,
-				this.BaseThrowDamage * damageMultiplier,
-				this.ProjectileVelocity);
+	//New methods
+
+	public void updateAttributesFromConfig(SpearProperties properties) {
+		this.VELOCITY = properties.VELOCITY.get().floatValue();
+		this.MELEE_DAMAGE = properties.MELEE_DAMAGE.get().floatValue();
+		this.MELEE_SPEED = properties.ATTACK_SPEED.get().floatValue();
+		this.THROW_DAMAGE = properties.RANGED_DAMAGE.get().floatValue();
+
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				this.MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				this.MELEE_SPEED - 4, AttributeModifier.Operation.ADDITION));
+		AttributeModifiers = builder.build();
 	}
 
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get())
-				.setBaseDamage(this.ThrowDamage);
+		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get());
 	}
+
+	protected float getProjectileBaseDamage(ItemStack stack) {
+		return THROW_DAMAGE;
+	}
+
+	//Tooltips
 
 	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
@@ -303,11 +244,13 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
+		int sharpnessLevel = stack.getEnchantmentLevel(SHARPNESS);
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_ranged_damage",
-						TooltipHelper.convertToEmbeddedElement(BaseThrowDamage))
+						TooltipHelper.convertToEmbeddedElement(THROW_DAMAGE + sharpnessLevel > 0 ?
+								0.5 * sharpnessLevel + 0.5 : 0))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
-						TooltipHelper.convertToEmbeddedElement(ProjectileVelocity))
+						TooltipHelper.convertToEmbeddedElement(VELOCITY))
 				.withStyle(ChatFormatting.DARK_AQUA));
 
 		super.appendHoverText(stack, level, tooltip, isAdvanced);

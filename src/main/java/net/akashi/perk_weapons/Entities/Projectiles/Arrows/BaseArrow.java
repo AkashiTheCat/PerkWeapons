@@ -237,9 +237,10 @@ public class BaseArrow extends AbstractArrow {
 		Entity entity = this.getEffectSource();
 
 		for (MobEffectInstance mobeffectinstance : this.potion.getEffects()) {
-			pLiving.addEffect(new MobEffectInstance(mobeffectinstance.getEffect(), Math.max(mobeffectinstance.mapDuration((p_268168_) -> {
-				return p_268168_ / 8;
-			}), 1), mobeffectinstance.getAmplifier(), mobeffectinstance.isAmbient(), mobeffectinstance.isVisible()), entity);
+			pLiving.addEffect(new MobEffectInstance(mobeffectinstance.getEffect(), Math.max(
+					mobeffectinstance.mapDuration((p_268168_) -> p_268168_ / 8), 1),
+					mobeffectinstance.getAmplifier(), mobeffectinstance.isAmbient(),
+					mobeffectinstance.isVisible()), entity);
 		}
 
 		if (!this.effects.isEmpty()) {

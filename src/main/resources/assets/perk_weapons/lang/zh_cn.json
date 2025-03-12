@@ -166,5 +166,6 @@
   "entity.perk_weapons.incinerator_arrow": "箭-焚烬",
   "entity.perk_weapons.hound": "猎犬",
 
-  "effect.perk_weapons.harm_all": "全体伤害"
+  "effect.perk_weapons.harm_all": "全体伤害",
+  "container.perk_weapons.furnace_core": "熔炉核心"
 }

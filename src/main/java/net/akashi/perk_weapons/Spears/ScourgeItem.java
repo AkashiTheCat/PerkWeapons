@@ -53,8 +53,8 @@ public class ScourgeItem extends BaseSpearItem {
 	public static int ABILITY_SHOTS_COUNT = 3;
 	public static int PIERCE_LEVEL = 127;
 
-	public ScourgeItem(boolean isAdvanced, Properties pProperties) {
-		super(isAdvanced, pProperties);
+	public ScourgeItem(Properties pProperties) {
+		super(pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
 	}
 
@@ -92,8 +92,10 @@ public class ScourgeItem extends BaseSpearItem {
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
 		float speedMultiplier = 1.0F + getSpeedBonus(stack);
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", BaseAttackDamage - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", BaseAttackSpeed * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				MELEE_SPEED * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
 		return slot == EquipmentSlot.MAINHAND ? builder.build() : super.getAttributeModifiers(slot, stack);
 	}
 
@@ -134,8 +136,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		ThrownSpear spear = new ThrownScourge(pLevel, player, pStack, ModEntities.THROWN_SCOURGE.get())
-				.setBaseDamage(ThrowDamage);
+		ThrownSpear spear = new ThrownScourge(pLevel, player, pStack, ModEntities.THROWN_SCOURGE.get());
 		spear.setPierceLevel((byte) PIERCE_LEVEL);
 		return spear;
 	}
@@ -143,10 +144,11 @@ public class ScourgeItem extends BaseSpearItem {
 	public void shootAbilitySpear(Level level, Player player, ItemStack stack) {
 		ThrownSpear thrownspear = this.createThrownSpear(level, player, stack);
 		if (thrownspear instanceof ThrownScourge scourge) {
-			scourge.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, ProjectileVelocity, 1.0F);
+			scourge.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, VELOCITY, 1.0F);
 			scourge.allowPickup = false;
 			level.addFreshEntity(scourge);
-			level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS, 1.0F, 1.0F);
+			level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
+					1.0F, 1.0F);
 		}
 	}
 

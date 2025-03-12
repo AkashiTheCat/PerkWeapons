@@ -10,6 +10,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
+import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
@@ -492,30 +493,12 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
-			return true;
-		}
-		if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
-			return ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0);
-		}
-		return false;
+		return EnchantmentValidator.canApplyAtTable(stack, enchantment, GeneralEnchants, ConflictEnchants);
 	}
 
 	@Override
 	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		Map<Enchantment, Integer> enchantments = book.getAllEnchantments();
-		for (Map.Entry<Enchantment, Integer> entry : enchantments.entrySet()) {
-			Enchantment enchantment = entry.getKey();
-			if (GeneralEnchants.stream().anyMatch(GEnchantment -> GEnchantment.equals(enchantment))) {
-				continue;
-			} else if (ConflictEnchants.stream().anyMatch(CEnchantments -> CEnchantments.equals(enchantment))) {
-				if (ConflictEnchants.stream().noneMatch(CEnchantment -> stack.getEnchantmentLevel(CEnchantment) > 0)) {
-					continue;
-				}
-			}
-			return false;
-		}
-		return true;
+		return EnchantmentValidator.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
 	}
 
 	//Tooltip descriptions
@@ -542,8 +525,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 						TooltipHelper.convertToEmbeddedElement(VELOCITY))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_charge_time",
-						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(MAX_CHARGE_TICKS)))
-				.withStyle(ChatFormatting.DARK_AQUA));
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(
+						getMaxChargeTicks(stack)))).withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.empty());
 
 		ItemStack ammoStack = getLastChargedProjectile(stack);

@@ -40,25 +40,31 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 			Items.GOLDEN_LEGGINGS,
 			Items.GOLDEN_BOOTS));
 
-	public PiglinsWarSpearItem(boolean isAdvanced, Properties pProperties) {
-		super(isAdvanced, pProperties);
+	public PiglinsWarSpearItem(Properties pProperties) {
+		super(pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
 		buildAttributeModifiers();
 	}
 
-	public PiglinsWarSpearItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity, boolean isAdvanced, Properties pProperties) {
+	public PiglinsWarSpearItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
+	                           boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
 		buildAttributeModifiers();
 	}
 
+	@Override
+	protected float getProjectileBaseDamage(ItemStack stack) {
+		return THROW_DAMAGE * (1 + getArmorCount(stack) * DAMAGE_RATIO_BONUS);
+	}
+
 	private void buildAttributeModifiers() {
-		for (int i = 0; i < 4; i++) {
+		for (int i = 0; i < 5; i++) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-					BaseAttackDamage * (1 + i * DAMAGE_RATIO_BONUS) - 1, AttributeModifier.Operation.ADDITION));
+					MELEE_DAMAGE * (1 + i * DAMAGE_RATIO_BONUS) - 1, AttributeModifier.Operation.ADDITION));
 			builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-					BaseAttackSpeed * (1 + i * DAMAGE_RATIO_BONUS) - 4, AttributeModifier.Operation.ADDITION));
+					MELEE_SPEED * (1 + i * DAMAGE_RATIO_BONUS) - 4, AttributeModifier.Operation.ADDITION));
 			MODIFIERS.add(builder.build());
 		}
 	}
@@ -76,9 +82,8 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
-		if (tag.contains(TAG_ARMOR_COUNT) && slot == EquipmentSlot.MAINHAND) {
-			return MODIFIERS.get(tag.getInt(TAG_ARMOR_COUNT));
+		if (slot == EquipmentSlot.MAINHAND) {
+			return MODIFIERS.get(getArmorCount(stack));
 		}
 		return super.getAttributeModifiers(slot, stack);
 	}
@@ -93,14 +98,22 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 				itemStack = player.getOffhandItem();
 			}
 			if (itemStack != ItemStack.EMPTY) {
-				int count = getArmorCount(player);
-				CompoundTag tag = itemStack.getOrCreateTag();
-				tag.putInt(TAG_ARMOR_COUNT, count);
+				setArmorCount(itemStack, getPlayerArmorCount(player));
 			}
 		}
 	}
 
-	private static int getArmorCount(Player player) {
+	public static int getArmorCount(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		return tag.contains(TAG_ARMOR_COUNT) ? tag.getInt(TAG_ARMOR_COUNT) : 0;
+	}
+
+	public static void setArmorCount(ItemStack stack, int count) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putInt(TAG_ARMOR_COUNT, count);
+	}
+
+	private static int getPlayerArmorCount(Player player) {
 		int count = 0;
 		for (ItemStack armor : player.getArmorSlots()) {
 			if (allowedArmor.stream().anyMatch(pArmor -> pArmor.equals(armor.getItem()))) {

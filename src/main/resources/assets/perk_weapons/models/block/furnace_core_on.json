@@ -1,10 +1,10 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "perk_weapons:block/furnace_core_front",
 		"2": "perk_weapons:block/furnace_core_side",
 		"3": "perk_weapons:block/furnace_core_top",
-		"particle": "perk_weapons:block/furnace_core_front"
+		"4": "perk_weapons:block/furnace_core_front_on",
+		"particle": "perk_weapons:block/furnace_core_front_on"
 	},
 	"elements": [
 		{
@@ -12,7 +12,7 @@
 			"to": [16, 16, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 2]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#4"},
 				"east": {"uv": [0, 0, 16, 15], "texture": "#2"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#2"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#2"},

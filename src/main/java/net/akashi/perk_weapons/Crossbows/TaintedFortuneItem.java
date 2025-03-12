@@ -71,9 +71,10 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 
 		if (getChargedProjectileAmount(stack) < AMMO_CAPACITY && tryLoadAmmo(e, stack)) {
 			setReloadBeginTime(stack, level.getGameTime());
+			return;
 		}
 
-		if (!isCrossbowCharged(stack)) {
+		if (!isCrossbowCharged(stack) && isAmmoLoaded(stack)) {
 			if (isSelected || e.getOffhandItem().is(this)) {
 				this.onUseTick(level, e, stack, 0);
 			}
@@ -86,7 +87,7 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 	@Override
 	public float getChargeProgress(LivingEntity shooter, ItemStack crossbowStack) {
 		long passedTime = shooter.level().getGameTime() - getReloadBeginTime(crossbowStack);
-		return Math.min((float) passedTime / getMaxChargeTicks(crossbowStack), 1.0f);
+		return isAmmoLoaded(crossbowStack) ? Math.min((float) passedTime / getMaxChargeTicks(crossbowStack), 1.0f) : 0;
 	}
 
 	@Override
@@ -112,6 +113,10 @@ public class TaintedFortuneItem extends BaseCrossbowItem {
 				this.OffhandAttributeModifiers = builder.build();
 			}
 		}
+	}
+
+	public boolean isAmmoLoaded(ItemStack crossbowStack) {
+		return getLastChargedProjectile(crossbowStack) != ItemStack.EMPTY;
 	}
 
 	public long getReloadBeginTime(ItemStack crossbowStack) {

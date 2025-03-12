@@ -25,8 +25,8 @@ public class ConduitGuardItem extends BaseSpearItem {
 	public static double TRACKING_THRESHOLD = 0.5;
 	public static int RETURN_TIME = 80;
 
-	public ConduitGuardItem(boolean isAdvanced, Properties pProperties) {
-		super(isAdvanced, pProperties);
+	public ConduitGuardItem(Properties pProperties) {
+		super(pProperties);
 		RemoveGeneralEnchant(LOYALTY);
 	}
 
@@ -38,8 +38,7 @@ public class ConduitGuardItem extends BaseSpearItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownConduitGuard(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_CONDUIT_GUARD.get())
-				.setBaseDamage(this.ThrowDamage);
+		return new ThrownConduitGuard(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_CONDUIT_GUARD.get());
 	}
 
 	@Override

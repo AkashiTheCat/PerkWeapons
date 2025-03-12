@@ -22,15 +22,8 @@ import javax.annotation.Nullable;
 import java.util.function.Function;
 
 public class FurnaceCoreBlock extends AbstractFurnaceBlock {
-	protected static final VoxelShape SHAPE = Block.box(1.0, 1.0, 1.0, 15.0, 14.0, 15.0);
-
 	public FurnaceCoreBlock(Properties pProperties) {
 		super(pProperties);
-	}
-
-	@Override
-	public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-		return SHAPE;
 	}
 
 	@Override
@@ -49,7 +42,8 @@ public class FurnaceCoreBlock extends AbstractFurnaceBlock {
 
 	@Override
 	@Nullable
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+	public <T extends BlockEntity>
+	BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
 		return createFurnaceTicker(pLevel, pBlockEntityType, ModBlockEntities.FURNACE_CORE_BLOCK_ENTITY.get());
 	}
 }

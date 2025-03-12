@@ -27,11 +27,12 @@ public class MegalodonItem extends BaseSpearItem {
 	public static int STRENGTH_LEVEL = 1;
 	public static int STRENGTH_TICKS = 120;
 
-	public MegalodonItem(boolean isAdvanced, Properties pProperties) {
-		super(isAdvanced, pProperties);
+	public MegalodonItem(Properties pProperties) {
+		super(pProperties);
 	}
 
-	public MegalodonItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity, boolean isAdvanced, Properties pProperties) {
+	public MegalodonItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
+	                     boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 	}
 
@@ -50,8 +51,7 @@ public class MegalodonItem extends BaseSpearItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownMegalodon(pLevel, player, pStack, ModEntities.THROWN_MEGALODON.get())
-				.setBaseDamage(this.ThrowDamage);
+		return new ThrownMegalodon(pLevel, player, pStack, ModEntities.THROWN_MEGALODON.get());
 	}
 
 	@Override

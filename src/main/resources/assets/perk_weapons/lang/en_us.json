@@ -166,5 +166,6 @@
   "entity.perk_weapons.incinerator_arrow": "Incinerator Arrow",
   "entity.perk_weapons.hound": "Hound",
 
-  "effect.perk_weapons.harm_all": "Harming"
+  "effect.perk_weapons.harm_all": "Harming",
+  "container.perk_weapons.furnace_core": "Furnace Core"
 }
