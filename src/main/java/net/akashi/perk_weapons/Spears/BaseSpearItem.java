@@ -246,8 +246,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 
 		int sharpnessLevel = stack.getEnchantmentLevel(SHARPNESS);
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_ranged_damage",
-						TooltipHelper.convertToEmbeddedElement(THROW_DAMAGE + sharpnessLevel > 0 ?
-								0.5 * sharpnessLevel + 0.5 : 0))
+						TooltipHelper.convertToEmbeddedElement(getProjectileBaseDamage(stack) +
+								(sharpnessLevel > 0 ? 0.5 * sharpnessLevel + 0.5 : 0)))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
 						TooltipHelper.convertToEmbeddedElement(VELOCITY))
