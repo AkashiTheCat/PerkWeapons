@@ -1,9 +1,11 @@
 package net.akashi.perk_weapons.Crossbows;
 
+import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class OppressorItem extends BaseCrossbowItem {
+	public static final String TAG_PERK_ACTIVATING = "perk_activate";
 	private static final Predicate<Entity> isVisible =
 			entity -> !entity.isSpectator() && entity.isPickable();
 	public static int AFFECT_RANGE = 32;
@@ -33,12 +37,16 @@ public class OppressorItem extends BaseCrossbowItem {
 
 	public OppressorItem(Properties pProperties) {
 		super(pProperties);
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerOppressorPropertyOverrides(this);
 	}
 
 	public OppressorItem(int chargeTicks, float damage, float velocity,
 	                     float inaccuracy, float speedModifier,
 	                     boolean onlyMainHand, Properties pProperties) {
 		super(chargeTicks, damage, velocity, inaccuracy, speedModifier, onlyMainHand, pProperties);
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerOppressorPropertyOverrides(this);
 	}
 
 	@Override
@@ -54,6 +62,8 @@ public class OppressorItem extends BaseCrossbowItem {
 	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		if (!isSelected || !entity.isCrouching()) {
+			if (isPerkActivating(stack))
+				setPerkActivating(stack, false);
 			return;
 		}
 
@@ -70,7 +80,10 @@ public class OppressorItem extends BaseCrossbowItem {
 		}
 		EntityHitResult entityResult = ProjectileUtil.getEntityHitResult(entity, from, to, searchBox,
 				isVisible, AFFECT_RANGE * AFFECT_RANGE);
+
 		if (entityResult == null) {
+			if (isPerkActivating(stack))
+				setPerkActivating(stack, false);
 			return;
 		}
 
@@ -93,6 +106,10 @@ public class OppressorItem extends BaseCrossbowItem {
 						target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 40, SLOWNESS_LEVEL - 1));
 					}
 				}
+
+				if (!isPerkActivating(stack))
+					setPerkActivating(stack, true);
+
 			} else {
 				//Render particle trail
 				Vec3 particleXYZ = new Vec3(entity.getX(), entity.getBoundingBox().getYsize() * 0.5 + entity.getY(),
@@ -113,8 +130,23 @@ public class OppressorItem extends BaseCrossbowItem {
 					particleXYZ = particleXYZ.add(delta);
 				}
 			}
+			return;
 		}
+
+		if (isPerkActivating(stack))
+			setPerkActivating(stack, false);
 	}
+
+	public void setPerkActivating(ItemStack stack, boolean isActivating) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putBoolean(TAG_PERK_ACTIVATING, isActivating);
+	}
+
+	public boolean isPerkActivating(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		return tag.contains(TAG_PERK_ACTIVATING) && tag.getBoolean(TAG_PERK_ACTIVATING);
+	}
+
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {

@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Client;
 
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
+import net.akashi.perk_weapons.Crossbows.OppressorItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.ModelOverrides;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -22,6 +23,11 @@ public class ClientHelper {
 				entity != null ? perkItem.getPerkLevel(entity, stack) : 0.0f);
 		ItemProperties.register((Item) perkItem, ModelOverrides.PERK_MAX, (stack, world, entity, value) ->
 				entity != null && perkItem.isPerkMax(entity, stack) ? 1.0f : 0.0f);
+	}
+
+	public static void registerOppressorPropertyOverrides(OppressorItem Item) {
+		ItemProperties.register(Item, ModelOverrides.PERK, (stack, world, entity, value) ->
+				entity != null && Item.isPerkActivating(stack) ? 1.0F : 0.0F);
 	}
 
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {

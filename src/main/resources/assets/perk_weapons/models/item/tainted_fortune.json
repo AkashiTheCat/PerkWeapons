@@ -6,7 +6,7 @@
     "overrides": [
         {
             "predicate": {
-                "pulling": 0.01
+                "perk_weapons:pulling": 0.01
             },
             "model": "perk_weapons:item/tainted_fortune_pulling_0"
         },

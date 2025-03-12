@@ -6,7 +6,7 @@
     "overrides": [
         {
             "predicate": {
-                "pulling": 1
+                "perk_weapons:pulling": 1
             },
             "model": "perk_weapons:item/liberator_pulling_0"
         },
