@@ -235,12 +235,20 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		boolean isCreative = isShooterPlayer && ((Player) shooter).getAbilities().instabuild;
 
 		if (ammoStack.isEmpty()) {
-			if (isCreative) {
+			if (isCreative || !isShooterPlayer) {
 				ammoStack = new ItemStack(Items.ARROW);
 			} else {
 				return false;
 			}
 		}
+		loadAmmo(shooter, crossbowStack, ammoStack);
+		return true;
+	}
+
+	public void loadAmmo(LivingEntity shooter, ItemStack crossbowStack, ItemStack ammoStack) {
+		boolean isShooterPlayer = shooter instanceof Player;
+		boolean isCreative = isShooterPlayer && ((Player) shooter).getAbilities().instabuild;
+
 		ItemStack ammoToLoad = ammoStack.copyWithCount(1);
 
 		if (isShooterPlayer && !isCreative) {
@@ -250,7 +258,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 
 		addChargedProjectile(crossbowStack, ammoToLoad);
-		return true;
 	}
 
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
@@ -276,7 +283,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		int durabilityCost = 1;
 		Projectile projectile = getProjectile(level, shooter, crossbowStack);
 		if (projectile instanceof AbstractArrow arrow) {
-			if ((isCreativeMode || projectileAngle != 0.0F))
+			if (isCreativeMode || projectileAngle != 0.0F || !(shooter instanceof Player))
 				arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
 
 			arrow.setBaseDamage(damage / velocity);
@@ -323,6 +330,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		} else {
 			arrow.setEffectsFromItem(ammoStack);
 		}
+
 		arrow.setShotFromCrossbow(true);
 		return arrow;
 	}
