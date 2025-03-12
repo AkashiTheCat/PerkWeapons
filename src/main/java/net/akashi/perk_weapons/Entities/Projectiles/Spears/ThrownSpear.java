@@ -23,8 +23,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -82,6 +84,13 @@ public class ThrownSpear extends AbstractArrow {
 	protected boolean canHitEntity(Entity entity) {
 		return super.canHitEntity(entity) && (this.piercedEntities == null ||
 				!this.piercedEntities.contains(entity.getId()));
+	}
+
+	@Override
+	protected void onHitBlock(BlockHitResult pResult) {
+		super.onHitBlock(pResult);
+		if (this.piercedEntities != null)
+			this.piercedEntities.clear();
 	}
 
 	@Override
@@ -152,7 +161,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	protected ItemStack getPickupItem() {
+	protected @NotNull ItemStack getPickupItem() {
 		return getEntityData().get(ID_SPEAR_ITEM);
 	}
 
@@ -211,7 +220,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	protected SoundEvent getDefaultHitGroundSoundEvent() {
+	protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
 		return SoundEvents.TRIDENT_HIT_GROUND;
 	}
 
