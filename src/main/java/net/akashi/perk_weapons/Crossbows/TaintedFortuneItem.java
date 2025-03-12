@@ -27,6 +27,7 @@ import java.util.UUID;
 public class TaintedFortuneItem extends BaseCrossbowItem {
 	public static final UUID KNOCKBACK_UUID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
 	public static final String TAG_RELOAD_BEGIN = "reload_begin";
+	public static final String TAG_LAST_TRY_LOAD = "last_try";
 	public Multimap<Attribute, AttributeModifier> OffhandAttributeModifiers;
 	public static float KNOCKBACK_MODIFIER = 1.0f;
 

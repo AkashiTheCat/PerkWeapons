@@ -241,14 +241,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				return false;
 			}
 		}
-		loadAmmo(shooter, crossbowStack, ammoStack);
-		return true;
-	}
-
-	public void loadAmmo(LivingEntity shooter, ItemStack crossbowStack, ItemStack ammoStack) {
-		boolean isShooterPlayer = shooter instanceof Player;
-		boolean isCreative = isShooterPlayer && ((Player) shooter).getAbilities().instabuild;
-
 		ItemStack ammoToLoad = ammoStack.copyWithCount(1);
 
 		if (isShooterPlayer && !isCreative) {
@@ -258,6 +250,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 
 		addChargedProjectile(crossbowStack, ammoToLoad);
+		return true;
 	}
 
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
@@ -330,7 +323,6 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		} else {
 			arrow.setEffectsFromItem(ammoStack);
 		}
-
 		arrow.setShotFromCrossbow(true);
 		return arrow;
 	}
