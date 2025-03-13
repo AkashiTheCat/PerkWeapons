@@ -4,6 +4,7 @@ import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.OppressorProperties;
 import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.client.renderer.entity.GuardianRenderer;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;

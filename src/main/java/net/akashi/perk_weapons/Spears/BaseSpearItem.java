@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Spears;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
@@ -50,6 +51,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	public float THROW_DAMAGE = 5F;
 
 	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+			POWER_ARROWS,
 			KNOCKBACK,
 			MOB_LOOTING,
 			LOYALTY,
@@ -110,7 +112,10 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 				int riptideLevel = EnchantmentHelper.getRiptide(pStack);
 				if (riptideLevel <= 0 || player.isInWaterOrRain()) {
 					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
-					thrownspear.setBaseDamage(getProjectileBaseDamage(pStack));
+					double multiplier = 1 + ModCommonConfigs.SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE.get() *
+							pStack.getEnchantmentLevel(POWER_ARROWS);
+					thrownspear.setBaseDamage(getProjectileBaseDamage(pStack) * multiplier);
+					System.out.println(thrownspear.getBaseDamage());
 
 					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
 							VELOCITY + (float) riptideLevel * 0.5F, 1.0F);
@@ -146,7 +151,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 						player.push(f1, f2, f3);
 						player.startAutoSpinAttack(20);
 						if (player.onGround()) {
-							player.move(MoverType.SELF, new Vec3(0.0D, (double) 1.1999999F, 0.0D));
+							player.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
 						}
 
 						SoundEvent soundevent;
@@ -245,8 +250,10 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
 		int sharpnessLevel = stack.getEnchantmentLevel(SHARPNESS);
+		double multiplier = 1 + ModCommonConfigs.SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE.get() *
+				stack.getEnchantmentLevel(POWER_ARROWS);
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_ranged_damage",
-						TooltipHelper.convertToEmbeddedElement(getProjectileBaseDamage(stack) +
+						TooltipHelper.convertToEmbeddedElement(getProjectileBaseDamage(stack) * multiplier +
 								(sharpnessLevel > 0 ? 0.5 * sharpnessLevel + 0.5 : 0)))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",

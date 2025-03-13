@@ -42,7 +42,6 @@ public class ThrownSpear extends AbstractArrow {
 	public boolean dealtDamage;
 	private int ReturnSlot;
 	public int clientSideReturnSpearTickCount;
-	private float baseDamage = 5.0f;
 
 	public ThrownSpear(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -96,15 +95,15 @@ public class ThrownSpear extends AbstractArrow {
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		Entity entity = pResult.getEntity();
-		float f = baseDamage;
+		float dmg = (float) getBaseDamage();
 		if (entity instanceof LivingEntity livingentity) {
-			f += EnchantmentHelper.getDamageBonus(getSpearItem(), livingentity.getMobType());
+			dmg += EnchantmentHelper.getDamageBonus(getSpearItem(), livingentity.getMobType());
 		}
 
 		Entity entity1 = this.getOwner();
-		DamageSource damagesource = this.damageSources().trident(this, (Entity) (entity1 == null ? this : entity1));
+		DamageSource damagesource = this.damageSources().trident(this, entity1 == null ? this : entity1);
 		SoundEvent soundevent = SoundEvents.TRIDENT_HIT;
-		if (entity.hurt(damagesource, f)) {
+		if (entity.hurt(damagesource, dmg)) {
 			if (entity.getType() == EntityType.ENDERMAN) {
 				return;
 			}
@@ -233,7 +232,6 @@ public class ThrownSpear extends AbstractArrow {
 		}
 		this.dealtDamage = pCompound.getBoolean("dealtdamage");
 		this.ReturnSlot = pCompound.getInt("returnslot");
-		this.baseDamage = pCompound.getFloat("damage");
 		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(spearItem));
 		this.entityData.set(ID_FIRE_ASPECT, (byte) spearItem.getEnchantmentLevel(FIRE_ASPECT));
 		this.entityData.set(ID_SPEAR_ITEM, spearItem);
@@ -245,7 +243,6 @@ public class ThrownSpear extends AbstractArrow {
 		pCompound.put("spear", getSpearItem().save(new CompoundTag()));
 		pCompound.putBoolean("dealtdamage", this.dealtDamage);
 		pCompound.putInt("returnslot", this.ReturnSlot);
-		pCompound.putFloat("damage", this.baseDamage);
 	}
 
 	@Override
@@ -283,11 +280,6 @@ public class ThrownSpear extends AbstractArrow {
 
 	public ItemStack getSpearItem() {
 		return getPickupItem();
-	}
-
-	public ThrownSpear setBaseDamage(float baseDamage) {
-		this.baseDamage = baseDamage;
-		return this;
 	}
 
 }
