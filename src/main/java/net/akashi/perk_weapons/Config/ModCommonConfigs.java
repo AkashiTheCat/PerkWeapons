@@ -88,12 +88,12 @@ public class ModCommonConfigs {
 		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
-		SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE = BUILDER.comment("Ranged Damage Buff In Percentage Per Power Level When Enchanted" +
+		SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE = BUILDER.comment("Ranged Damage Buff Ratio Per Power Level When Enchanted" +
 						" On Modded Spears").defineInRange("PowerBuff", 0.2, 0, 255);
 		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required By Each Repairer To Repair Something On Anvil")
 				.defineInRange("RepairerCost", 5, 0, 255);
-		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Percentage Of Durability Repaired By Each Repairer")
-				.defineInRange("RepairPercentage", 0.2, 0, 1);
+		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Ratio Of Durability Repaired By Each Repairer")
+				.defineInRange("RepairRatio", 0.2, 0, 1);
 		BUILDER.pop();
 
 		//Spears

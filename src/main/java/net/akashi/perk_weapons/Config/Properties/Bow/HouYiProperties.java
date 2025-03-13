@@ -14,9 +14,9 @@ public class HouYiProperties extends BowProperties {
 	                       boolean onlyAllowMainHand) {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity, defaultInaccuracy,
 				defaultSpeedModifier, defaultZoomFactor, onlyAllowMainHand, false);
-		STAR_SHOOTER_DAMAGE_MODIFIER = builder.comment("Damage Modifier In Percentage When Star Shooter Enchanted")
+		STAR_SHOOTER_DAMAGE_MODIFIER = builder.comment("Damage Modifier When Star Shooter Enchanted (Damage = Base damage * (1 + this))")
 				.defineInRange("SSDamageModifier", SSDamageModifier, -1.0, Double.MAX_VALUE);
-		STAR_SHOOTER_AIR_DAMAGE_MODIFIER = builder.comment("Damage Modifier To Entities In Air In Percentage When Star Shooter Enchanted")
+		STAR_SHOOTER_AIR_DAMAGE_MODIFIER = builder.comment("Damage Modifier To Entities In Air When Star Shooter Enchanted")
 				.defineInRange("SSAirDamageModifier", SSAirDamageModifier, -1.0, Double.MAX_VALUE);
 		builder.pop();
 	}
