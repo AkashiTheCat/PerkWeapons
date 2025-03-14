@@ -13,42 +13,12 @@ import net.minecraft.world.phys.EntityHitResult;
 import static net.akashi.perk_weapons.Spears.ScourgeItem.*;
 
 public class ThrownScourge extends ThrownSpear {
-	public boolean allowPickup = true;
-
 	public ThrownScourge(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
 	}
 
 	public ThrownScourge(Level pLevel, LivingEntity pShooter, ItemStack pStack, EntityType<? extends ThrownSpear> spearType) {
 		super(pLevel, pShooter, pStack, spearType);
-	}
-
-	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
-		super.readAdditionalSaveData(pCompound);
-		this.allowPickup = pCompound.getBoolean("allowPickup");
-	}
-
-	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
-		super.addAdditionalSaveData(pCompound);
-		pCompound.putBoolean("allowPickup", this.allowPickup);
-	}
-
-	@Override
-	protected boolean tryPickup(Player pPlayer) {
-		if (allowPickup) {
-			return super.tryPickup(pPlayer);
-		}
-		return false;
-	}
-
-	@Override
-	public void tickDespawn() {
-		if (!allowPickup) {
-			super.tickDespawn();
-		}
-		super.tickDespawn();
 	}
 
 	@Override

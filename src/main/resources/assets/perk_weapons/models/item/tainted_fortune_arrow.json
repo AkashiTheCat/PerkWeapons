@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/base/base_crossbow",
+    "parent": "perk_weapons:item/tainted_fortune",
     "textures": {
         "layer0": "perk_weapons:item/crossbow/tainted_fortune/tainted_fortune_arrow"
     }

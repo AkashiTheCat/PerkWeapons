@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Spears;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Spear.ScourgeProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownScourge;
@@ -26,11 +27,16 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.tools.Tool;
 import java.util.*;
@@ -41,13 +47,13 @@ import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 public class ScourgeItem extends BaseSpearItem {
 	public static final String TAG_LAST_USED = "lastUsed";
 	public static final String TAG_SHOTS_REMAIN = "shotsRemain";
-	public static final String TAG_SPEED_BONUS = "speedBonus";
+	public static final String TAG_BUFFED = "buffed";
 	private static int ABILITY_COOLDOWN = 600;
 	public static int WITHER_DURATION = 40;
 	public static int WITHER_LEVEL = 3;
 	public static int SLOWNESS_DURATION = 40;
 	public static int SLOWNESS_LEVEL = 2;
-	public static int ABILITY_BUFF_DURATION = 120;
+	public static int ABILITY_BUFF_DURATION = 260;
 	public static float ABILITY_ATTACK_SPEED_BONUS = 0.3F;
 	public static int ABILITY_SHOTS_INTERVAL = 10;
 	public static int ABILITY_SHOTS_COUNT = 3;
@@ -56,12 +62,18 @@ public class ScourgeItem extends BaseSpearItem {
 	public ScourgeItem(Properties pProperties) {
 		super(pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerScourgePropertyOverrides(this);
 	}
 
 	public ScourgeItem(float attackDamage, float attackSpeed, float throwDamage,
 	                   float projectileVelocity, boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerScourgePropertyOverrides(this);
 	}
 
 	@Override
@@ -90,7 +102,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		float speedMultiplier = 1.0F + getSpeedBonus(stack);
+		float speedMultiplier = 1.0F + (isBuffed(stack) ? ABILITY_ATTACK_SPEED_BONUS : 0);
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
 				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
@@ -105,10 +117,11 @@ public class ScourgeItem extends BaseSpearItem {
 		if (pPlayer.isCrouching() && !level.isClientSide()) {
 			ItemStack stack = pPlayer.getItemInHand(pHand);
 
+			setBuffed(stack, true);
+
 			shootAbilitySpear(level, pPlayer, stack);
 			setAbilityShotsRemain(stack, ABILITY_SHOTS_COUNT - 1);
 			setLastAbilityUsedTime(stack, level.getGameTime());
-			setSpeedBonus(stack, ABILITY_ATTACK_SPEED_BONUS);
 
 			pPlayer.getCooldowns().addCooldown(this, ABILITY_COOLDOWN);
 			pLevel.playSound(null, pPlayer.getX(), pPlayer.getY(), pPlayer.getZ(),
@@ -128,8 +141,8 @@ public class ScourgeItem extends BaseSpearItem {
 				shootAbilitySpear(level, player, stack);
 				setAbilityShotsRemain(stack, shotsRemain - 1);
 			}
-			if (getSpeedBonus(stack) != 0.0F && tickPassed > ABILITY_BUFF_DURATION) {
-				setSpeedBonus(stack, 0.0F);
+			if (isBuffed(stack) && tickPassed > ABILITY_BUFF_DURATION) {
+				setBuffed(stack, false);
 			}
 		}
 	}
@@ -142,13 +155,20 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	public void shootAbilitySpear(Level level, Player player, ItemStack stack) {
-		ThrownSpear thrownspear = this.createThrownSpear(level, player, stack);
-		if (thrownspear instanceof ThrownScourge scourge) {
-			scourge.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, VELOCITY, 1.0F);
-			scourge.allowPickup = false;
-			level.addFreshEntity(scourge);
-			level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
-					1.0F, 1.0F);
+		for (int angle = -10; angle <= 10; angle += 10) {
+			ThrownSpear thrownspear = this.createThrownSpear(level, player, stack);
+			if (thrownspear instanceof ThrownScourge scourge) {
+				Vec3 vec31 = player.getUpVector(1.0F);
+				Quaternionf quaternionf = (new Quaternionf()).setAngleAxis(angle * ((float) Math.PI / 180F),
+						vec31.x, vec31.y, vec31.z);
+				Vec3 vec3 = player.getViewVector(1.0F);
+				Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
+				scourge.shoot(vector3f.x(), vector3f.y(), vector3f.z(), VELOCITY, 1.0F);
+				scourge.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+				level.addFreshEntity(scourge);
+				level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
+						1.0F, 1.0F);
+			}
 		}
 	}
 
@@ -178,17 +198,14 @@ public class ScourgeItem extends BaseSpearItem {
 		return 0;
 	}
 
-	public void setSpeedBonus(ItemStack stack, float bonus) {
+	public void setBuffed(ItemStack stack, boolean buffed) {
 		CompoundTag tag = stack.getOrCreateTag();
-		tag.putFloat(TAG_SPEED_BONUS, bonus);
+		tag.putBoolean(TAG_BUFFED, buffed);
 	}
 
-	public float getSpeedBonus(ItemStack stack) {
+	public boolean isBuffed(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
-		if (tag.contains(TAG_SPEED_BONUS)) {
-			return tag.getFloat(TAG_SPEED_BONUS);
-		}
-		return 0;
+		return tag.contains(TAG_BUFFED) && tag.getBoolean(TAG_BUFFED);
 	}
 
 	@Override
@@ -217,7 +234,7 @@ public class ScourgeItem extends BaseSpearItem {
 		list.add(TooltipHelper.getCoolDownTip(ABILITY_COOLDOWN));
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_ability_1",
-				TooltipHelper.convertToEmbeddedElement(ABILITY_SHOTS_COUNT))));
+				TooltipHelper.convertToEmbeddedElement(ABILITY_SHOTS_COUNT * 3))));
 		list.add(TooltipHelper.getAttackSpeedModifier(ABILITY_ATTACK_SPEED_BONUS)
 				.append(Component.translatable("tooltip.perk_weapons.seconds_append",
 						TooltipHelper.convertTicksToSeconds(ABILITY_BUFF_DURATION))));

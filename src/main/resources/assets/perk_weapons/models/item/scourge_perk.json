@@ -1,0 +1,6 @@
+{
+  "parent": "perk_weapons:item/scourge",
+  "textures": {
+    "layer0": "perk_weapons:item/spear/scourge_perk"
+  }
+}

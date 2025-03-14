@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/base/base_crossbow",
+    "parent": "perk_weapons:item/sonic_blaster",
     "textures": {
         "layer0": "perk_weapons:item/crossbow/sonic_blaster/sonic_blaster_pulling_0"
     }

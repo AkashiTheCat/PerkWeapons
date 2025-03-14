@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/liberator",
+    "textures": {
+        "layer0": "perk_weapons:item/crossbow/liberator/liberator_regicide_pulling_1"
+    }
+}

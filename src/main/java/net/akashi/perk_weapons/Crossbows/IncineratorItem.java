@@ -31,14 +31,18 @@ public class IncineratorItem extends MagFedCrossbowItem {
 
 	public IncineratorItem(Properties pProperties) {
 		super(pProperties);
-		AddGeneralEnchant(FLAMING_ARROWS);
+		RemoveGeneralEnchant(MULTISHOT);
+		RemoveGeneralEnchant(UNBREAKING);
+		AddConflictEnchant(MULTISHOT);
 	}
 
 	public IncineratorItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
 	                       float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier,
 				7, onlyAllowMainHand, pProperties);
-		AddGeneralEnchant(FLAMING_ARROWS);
+		RemoveGeneralEnchant(MULTISHOT);
+		RemoveGeneralEnchant(UNBREAKING);
+		AddConflictEnchant(MULTISHOT);
 	}
 
 	@Override
@@ -50,7 +54,7 @@ public class IncineratorItem extends MagFedCrossbowItem {
 			BLAZE_RELOAD_ADDITION = IProperties.BLAZE_RELOAD_INCREMENT.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
 		}
-		AddGeneralEnchant(ModEnchantments.BLAZE.get());
+		AddConflictEnchant(ModEnchantments.BLAZE.get());
 	}
 
 	@Override
@@ -76,8 +80,6 @@ public class IncineratorItem extends MagFedCrossbowItem {
 			arrow.setEffectsFromItem(ammoStack);
 		}
 		arrow.setShotFromCrossbow(true);
-		if (crossbowStack.getEnchantmentLevel(FLAMING_ARROWS) > 0)
-			arrow.setSecondsOnFire(100);
 
 		return arrow;
 	}
@@ -104,9 +106,11 @@ public class IncineratorItem extends MagFedCrossbowItem {
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
 		List<Component> list = new ArrayList<>();
 
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1",
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2",
 				TooltipHelper.setEmbeddedElementStyle(TooltipHelper.convertToEmbeddedElement(getAmmoCapacity(stack))))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_3")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_4")));
 		list.add(Component.empty());
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
 				TooltipHelper.convertToEmbeddedElement(ModEnchantments.BLAZE.get(), 1))));
