@@ -10,4 +10,5 @@ public class ModelOverrides {
 	public static final ResourceLocation PERK_MAX = new ResourceLocation(PerkWeapons.MODID, "perk_max");
 	public static final ResourceLocation CHARGED = new ResourceLocation(PerkWeapons.MODID, "charged");
 	public static final ResourceLocation FIREWORK = new ResourceLocation(PerkWeapons.MODID, "firework");
+	public static final ResourceLocation REGICIDE = new ResourceLocation(PerkWeapons.MODID, "regicide");
 }

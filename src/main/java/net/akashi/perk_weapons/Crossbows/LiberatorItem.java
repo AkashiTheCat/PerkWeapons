@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Crossbows;
 
+import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,9 @@ public class LiberatorItem extends MagFedCrossbowItem {
 	public LiberatorItem(Properties pProperties) {
 		super(pProperties);
 		this.RemoveGeneralEnchant(PIERCING);
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerLiberatorPropertyOverrides(this);
 	}
 
 	public LiberatorItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
@@ -37,6 +42,9 @@ public class LiberatorItem extends MagFedCrossbowItem {
 		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier,
 				1, onlyAllowMainHand, pProperties);
 		RemoveGeneralEnchant(PIERCING);
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerLiberatorPropertyOverrides(this);
 	}
 
 	@Override

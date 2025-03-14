@@ -55,7 +55,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 			KNOCKBACK,
 			MOB_LOOTING,
 			LOYALTY,
-			MENDING
+			MENDING,
+			UNBREAKING
 	));
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>(Arrays.asList(
 			SMITE,

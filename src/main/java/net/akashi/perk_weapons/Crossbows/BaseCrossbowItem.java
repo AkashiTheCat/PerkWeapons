@@ -38,6 +38,7 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -71,7 +72,9 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			MULTISHOT,
 			PIERCING,
 			POWER_ARROWS,
-			MENDING
+			MENDING,
+			UNBREAKING,
+			MOB_LOOTING
 	));
 
 	protected final List<Enchantment> ConflictEnchants = new ArrayList<>();
@@ -147,6 +150,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
 						middleSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
 			}
+
 		}
 	}
 

@@ -2,5 +2,13 @@
   "parent": "perk_weapons:item/base/base_spear",
   "textures": {
     "layer0": "perk_weapons:item/spear/scourge"
-  }
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "perk_weapons:perk": 1
+      },
+      "model": "perk_weapons:item/scourge_perk"
+    }
+  ]
 }

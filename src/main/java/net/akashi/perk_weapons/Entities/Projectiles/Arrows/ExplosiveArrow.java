@@ -1,13 +1,19 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
+import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPacket;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,9 +21,7 @@ import net.minecraft.world.entity.player.Player;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
 import org.joml.Vector3f;
@@ -27,6 +31,7 @@ public class ExplosiveArrow extends BaseArrow {
 	public static final ResourceLocation EXPLOSIVE_ARROW_LOCATION =
 			new ResourceLocation(PerkWeapons.MODID, "textures/entity/projectiles/explosive_arrow.png");
 	private int fuseTime = 30;
+	private int attachedEntityID = 0;
 
 	public ExplosiveArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -46,27 +51,19 @@ public class ExplosiveArrow extends BaseArrow {
 		this(ModEntities.EXPLOSIVE_ARROW.get(), level);
 	}
 
+	@Override
+	public void setPierceLevel(byte pPierceLevel) {
+		super.setPierceLevel((byte) 1);
+	}
+
+	@Override
+	public byte getPierceLevel() {
+		return 1;
+	}
 
 	@Override
 	protected ItemStack getPickupItem() {
 		return null;
-	}
-
-	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
-		super.onHitEntity(pResult);
-		this.explode();
-	}
-
-	@Override
-	protected void onHit(HitResult pResult) {
-		super.onHit(pResult);
-	}
-
-	@Override
-	protected void onHitBlock(BlockHitResult pResult) {
-		super.onHitBlock(pResult);
-		this.explode();
 	}
 
 	@Override
@@ -79,9 +76,30 @@ public class ExplosiveArrow extends BaseArrow {
 		} else {
 			if (this.fuseTime > 0)
 				this.fuseTime--;
+			if (this.fuseTime == 0) {
+				this.explode();
+			}
 		}
-		if (this.fuseTime == 0) {
-			this.explode();
+
+		Entity entity = level().getEntity(this.attachedEntityID);
+		if (entity == null)
+			return;
+
+		this.setPos(entity.position());
+	}
+
+	@Override
+	protected void onHitEntity(EntityHitResult pResult) {
+		super.onHitEntity(pResult);
+		Entity entity = pResult.getEntity();
+		if (entity.isAlive()) {
+			this.attachedEntityID = entity.getId();
+			this.setNoPhysics(true);
+			this.setInvisible(true);
+		} else {
+			this.setDeltaMovement(this.getDeltaMovement().multiply(
+					-0.01D, -0.1D, -0.01D
+			));
 		}
 	}
 
@@ -89,12 +107,27 @@ public class ExplosiveArrow extends BaseArrow {
 	public void readAdditionalSaveData(CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		this.fuseTime = pCompound.getInt("fuseTime");
+		this.attachedEntityID = pCompound.getInt("attID");
 	}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.putInt("fuseTime", this.fuseTime);
+		pCompound.putInt("attID", this.attachedEntityID);
+	}
+
+	private void putVec3(CompoundTag tag, String key, Vec3 vec3) {
+		tag.putDouble(key + "_x", vec3.x);
+		tag.putDouble(key + "_y", vec3.y);
+		tag.putDouble(key + "_z", vec3.z);
+	}
+
+	private Vec3 readVec3(CompoundTag tag, String key) {
+		double x = tag.getDouble(key + "_x");
+		double y = tag.getDouble(key + "_y");
+		double z = tag.getDouble(key + "_z");
+		return new Vec3(x, y, z);
 	}
 
 	public void explode() {
@@ -125,7 +158,7 @@ public class ExplosiveArrow extends BaseArrow {
 
 	@Override
 	public boolean shouldRender(double pX, double pY, double pZ) {
-		return true;
+		return !this.isInvisible();
 	}
 
 	private double getOwnerSqrDistance() {

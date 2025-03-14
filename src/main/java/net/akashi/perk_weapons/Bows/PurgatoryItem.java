@@ -11,8 +11,12 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,12 +28,14 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
+import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
@@ -39,6 +45,7 @@ public class PurgatoryItem extends BaseBowItem {
 	public PurgatoryItem(Properties properties) {
 		super(properties);
 		RemoveGeneralEnchant(FLAMING_ARROWS);
+		RemoveGeneralEnchant(UNBREAKING);
 	}
 
 	public PurgatoryItem(int drawTime, float projectileDamage, float velocity, float inaccuracy,
@@ -52,12 +59,22 @@ public class PurgatoryItem extends BaseBowItem {
 				"Tool modifier", knockBackResistance, AttributeModifier.Operation.MULTIPLY_TOTAL));
 		this.AttributeModifiers = builder.build();
 		RemoveGeneralEnchant(FLAMING_ARROWS);
-
+		RemoveGeneralEnchant(UNBREAKING);
 	}
 
 	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
 		return super.use(pLevel, pPlayer, pHand);
+	}
+
+	@Override
+	protected void onPlayerBowShoot(Level level, Player player) {
+		if (!level.isClientSide()) {
+			Vec3 viewVec = player.getViewVector(0);
+			Vec3 pos = player.getPosition(0).add(viewVec.normalize().scale(8.0));
+			level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.CREEPER_PRIMED, SoundSource.PLAYERS,
+					1.0f, 1.0f);
+		}
 	}
 
 	@Override
@@ -105,13 +122,13 @@ public class PurgatoryItem extends BaseBowItem {
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
 		List<Component> list = new ArrayList<>();
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_1")));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_2",
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_2")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
 				TooltipHelper.convertToEmbeddedElement(ModEnchantments.MELT_DOWN_ARROW.get(), 1))));
-		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3")));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
+		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_5",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FUSE_TIME)))));
 

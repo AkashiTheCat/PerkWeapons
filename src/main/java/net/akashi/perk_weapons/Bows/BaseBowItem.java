@@ -56,7 +56,9 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			FLAMING_ARROWS,
 			POWER_ARROWS,
 			PUNCH_ARROWS,
-			MENDING
+			MENDING,
+			UNBREAKING,
+			MOB_LOOTING
 	));
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
 
@@ -178,9 +180,14 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 					}
 				}
 
+				onPlayerBowShoot(pLevel, player);
+
 				player.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
+	}
+
+	protected void onPlayerBowShoot(Level level, Player player) {
 	}
 
 	@Override

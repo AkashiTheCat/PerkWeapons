@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/beholder",
+    "textures": {
+        "layer0": "perk_weapons:item/crossbow/beholder/beholder_firework"
+    }
+}
