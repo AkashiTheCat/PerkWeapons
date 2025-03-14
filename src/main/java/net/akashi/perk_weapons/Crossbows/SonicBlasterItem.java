@@ -141,6 +141,16 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
+	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+		if (pLevel.isClientSide() && pEntity instanceof Player player && pIsSelected && isCrossbowCharged(pStack) &&
+				pLevel.getGameTime() % 40 == 0) {
+			pLevel.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_HEARTBEAT,
+					SoundSource.PLAYERS, 0.8f, 1.0f);
+		}
+	}
+
+	@Override
 	protected void shoot(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack,
 	                     float damage, float velocity, float inaccuracy) {
 		if (level.isClientSide()) {

@@ -40,11 +40,13 @@ public class ExplosiveArrow extends BaseArrow {
 	protected ExplosiveArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, double pX, double pY, double pZ, int fuseTime) {
 		super(pEntityType, pLevel, pX, pY, pZ);
 		this.fuseTime = fuseTime;
+		this.pickup = Pickup.DISALLOWED;
 	}
 
 	public ExplosiveArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, LivingEntity pShooter, int fuseTime) {
 		super(pEntityType, pLevel, pShooter);
 		this.fuseTime = fuseTime;
+		this.pickup = Pickup.DISALLOWED;
 	}
 
 	public ExplosiveArrow(PlayMessages.SpawnEntity spawnEntity, Level level) {
@@ -63,7 +65,7 @@ public class ExplosiveArrow extends BaseArrow {
 
 	@Override
 	protected ItemStack getPickupItem() {
-		return null;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
