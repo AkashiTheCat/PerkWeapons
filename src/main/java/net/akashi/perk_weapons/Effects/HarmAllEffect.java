@@ -14,8 +14,7 @@ public class HarmAllEffect extends MobEffect {
 	@Override
 	public void applyInstantenousEffect(@Nullable Entity pSource, @Nullable Entity pIndirectSource,
 	                                    LivingEntity target, int pAmplifier, double pHealth) {
-		if (target.isAlive())
-			target.hurt(target.damageSources().magic(), pAmplifier);
+		target.hurt(target.damageSources().magic(), pAmplifier);
 	}
 
 	@Override

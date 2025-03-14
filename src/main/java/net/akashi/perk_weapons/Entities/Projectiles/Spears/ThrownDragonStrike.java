@@ -1,17 +1,14 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Spears;
 
 import net.akashi.perk_weapons.Registry.ModEffects;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 
@@ -44,14 +41,13 @@ public class ThrownDragonStrike extends ThrownSpear {
 
 	@Override
 	protected void onHitBlock(BlockHitResult pResult) {
-		spawnAreaEffect(this.getBlockX(), this.getBlockY(), this.getBlockZ());
+		spawnAreaEffect();
 		super.onHitBlock(pResult);
 	}
 
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
-		Entity entity = pResult.getEntity();
-		spawnAreaEffect(entity.getBlockX(), entity.getBlockY(), entity.getBlockZ());
+		spawnAreaEffect();
 		super.onHitEntity(pResult);
 	}
 
@@ -60,9 +56,9 @@ public class ThrownDragonStrike extends ThrownSpear {
 		return 3;
 	}
 
-	public void spawnAreaEffect(float x, float y, float z) {
+	public void spawnAreaEffect() {
 		if (this.getOwner() instanceof Player player && !this.level().isClientSide()) {
-			AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level(), x, y, z);
+			AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level(), this.getBlockX(), this.getBlockY(), this.getBlockZ());
 			areaeffectcloud.setOwner(player);
 			areaeffectcloud.setParticle(ParticleTypes.DRAGON_BREATH);
 			areaeffectcloud.setRadius(INIT_AFFECT_CLOUD_RADIUS);

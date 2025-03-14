@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/incinerator",
+    "parent": "perk_weapons:item/base/base_crossbow",
     "textures": {
         "layer0": "perk_weapons:item/crossbow/incinerator/incinerator_pulling_2"
     }

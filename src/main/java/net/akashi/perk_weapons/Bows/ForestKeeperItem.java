@@ -40,7 +40,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 	public static int PERK_DROP_INTERVAL = 40;
 	public static boolean ENABLE_SLOWDOWN_REMOVAL = true;
 	private static float PERK_DROP_PER_TICK = (float) 1 / PERK_DROP_INTERVAL;
-	private static final Map<UUID, Float> PERK_LEVEL_MAP = new HashMap<>(32);
+	private static final Map<UUID, Float> PERK_LEVEL_MAP = new HashMap<>();
 
 	public ForestKeeperItem(Properties properties) {
 		super(properties);

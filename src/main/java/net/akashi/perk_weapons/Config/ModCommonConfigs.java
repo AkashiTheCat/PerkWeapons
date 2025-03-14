@@ -5,6 +5,8 @@ import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.*;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
+import net.akashi.perk_weapons.Crossbows.IncineratorItem;
+import net.akashi.perk_weapons.Crossbows.TaintedFortuneItem;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
@@ -59,7 +61,7 @@ public class ModCommonConfigs {
 	public static DevourerProperties DEVOURER_PROPERTIES;
 
 	//Crossbow Configs
-	public static BeholderProperties BEHOLDER_PROPERTIES;
+	public static OppressorProperties OPPRESSOR_PROPERTIES;
 	public static LiberatorProperties LIBERATOR_PROPERTIES;
 	public static TaintedFortuneProperties TAINTED_FORTUNE_PROPERTIES;
 	public static SonicBlasterProperties SONIC_BLASTER_PROPERTIES;
@@ -87,7 +89,7 @@ public class ModCommonConfigs {
 				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
 						"minecraft:ender_dragon"), obj -> obj instanceof String);
 		SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE = BUILDER.comment("Ranged Damage Buff Ratio Per Power Level When Enchanted" +
-				" On Modded Spears").defineInRange("PowerBuff", 0.2, 0, 255);
+						" On Modded Spears").defineInRange("PowerBuff", 0.2, 0, 255);
 		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required By Each Repairer To Repair Something On Anvil")
 				.defineInRange("RepairerCost", 5, 0, 255);
 		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Ratio Of Durability Repaired By Each Repairer")
@@ -169,8 +171,8 @@ public class ModCommonConfigs {
 		FROST_HUNTER_PROPERTIES = new FrostHunterProperties(BUILDER, "Frost Hunter",
 				24, 9,
 				3.0, 0.8,
-				160, 600,
-				600, 2,
+				160, 1200,
+				400, 2,
 				true, 0.0,
 				0.1, false);
 		HOU_YI_PROPERTIES = new HouYiProperties(BUILDER, "Hou Yi",
@@ -186,12 +188,11 @@ public class ModCommonConfigs {
 				0.1, true);
 
 		//Crossbows
-		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Oppressor",
+		OPPRESSOR_PROPERTIES = new OppressorProperties(BUILDER, "Oppressor",
 				37, 12.0,
 				4.4, 0.5,
-				-0.5, (byte) 2,
-				(byte) 1, 40,
-				true);
+				-0.5, (byte) 1,
+				32, true);
 		LIBERATOR_PROPERTIES = new LiberatorProperties(BUILDER, "Liberator",
 				50, 10.0,
 				2.4, 1.0,
@@ -199,8 +200,8 @@ public class ModCommonConfigs {
 				1, 2,
 				true);
 		TAINTED_FORTUNE_PROPERTIES = new TaintedFortuneProperties(BUILDER, "Tainted Fortune",
-				25, 10.0,
-				2.0, 1.2,
+				20, 10.0,
+				2.4, 1.2,
 				0.0, 1.0,
 				false);
 		SONIC_BLASTER_PROPERTIES = new SonicBlasterProperties(BUILDER, "Sonic Blaster",
@@ -211,7 +212,7 @@ public class ModCommonConfigs {
 				-1, false,
 				0.6, true);
 		INCINERATOR_PROPERTIES = new IncineratorProperties(BUILDER, "Incinerator",
-				80, 13.0,
+				80, 11.0,
 				3.2, 0.8,
 				-0.25, 7,
 				10, 10,
@@ -261,7 +262,7 @@ public class ModCommonConfigs {
 		ModItems.HOU_YI.get().updateAttributesFromConfig(HOU_YI_PROPERTIES);
 		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
 
-		ModItems.OPPRESSOR.get().updateAttributesFromConfig(BEHOLDER_PROPERTIES);
+		ModItems.OPPRESSOR.get().updateAttributesFromConfig(OPPRESSOR_PROPERTIES);
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
 		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
 		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);

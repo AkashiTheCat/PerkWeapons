@@ -8,13 +8,11 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,11 +27,11 @@ import java.util.*;
 
 public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	public static int FROZEN_TIME = 160;
-	private static int ABILITY_COOLDOWN_TIME = 600;
-	private static int HOUND_LIFETIME = 600;
+	private static int ABILITY_COOLDOWN_TIME = 1200;
+	private static int HOUND_LIFETIME = 400;
 	private static byte HOUND_COUNT = 2;
 	private static boolean ENABLE_HOUND_EFFECT = true;
-	private static final Map<UUID, Integer> CD_MAP = new HashMap<>(32);
+	private static final Map<UUID, Long> AbilityUseTimeMap = new HashMap<>();
 
 	public FrostHunterItem(Properties properties) {
 		super(properties);
@@ -45,22 +43,10 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
-		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-		if (!pLevel.isClientSide() && pEntity instanceof Player player && pIsSelected) {
-			UUID uuid = player.getUUID();
-			if (CD_MAP.containsKey(uuid)) {
-				int ticks = CD_MAP.get(uuid);
-				if (ticks > 0)
-					CD_MAP.put(uuid, ticks - 1);
-			}
-		}
-	}
-
-	@Override
 	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		boolean flag = !CD_MAP.containsKey(pPlayer.getUUID());
-		if (pPlayer.isCrouching() && (flag || CD_MAP.get(pPlayer.getUUID()) == 0)) {
+		boolean flag = !AbilityUseTimeMap.containsKey(pPlayer.getUUID());
+		if (pPlayer.isCrouching() &&
+				(flag || (pLevel.getGameTime() - AbilityUseTimeMap.get(pPlayer.getUUID()) > ABILITY_COOLDOWN_TIME))) {
 			if (!pLevel.isClientSide()) {
 				for (int i = 0; i < HOUND_COUNT; i++) {
 					Hound hound = new Hound(EntityType.WOLF, pLevel, HOUND_LIFETIME);
@@ -75,7 +61,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 					}
 					hound.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
 					pLevel.addFreshEntity(hound);
-					CD_MAP.put(pPlayer.getUUID(), ABILITY_COOLDOWN_TIME);
+					AbilityUseTimeMap.put(pPlayer.getUUID(), pLevel.getGameTime());
 				}
 			}
 		}
@@ -108,14 +94,14 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 
 	@Override
 	public float getCoolDownProgress(LivingEntity player, ItemStack stack) {
-		if (!CD_MAP.containsKey(player.getUUID()))
+		if (!AbilityUseTimeMap.containsKey(player.getUUID()))
 			return 1.0f;
 		else {
-			int timeRemaining = CD_MAP.get(player.getUUID());
-			if (timeRemaining == 0) {
+			long timePassed = player.level().getGameTime() - AbilityUseTimeMap.get(player.getUUID());
+			if (timePassed > ABILITY_COOLDOWN_TIME) {
 				return 1.0f;
 			} else {
-				return 1f - (float) timeRemaining / ABILITY_COOLDOWN_TIME;
+				return (float) timePassed / ABILITY_COOLDOWN_TIME;
 			}
 		}
 	}
@@ -131,15 +117,10 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_1",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FROZEN_TIME)))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_2")));
 
 		list.add(Component.empty());
-
 		list.add(TooltipHelper.getCrouchUseAbilityHint());
 		list.add(TooltipHelper.getCoolDownTip(ABILITY_COOLDOWN_TIME));
-		list.add(Component.translatable("tooltip.perk_weapons.frost_hunter_cd_hint")
-				.withStyle(ChatFormatting.GRAY));
-
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_ability_1",
 				TooltipHelper.convertToEmbeddedElement(HOUND_COUNT),
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(HOUND_LIFETIME)))));

@@ -30,14 +30,6 @@ public class MagFedCrossbowItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
-		InteractionResultHolder<ItemStack> res = super.use(pLevel, pPlayer, pHand);
-		if (this.getChargedProjectileAmount(pPlayer.getItemInHand(pHand)) > 0)
-			pPlayer.getCooldowns().addCooldown(this, 10);
-		return res;
-	}
-
-	@Override
 	public void appendHoverText(ItemStack stack, @Nullable Level pLevel, List<Component> tooltip, TooltipFlag flag) {
 		super.appendHoverText(stack, pLevel, tooltip, flag);
 		if (pLevel == null || !pLevel.isClientSide())

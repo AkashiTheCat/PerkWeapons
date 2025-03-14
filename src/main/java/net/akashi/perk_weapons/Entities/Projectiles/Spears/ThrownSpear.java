@@ -70,6 +70,16 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
+	protected boolean tryPickup(Player pPlayer) {
+		if (!pPlayer.isCreative()) {
+			if (pPlayer.getInventory().add(ReturnSlot, this.getPickupItem())) {
+				return true;
+			}
+		}
+		return super.tryPickup(pPlayer);
+	}
+
+	@Override
 	protected boolean canHitEntity(Entity entity) {
 		return super.canHitEntity(entity) && (this.piercedEntities == null ||
 				!this.piercedEntities.contains(entity.getId()));
@@ -101,8 +111,7 @@ public class ThrownSpear extends AbstractArrow {
 			if (entity instanceof LivingEntity livingentity) {
 				if (getKnockback() > 0) {
 					double d0 = Math.max(0.0D, 1.0D - livingentity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
-					Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D)
-							.normalize().scale((double) getKnockback() * 0.6D * d0);
+					Vec3 vec3 = this.getDeltaMovement().multiply(1.0D, 0.0D, 1.0D).normalize().scale((double) getKnockback() * 0.6D * d0);
 					if (vec3.lengthSqr() > 0.0D) {
 						livingentity.push(vec3.x, 0.1D, vec3.z);
 					}
@@ -240,7 +249,6 @@ public class ThrownSpear extends AbstractArrow {
 	public void tickDespawn() {
 		int i = this.entityData.get(ID_LOYALTY);
 		if (this.pickup != Pickup.ALLOWED || i <= 0) {
-			super.tickDespawn();
 			super.tickDespawn();
 		}
 	}

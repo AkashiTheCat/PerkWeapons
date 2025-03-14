@@ -1,5 +1,5 @@
 {
-    "parent": "perk_weapons:item/liberator",
+    "parent": "perk_weapons:item/base/base_crossbow",
     "textures": {
         "layer0": "perk_weapons:item/crossbow/liberator/liberator_firework"
     }

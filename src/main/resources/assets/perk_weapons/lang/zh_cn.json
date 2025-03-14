@@ -13,13 +13,13 @@
   "block.perk_weapons.furnace_core": "熔炉核心",
 
   "item.perk_weapons.ancient_spike": "远古针刺",
-  "item.perk_weapons.wither_spine": "凋灵胸骨",
+  "item.perk_weapons.wither_spine": "凋灵脊髓",
   "item.perk_weapons.gilded_blackstone_handle": "镶金黑石手柄",
   "item.perk_weapons.guardians_eye": "守卫者之眼",
   "item.perk_weapons.dragon_fang": "龙牙",
   "item.perk_weapons.hunters_remains": "猎人遗物",
   "item.perk_weapons.totem_of_evoking": "唤魔图腾",
-  "item.perk_weapons.repairer": "回溯粉尘",
+  "item.perk_weapons.repairer": "维修工具",
 
   "item.perk_weapons.iron_spear": "铁投矛",
   "item.perk_weapons.golden_spear": "金投矛",
@@ -40,7 +40,7 @@
   "item.perk_weapons.hou_yi": "后羿",
   "item.perk_weapons.devourer": "吞噬者",
 
-  "item.perk_weapons.beholder": "旁观者",
+  "item.perk_weapons.oppressor": "暴君",
   "item.perk_weapons.liberator": "解放者",
   "item.perk_weapons.tainted_fortune": "不义之财",
   "item.perk_weapons.sonic_blaster": "音爆",
@@ -97,10 +97,10 @@
   "tooltip.perk_weapons.dragon_strike_perk_3": "手持时 %f 魔法伤害抗性",
 
   "tooltip.perk_weapons.purgatory": "\"于永恒的炽焰中锻造。\"",
-  "tooltip.perk_weapons.purgatory_perk_1": "不会损坏",
-  "tooltip.perk_weapons.purgatory_perk_2": "箭矢命中时点燃生物",
-  "tooltip.perk_weapons.purgatory_perk_3": "箭矢能够穿透至多 %d 个生物",
-  "tooltip.perk_weapons.purgatory_perk_4": "箭矢不再穿透生物",
+  "tooltip.perk_weapons.purgatory_perk_1": "命中生物时点燃生物",
+  "tooltip.perk_weapons.purgatory_perk_2": "箭矢能够穿透至多 %d 个生物",
+  "tooltip.perk_weapons.purgatory_perk_3": "箭矢不再穿透生物",
+  "tooltip.perk_weapons.purgatory_perk_4": "箭矢在命中时产生爆炸",
   "tooltip.perk_weapons.purgatory_perk_5": "箭矢会在 %f 秒后自动引爆",
 
   "tooltip.perk_weapons.forest_keeper": "\"游荡在林间，让人捉摸不透。\"",
@@ -121,8 +121,6 @@
 
   "tooltip.perk_weapons.frost_hunter": "\"拉响冰封誓约，幽狼群缚于猎月。\"",
   "tooltip.perk_weapons.frost_hunter_perk_1": "命中冰冻目标 %s 秒",
-  "tooltip.perk_weapons.frost_hunter_perk_2": "箭矢不受受击无敌帧影响",
-  "tooltip.perk_weapons.frost_hunter_cd_hint": "仅在持有时冷却",
   "tooltip.perk_weapons.frost_hunter_ability_1": "召唤 %d 只猎犬, 猎犬存在时间:%f 秒",
 
   "tooltip.perk_weapons.hou_yi": "\"于正在消亡的恒星的光辉中锻造的遗物。\"",
@@ -135,11 +133,11 @@
   "tooltip.perk_weapons.devourer_perk_3": "让目标在短时间内无法移动",
   "tooltip.perk_weapons.devourer_perk_4": "在目标脚下生成一个唤魔者尖牙",
 
-  "tooltip.perk_weapons.beholder": "\"如果你能帮它滴眼药水，它会高兴一整天。\"",
-  "tooltip.perk_weapons.beholder_perk_1": "蹲下时:",
-  "tooltip.perk_weapons.beholder_perk_2": "对瞄准的生物施加以下效果:",
+  "tooltip.perk_weapons.oppressor": "\"他一手遮天、傲睨万物，相信世间再无人可与之匹敌...\"",
+  "tooltip.perk_weapons.oppressor_perk_1": "蹲下时:",
+  "tooltip.perk_weapons.oppressor_perk_2": "对瞄准的生物施加以下效果:",
 
-  "tooltip.perk_weapons.liberator": "\"迸射双重咒矢——弑君者之怒凝为裂冕者，缚于暴君暮光。\"",
+  "tooltip.perk_weapons.liberator": "\"...却不知覆舟之水从不在敌营宝座之上，而在自己身下。\"",
   "tooltip.perk_weapons.liberator_perk_1": "箭矢能够穿透至多 %d 个生物",
   "tooltip.perk_weapons.liberator_perk_2": "+%d %s 等级",
 
@@ -151,10 +149,8 @@
   "tooltip.perk_weapons.sonic_blaster_perk_2": "最大伤害距离: %d",
 
   "tooltip.perk_weapons.incinerator": "\"你的战士之魂在轮回业火中永恒燃烧。\"",
-  "tooltip.perk_weapons.incinerator_perk_1": "不会损坏",
-  "tooltip.perk_weapons.incinerator_perk_2": "弹匣供弹 - 弹容量: %d",
-  "tooltip.perk_weapons.incinerator_perk_3": "箭矢命中时点燃生物",
-  "tooltip.perk_weapons.incinerator_perk_4": "箭矢对着火的生物造成额外击退",
+  "tooltip.perk_weapons.incinerator_perk_1": "弹匣供弹 - 弹容量: %d",
+  "tooltip.perk_weapons.incinerator_perk_2": "箭矢对着火的生物造成额外击退",
 
   "entity.perk_weapons.thrown_spear": "投矛",
   "entity.perk_weapons.thrown_megalodon": "巨齿鲨",
@@ -168,9 +164,8 @@
   "entity.perk_weapons.star_shooter_arrow": "箭-射日",
   "entity.perk_weapons.devourer_arrow": "箭-吞噬者",
   "entity.perk_weapons.incinerator_arrow": "箭-焚烬",
-  "perk_weapons.entity.hound": "猎犬",
+  "entity.perk_weapons.hound": "猎犬",
 
   "effect.perk_weapons.harm_all": "全体伤害",
   "container.perk_weapons.furnace_core": "熔炉核心"
-
 }

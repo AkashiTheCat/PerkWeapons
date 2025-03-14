@@ -121,11 +121,6 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	protected SoundEvent getEndSound(ItemStack crossbowStack) {
-		return SoundEvents.WARDEN_HEARTBEAT;
-	}
-
-	@Override
 	protected SoundEvent getStartSound(ItemStack crossbowStack) {
 		return SoundEvents.WARDEN_SONIC_CHARGE;
 	}

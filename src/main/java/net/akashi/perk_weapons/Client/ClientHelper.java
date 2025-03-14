@@ -2,13 +2,12 @@ package net.akashi.perk_weapons.Client;
 
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
-import net.akashi.perk_weapons.Crossbows.BeholderItem;
-import net.akashi.perk_weapons.Crossbows.LiberatorItem;
-import net.akashi.perk_weapons.Registry.ModEnchantments;
-import net.akashi.perk_weapons.Spears.ScourgeItem;
+import net.akashi.perk_weapons.Crossbows.OppressorItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.ModelOverrides;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 
 public class ClientHelper {
@@ -26,21 +25,10 @@ public class ClientHelper {
 				entity != null && perkItem.isPerkMax(entity, stack) ? 1.0f : 0.0f);
 	}
 
-	public static void registerOppressorPropertyOverrides(BeholderItem Item) {
+	public static void registerOppressorPropertyOverrides(OppressorItem Item) {
 		ItemProperties.register(Item, ModelOverrides.PERK, (stack, world, entity, value) ->
 				entity != null && Item.isPerkActivating(stack) ? 1.0F : 0.0F);
 	}
-
-	public static void registerScourgePropertyOverrides(ScourgeItem Item) {
-		ItemProperties.register(Item, ModelOverrides.PERK, (stack, world, entity, value) ->
-				entity != null && Item.isBuffed(stack) ? 1.0F : 0.0F);
-	}
-
-	public static void registerLiberatorPropertyOverrides(LiberatorItem Item) {
-		ItemProperties.register(Item, ModelOverrides.REGICIDE, (stack, world, entity, value) ->
-				entity != null && Item.getEnchantmentLevel(stack, ModEnchantments.REGICIDE.get()) > 0 ? 1.0F : 0.0F);
-	}
-
 
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {
 		ItemProperties.register(crossbow, ModelOverrides.PULL, (stack, world, entity, value) -> {

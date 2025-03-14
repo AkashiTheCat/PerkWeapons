@@ -19,7 +19,7 @@
   "item.perk_weapons.dragon_fang": "Dragon Fang",
   "item.perk_weapons.hunters_remains": "Hunter's Remains",
   "item.perk_weapons.totem_of_evoking": "Totem Of Evoking",
-  "item.perk_weapons.repairer": "Dust Of BackTracing",
+  "item.perk_weapons.repairer": "Repairer",
 
   "item.perk_weapons.iron_spear": "Iron Spear",
   "item.perk_weapons.golden_spear": "Golden Spear",
@@ -40,7 +40,7 @@
   "item.perk_weapons.hou_yi": "Hou Yi",
   "item.perk_weapons.devourer": "Devourer",
 
-  "item.perk_weapons.beholder": "Beholder",
+  "item.perk_weapons.oppressor": "Oppressor",
   "item.perk_weapons.liberator": "Liberator",
   "item.perk_weapons.tainted_fortune": "Tainted Fortune",
   "item.perk_weapons.sonic_blaster": "Sonic Blaster",
@@ -97,10 +97,10 @@
   "tooltip.perk_weapons.dragon_strike_perk_3": "%s Magic Resistance when held in hand",
 
   "tooltip.perk_weapons.purgatory": "\"Forged in the eternal inferno.\"",
-  "tooltip.perk_weapons.purgatory_perk_1": "Unbreakable",
-  "tooltip.perk_weapons.purgatory_perk_2": "Sets hit entities on fire",
-  "tooltip.perk_weapons.purgatory_perk_3": "Arrow pierces through up to %d entities",
-  "tooltip.perk_weapons.purgatory_perk_4": "Arrow no longer pierce through entities",
+  "tooltip.perk_weapons.purgatory_perk_1": "Sets hit entities on fire",
+  "tooltip.perk_weapons.purgatory_perk_2": "Arrow pierces through up to %d entities",
+  "tooltip.perk_weapons.purgatory_perk_3": "Arrow no longer pierce through entities",
+  "tooltip.perk_weapons.purgatory_perk_4": "Arrow creates explosion on hit",
   "tooltip.perk_weapons.purgatory_perk_5": "Arrow automatically detonates after %f seconds",
 
   "tooltip.perk_weapons.forest_keeper": "\"Wanders through the woods, ever elusive.\"",
@@ -121,8 +121,6 @@
 
   "tooltip.perk_weapons.frost_hunter": "\"Draws frostbitten vows — a ghostpack bound to the hunter's moon.\"",
   "tooltip.perk_weapons.frost_hunter_perk_1": "Freezes enemy for %f seconds on hit",
-  "tooltip.perk_weapons.frost_hunter_perk_2": "Arrow ignores invulnerable time",
-  "tooltip.perk_weapons.frost_hunter_cd_hint": "Only cools down when held",
   "tooltip.perk_weapons.frost_hunter_ability_1": "Summon %d tamed wolfs, despawn after %f seconds",
 
   "tooltip.perk_weapons.hou_yi": "\"A relic forged in the radiance of a dying sun.\"",
@@ -135,11 +133,11 @@
   "tooltip.perk_weapons.devourer_perk_3": "Immobilize the target for a short period",
   "tooltip.perk_weapons.devourer_perk_4": "Summon an Evoker Fang under the target",
 
-  "tooltip.perk_weapons.beholder": "\"If you can help with the eye drops, it'll brighten its whole day.\"",
-  "tooltip.perk_weapons.beholder_perk_1": "When Crouching:",
-  "tooltip.perk_weapons.beholder_perk_2": "Applies following effects to entity being aimed at:",
+  "tooltip.perk_weapons.oppressor": "\"He shrouds the firmament in his palm, scorning creation's breath — believing no mortal coil could ever bind his thunder.\"",
+  "tooltip.perk_weapons.oppressor_perk_1": "When Crouching:",
+  "tooltip.perk_weapons.oppressor_perk_2": "Applies following effects to entity being aimed at:",
 
-  "tooltip.perk_weapons.liberator": "\"Unleashes twin-cursed bolts — a kingsbane's wrath crystallized in shadowed crown splitters.\"",
+  "tooltip.perk_weapons.liberator": "\"...But blind to the tides that capsize thrones — rebellion's wave swells not in foreign courts, but in the shadow of his own iron-shod feet.\"",
   "tooltip.perk_weapons.liberator_perk_1": "Arrow pierces through up to %d entities",
   "tooltip.perk_weapons.liberator_perk_2": "+%d %s level",
 
@@ -151,10 +149,8 @@
   "tooltip.perk_weapons.sonic_blaster_perk_2": "Max Attack Range: %d",
 
   "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
-  "tooltip.perk_weapons.incinerator_perk_1": "Unbreakable",
-  "tooltip.perk_weapons.incinerator_perk_2": "Magazine fed - Ammo capacity: %d",
-  "tooltip.perk_weapons.incinerator_perk_3": "Sets hit entities on fire",
-  "tooltip.perk_weapons.incinerator_perk_4": "Applies additional knockback when hit an entity on fire",
+  "tooltip.perk_weapons.incinerator_perk_1": "Magazine fed - Ammo capacity: %d",
+  "tooltip.perk_weapons.incinerator_perk_2": "Applies additional knockback when hit an entity on fire",
 
   "entity.perk_weapons.thrown_spear": "Spear",
   "entity.perk_weapons.thrown_megalodon": "Megalodon",
@@ -168,7 +164,7 @@
   "entity.perk_weapons.star_shooter_arrow": "Star Shooter Arrow",
   "entity.perk_weapons.devourer_arrow": "Devourer Arrow",
   "entity.perk_weapons.incinerator_arrow": "Incinerator Arrow",
-  "perk_weapons.entity.hound": "Hound",
+  "entity.perk_weapons.hound": "Hound",
 
   "effect.perk_weapons.harm_all": "Harming",
   "container.perk_weapons.furnace_core": "Furnace Core"

@@ -6,6 +6,7 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Spears.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -114,7 +115,7 @@ public class ModItems {
 			ITEMS.register("purgatory",
 					() -> new PurgatoryItem(50, 25, 4.5F, 0.2F,
 							-1.0F, 1.0F, 0.15F, true,
-							new Item.Properties().rarity(Rarity.UNCOMMON))), BOW_TAB);
+							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<ForestKeeperItem> FOREST_KEEPER = addToTab(
 			ITEMS.register("forest_keeper",
 					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F,
@@ -143,9 +144,9 @@ public class ModItems {
 							new Item.Properties().durability(960).rarity(Rarity.UNCOMMON))), BOW_TAB);
 
 	//Crossbows
-	public static final RegistryObject<BeholderItem> OPPRESSOR = addToTab(
-			ITEMS.register("beholder",
-					() -> new BeholderItem(37, 12, 4.4F,
+	public static final RegistryObject<OppressorItem> OPPRESSOR = addToTab(
+			ITEMS.register("oppressor",
+					() -> new OppressorItem(37, 12, 4.4F,
 							0.5F, -0.5F, true,
 							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<LiberatorItem> LIBERATOR = addToTab(
@@ -155,7 +156,7 @@ public class ModItems {
 							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<TaintedFortuneItem> TAINTED_FORTUNE = addToTab(
 			ITEMS.register("tainted_fortune",
-					() -> new TaintedFortuneItem(25, 8, 2.0F,
+					() -> new TaintedFortuneItem(20, 8, 2.4F,
 							1.0F, 0.0F, false,
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<SonicBlasterItem> SONIC_BLASTER = addToTab(
@@ -167,6 +168,6 @@ public class ModItems {
 			ITEMS.register("incinerator",
 					() -> new IncineratorItem(80, 11, 3.2F,
 							0.8F, -0.25F, true,
-							new Item.Properties().rarity(Rarity.UNCOMMON))), BOW_TAB);
+							new Item.Properties().durability(2560).rarity(Rarity.UNCOMMON))), BOW_TAB);
 
 }

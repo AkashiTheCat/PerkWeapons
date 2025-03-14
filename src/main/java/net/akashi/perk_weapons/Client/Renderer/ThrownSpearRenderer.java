@@ -38,9 +38,8 @@ public class ThrownSpearRenderer<T extends ThrownSpear> extends EntityRenderer<T
 		pPoseStack.translate(-0.3d, -0.6d, 0.0d);;
 
 		ItemStack weapon = pEntity.getSpearItem();
-		BakedModel bakedModel = this.itemRenderer.getModel(weapon, pEntity.level(), null, pEntity.getId());
-		this.itemRenderer.render(weapon, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight,
-				OverlayTexture.NO_OVERLAY, bakedModel);
+		BakedModel bakedModel = this.itemRenderer.getModel(weapon, pEntity.level(), (LivingEntity)null, pEntity.getId());
+		this.itemRenderer.render(weapon, ItemDisplayContext.GROUND, false, pPoseStack, pBuffer, pPackedLight, OverlayTexture.NO_OVERLAY, bakedModel);
 		pPoseStack.popPose();
 		super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
 	}

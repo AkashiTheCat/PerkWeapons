@@ -36,50 +36,6 @@
                 "perk_weapons:firework": 1
             },
             "model": "perk_weapons:item/liberator_firework"
-        },
-        {
-            "predicate": {
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide"
-        },
-        {
-            "predicate": {
-                "perk_weapons:pulling": 1,
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide_pulling_0"
-        },
-        {
-            "predicate": {
-                "perk_weapons:pulling": 1,
-                "perk_weapons:pull": 0.5,
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide_pulling_1"
-        },
-        {
-            "predicate": {
-                "perk_weapons:pulling": 1,
-                "perk_weapons:pull": 1.0,
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide_pulling_2"
-        },
-        {
-            "predicate": {
-                "perk_weapons:charged": 1,
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide_arrow"
-        },
-        {
-            "predicate": {
-                "perk_weapons:charged": 1,
-                "perk_weapons:firework": 1,
-                "perk_weapons:regicide": 1
-            },
-            "model": "perk_weapons:item/liberator_regicide_firework"
         }
     ]
 }
