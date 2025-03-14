@@ -186,7 +186,7 @@ public class ModCommonConfigs {
 				0.1, true);
 
 		//Crossbows
-		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Oppressor",
+		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Beholder",
 				37, 12.0,
 				4.4, 0.5,
 				-0.5, (byte) 2,
