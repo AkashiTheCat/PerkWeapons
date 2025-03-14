@@ -30,7 +30,7 @@ public class DragonStrikeProperties extends SpearProperties {
 				.defineInRange("EffectDamage", defaultAffectCloudDamage, 1, Integer.MAX_VALUE);
 		RETURN_TIME = builder.comment("How Long In Ticks Will The Spear Automatically Return If Didn't Hit Anything")
 				.defineInRange("ReturnTime", defaultReturnTime, 0, 600);
-		ABILITY_COOLDOWN_TIME = builder.comment("How Long In Ticks Will The Crouch+Use Ability's CoolDown Be")
+		ABILITY_COOLDOWN_TIME = builder.comment("Cooldown Of The Crouch+Use Ability In Ticks")
 				.defineInRange("AbilityCD", defaultAbilityCoolDownTime, 0, 6000);
 		builder.pop();
 	}

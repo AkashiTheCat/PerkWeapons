@@ -16,7 +16,7 @@ public class PurgatoryProperties extends BowProperties {
 		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name + "'s Arrow")
 				.defineInRange("PierceLevel", defaultPierceLevel, 0, 127);
 		FUSE_TIME = builder.comment("The Fuse Time(In Ticks) Of The Arrow When Melt Down Enchanted")
-				.comment("The Arrow Will Explode On Impact Or AirBurst When Its FuseTimer = 0")
+				.comment("Arrow Explodes When Its FuseTimer = 0")
 				.defineInRange("FuseTime", defaultFuseTime, 0, Integer.MAX_VALUE);
 		builder.pop();
 	}
