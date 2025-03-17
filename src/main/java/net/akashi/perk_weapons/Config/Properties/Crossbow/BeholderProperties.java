@@ -18,7 +18,7 @@ public class BeholderProperties extends CrossbowProperties {
 		SLOWNESS_LEVEL = builder.comment("Level Of Slowness Effect On Target When Ability Activates")
 				.defineInRange("SlownessLevel", defaultSlownessLevel, 0, 255);
 		WEAKNESS_LEVEL = builder.comment("Level Of Weakness Effect On Target When Ability Activates")
-				.defineInRange("SlownessLevel", defaultWeaknessLevel, 0, 255);
+				.defineInRange("WeaknessLevel", defaultWeaknessLevel, 0, 255);
 		AFFECT_RANGE = builder.comment("Max Affect Distance Of The Ability")
 				.defineInRange("AffectRange", defaultAffectRange, 0, 128);
 		builder.pop();

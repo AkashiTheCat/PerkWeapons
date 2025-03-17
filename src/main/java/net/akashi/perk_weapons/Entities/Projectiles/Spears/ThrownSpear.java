@@ -40,7 +40,7 @@ public class ThrownSpear extends AbstractArrow {
 	@Nullable
 	protected IntOpenHashSet piercedEntities;
 	public boolean dealtDamage;
-	private int ReturnSlot;
+	private int returnSlot = -2;
 	public int clientSideReturnSpearTickCount;
 
 	public ThrownSpear(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
@@ -53,9 +53,11 @@ public class ThrownSpear extends AbstractArrow {
 		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(pStack));
 		this.entityData.set(ID_FIRE_ASPECT, (byte) pStack.getEnchantmentLevel(FIRE_ASPECT));
 		this.entityData.set(ID_FOIL, pStack.hasFoil());
-		if (pShooter instanceof Player player)
-			this.ReturnSlot = player.getInventory().findSlotMatchingItem(pStack);
 		setKnockback(EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK, pShooter));
+	}
+
+	public void setReturnSlot(int slotIndex) {
+		this.returnSlot = slotIndex;
 	}
 
 
@@ -155,6 +157,23 @@ public class ThrownSpear extends AbstractArrow {
 		return getEntityData().get(ID_SPEAR_ITEM);
 	}
 
+	@Override
+	protected boolean tryPickup(Player pPlayer) {
+		switch (this.pickup) {
+			case ALLOWED:
+				ItemStack stack = this.getPickupItem();
+				if (this.returnSlot != -1 && pPlayer.getInventory().getItem(this.returnSlot).isEmpty()) {
+					pPlayer.getInventory().setItem(this.returnSlot, stack);
+					return true;
+				}
+				return pPlayer.getInventory().add(stack);
+			case CREATIVE_ONLY:
+				return pPlayer.getAbilities().instabuild;
+			default:
+				return false;
+		}
+	}
+
 	public boolean isChanneling() {
 		return EnchantmentHelper.hasChanneling(getSpearItem());
 	}
@@ -222,7 +241,7 @@ public class ThrownSpear extends AbstractArrow {
 			spearItem = ItemStack.of(pCompound.getCompound("spear"));
 		}
 		this.dealtDamage = pCompound.getBoolean("dealtdamage");
-		this.ReturnSlot = pCompound.getInt("returnslot");
+		this.returnSlot = pCompound.getInt("returnslot");
 		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(spearItem));
 		this.entityData.set(ID_FIRE_ASPECT, (byte) spearItem.getEnchantmentLevel(FIRE_ASPECT));
 		this.entityData.set(ID_SPEAR_ITEM, spearItem);
@@ -233,7 +252,7 @@ public class ThrownSpear extends AbstractArrow {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.put("spear", getSpearItem().save(new CompoundTag()));
 		pCompound.putBoolean("dealtdamage", this.dealtDamage);
-		pCompound.putInt("returnslot", this.ReturnSlot);
+		pCompound.putInt("returnslot", this.returnSlot);
 	}
 
 	@Override

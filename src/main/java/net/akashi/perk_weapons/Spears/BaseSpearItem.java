@@ -25,6 +25,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
@@ -116,7 +117,11 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 					double multiplier = 1 + ModCommonConfigs.SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE.get() *
 							pStack.getEnchantmentLevel(POWER_ARROWS);
 					thrownspear.setBaseDamage(getProjectileBaseDamage(pStack) * multiplier);
-					System.out.println(thrownspear.getBaseDamage());
+
+					int slot = player.getMainHandItem().getItem() instanceof BaseSpearItem ?
+							player.getInventory().selected : Inventory.SLOT_OFFHAND;
+
+					thrownspear.setReturnSlot(slot);
 
 					thrownspear.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F,
 							VELOCITY + (float) riptideLevel * 0.5F, 1.0F);
