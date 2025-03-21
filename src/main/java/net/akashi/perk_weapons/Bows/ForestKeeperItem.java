@@ -14,6 +14,7 @@ import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -60,13 +61,13 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 	}
 
 	@Override
-	public void onInventoryTick(ItemStack stack, Level level, Player player, int slotIndex, int selectedIndex) {
-		super.onInventoryTick(stack, level, player, slotIndex, selectedIndex);
+	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		int nbtPerkLevel = getNbtPerkLevel(stack);
 		if (nbtPerkLevel == 0)
 			return;
 
-		if (Math.ceil(getPerkLevel(player, stack)) < nbtPerkLevel) {
+		if (Math.ceil(getPerkLevel((LivingEntity) entity, stack)) < nbtPerkLevel) {
 			setNbtPerkLevel(stack, nbtPerkLevel - 1);
 			setLastPerkChangeTime(stack, level.getGameTime());
 		}
