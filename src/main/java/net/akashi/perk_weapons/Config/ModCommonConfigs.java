@@ -6,6 +6,7 @@ import net.akashi.perk_weapons.Config.Properties.Crossbow.*;
 import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
+import net.akashi.perk_weapons.Effects.InternalExplosionEffect;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -245,6 +246,8 @@ public class ModCommonConfigs {
 			BaseCrossbowItem.SUPPORTED_PROJECTILE = BaseCrossbowItem.SUPPORTED_PROJECTILE.or(
 					(ammoStack) -> ammoStack.is(Items.FIREWORK_ROCKET));
 		}
+
+		InternalExplosionEffect.updateAttributesFromConfig(INTERNAL_EXP_PROPERTIES);
 
 		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
