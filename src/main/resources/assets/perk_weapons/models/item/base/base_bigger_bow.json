@@ -4,22 +4,22 @@
     "thirdperson_righthand": {
       "rotation": [-80, 260, -40],
       "translation": [-1, -2, 2.5],
-      "scale": [1.75, 1.75, 1.75]
+      "scale": [1.5, 1.5, 1.5]
     },
     "thirdperson_lefthand": {
       "rotation": [-80, -280, 40],
       "translation": [-1, -2, 2.5],
-      "scale": [1.75, 1.75, 1.75]
+      "scale": [1.5, 1.5, 1.5]
     },
     "firstperson_righthand": {
-      "rotation": [0, -100, 25],
-      "translation": [1.13, 4.2, 0.5],
-      "scale": [1.0, 1.0, 0.8]
+      "rotation": [0, -95, 25],
+      "translation": [1.13, 3.7, 1.0],
+      "scale": [1.0, 1.0, 0.75]
     },
     "firstperson_lefthand": {
-      "rotation": [0, 80, -25],
-      "translation": [1.13, 4.2, 0.5],
-      "scale": [1.0, 1.0, 0.8]
+      "rotation": [0, 85, -25],
+      "translation": [1.13, 3.7, 1.0],
+      "scale": [1.0, 1.0, 0.75]
     }
   }
 }
