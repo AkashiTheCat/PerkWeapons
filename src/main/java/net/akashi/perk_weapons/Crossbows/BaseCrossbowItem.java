@@ -197,10 +197,14 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+		return slotChanged || newStack.getItem() != oldStack.getItem();
+	}
+
+	@Override
 	public float getChokeProgress(LivingEntity shooter, ItemStack stack) {
 		return isCrossbowCharged(stack) ? 1.0f : getChargeProgress(shooter, stack);
 	}
-
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
@@ -522,8 +526,10 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
+		int powerLevel = getCrossbowEnchantmentLevel(stack, POWER_ARROWS);
+		float damage = (float) (DAMAGE * (powerLevel > 0 ? 1 + 0.25 * powerLevel : 1));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
-						TooltipHelper.convertToEmbeddedElement(DAMAGE))
+						TooltipHelper.convertToEmbeddedElement(damage))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
 						TooltipHelper.convertToEmbeddedElement(VELOCITY))

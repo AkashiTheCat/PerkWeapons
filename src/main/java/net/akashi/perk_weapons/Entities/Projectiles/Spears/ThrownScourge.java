@@ -29,4 +29,9 @@ public class ThrownScourge extends ThrownSpear {
 		}
 		super.onHitEntity(pResult);
 	}
+
+	@Override
+	public byte getLoyaltyLevel() {
+		return pickup == Pickup.ALLOWED ? super.getLoyaltyLevel() : 0;
+	}
 }

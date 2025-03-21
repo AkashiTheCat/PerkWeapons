@@ -6,11 +6,13 @@ import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
+import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -38,6 +40,8 @@ import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
 import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
+	public static final ResourceLocation ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
+			"textures/entity/projectiles/fire_arrow.png");
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
 	public static byte PIERCE_LEVEL = 5;
 	public static int FUSE_TIME;
@@ -86,6 +90,7 @@ public class PurgatoryItem extends BaseBowItem {
 			} else {
 				arrow.setEffectsFromItem(arrowStack);
 			}
+			arrow.setTextureLocation(ARROW_LOCATION);
 			return setArrowAttributes(arrow);
 		} else {
 			PurgatoryArrow arrow = new PurgatoryArrow(ModEntities.PURGATORY_ARROW.get(), level, player);

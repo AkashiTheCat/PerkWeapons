@@ -4,6 +4,7 @@ import net.akashi.perk_weapons.Client.GUI.CoolDownIndicatorHud;
 import net.akashi.perk_weapons.Client.GUI.DoubleLineCrossHair;
 import net.akashi.perk_weapons.Client.GUI.PerkIndicatorHud;
 import net.akashi.perk_weapons.Client.Renderer.BaseArrowRenderer;
+import net.akashi.perk_weapons.Client.Renderer.BeholderBeamRenderer;
 import net.akashi.perk_weapons.Client.Renderer.ThrownSpearRenderer;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
@@ -32,6 +33,8 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.STAR_SHOOTER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.DEVOURER_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.INCINERATOR_ARROW.get(), BaseArrowRenderer::new);
+
+		event.registerEntityRenderer(ModEntities.BEHOLDER_BEAM_SRC.get(), BeholderBeamRenderer::new);
 	}
 
 	@SubscribeEvent

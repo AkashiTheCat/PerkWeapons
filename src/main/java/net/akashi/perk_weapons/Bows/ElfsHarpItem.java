@@ -67,7 +67,8 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	@Override
 	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
 		float level = getPerkLevel(entity, stack);
-		setPerkLevel(stack, level + 1);
+		if (level < getMaxPerkLevel())
+			setPerkLevel(stack, level + 1);
 	}
 
 	@Override

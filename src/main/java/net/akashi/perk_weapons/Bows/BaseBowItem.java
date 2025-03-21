@@ -111,6 +111,11 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+		return slotChanged || newStack.getItem() != oldStack.getItem();
+	}
+
+	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
 		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : ImmutableMultimap.of();
 	}

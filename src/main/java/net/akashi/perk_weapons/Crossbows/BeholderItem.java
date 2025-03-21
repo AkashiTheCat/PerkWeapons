@@ -1,11 +1,10 @@
 package net.akashi.perk_weapons.Crossbows;
 
 import net.akashi.perk_weapons.Client.ClientHelper;
-import net.akashi.perk_weapons.Client.Renderer.BeholderBeamRenderer;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.BeholderProperties;
+import net.akashi.perk_weapons.Entities.BeholderBeamEntity;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +30,7 @@ import java.util.function.Predicate;
 
 public class BeholderItem extends BaseCrossbowItem {
 	public static final String TAG_PERK_ACTIVATING = "perk_activate";
+	public static final String TAG_BEAM_ENTITY_ID = "beam_id";
 	public static final String TAG_LAST_SOUND_PLAYED = "last_played";
 	private static final Predicate<Entity> isVisible =
 			entity -> !entity.isSpectator() && entity.isPickable();
@@ -66,12 +66,7 @@ public class BeholderItem extends BaseCrossbowItem {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		boolean isClient = level.isClientSide();
 		if (!isSelected || !entity.isCrouching()) {
-			if (!isClient && isPerkActivating(stack)) {
-				setPerkActivating(stack, false);
-			}
-			if (isClient && BeholderBeamRenderer.RENDER_DATA_MAP.containsKey(entity.getId())) {
-				BeholderBeamRenderer.removeRenderData(entity.getId());
-			}
+			deactivatePerk(level, stack);
 			return;
 		}
 
@@ -90,15 +85,9 @@ public class BeholderItem extends BaseCrossbowItem {
 				isVisible, AFFECT_RANGE * AFFECT_RANGE);
 
 		if (entityResult == null) {
-			if (!isClient && isPerkActivating(stack)) {
-				setPerkActivating(stack, false);
-			}
-			if (isClient && BeholderBeamRenderer.RENDER_DATA_MAP.containsKey(entity.getId())) {
-				BeholderBeamRenderer.removeRenderData(entity.getId());
-			}
+			deactivatePerk(level, stack);
 			return;
 		}
-
 
 		if (entityResult.getEntity() instanceof LivingEntity target &&
 				target.getBoundingBox().clip(from, to).isPresent()) {
@@ -121,7 +110,7 @@ public class BeholderItem extends BaseCrossbowItem {
 			}
 
 			if (!isClient && !isPerkActivating(stack)) {
-				setPerkActivating(stack, true);
+				activatePerk(level, stack, entity, target);
 				long time = level.getGameTime();
 				if (time - getLastSoundPlayedTime(stack) > 60) {
 					level.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
@@ -130,18 +119,28 @@ public class BeholderItem extends BaseCrossbowItem {
 				}
 			}
 
-			if (isClient && !BeholderBeamRenderer.RENDER_DATA_MAP.containsKey(entity.getId())) {
-				BeholderBeamRenderer.addRenderData(entity.getId(), target.getId());
-			}
-
 			return;
 		}
 
-		if (!isClient && isPerkActivating(stack)) {
+		deactivatePerk(level, stack);
+	}
+
+	private void deactivatePerk(Level level, ItemStack stack) {
+		if (!level.isClientSide() && isPerkActivating(stack)) {
 			setPerkActivating(stack, false);
+			Entity beamEntity = level.getEntity(getBeamEntityId(stack));
+			if (beamEntity != null) {
+				beamEntity.discard();
+			}
 		}
-		if (isClient && BeholderBeamRenderer.RENDER_DATA_MAP.containsKey(entity.getId())) {
-			BeholderBeamRenderer.removeRenderData(entity.getId());
+	}
+
+	private void activatePerk(Level level, ItemStack stack, Entity src, Entity target) {
+		if (!level.isClientSide() && !isPerkActivating(stack)) {
+			setPerkActivating(stack, true);
+			Entity beamEntity = new BeholderBeamEntity(level, src, target);
+			level.addFreshEntity(beamEntity);
+			setBeamEntityId(stack, beamEntity.getId());
 		}
 	}
 
@@ -153,6 +152,16 @@ public class BeholderItem extends BaseCrossbowItem {
 	public boolean isPerkActivating(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		return tag.contains(TAG_PERK_ACTIVATING) && tag.getBoolean(TAG_PERK_ACTIVATING);
+	}
+
+	public void setBeamEntityId(ItemStack stack, int id) {
+		CompoundTag tag = stack.getOrCreateTag();
+		tag.putInt(TAG_BEAM_ENTITY_ID, id);
+	}
+
+	public int getBeamEntityId(ItemStack stack) {
+		CompoundTag tag = stack.getOrCreateTag();
+		return tag.contains(TAG_BEAM_ENTITY_ID) ? tag.getInt(TAG_BEAM_ENTITY_ID) : -1;
 	}
 
 	public void setLastSoundPlayedTime(ItemStack stack, long time) {

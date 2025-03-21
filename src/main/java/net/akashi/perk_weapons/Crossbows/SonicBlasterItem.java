@@ -153,9 +153,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	@Override
 	protected void shoot(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack,
 	                     float damage, float velocity, float inaccuracy) {
-		if (level.isClientSide()) {
-			renderShootingParticles(level, shooter);
-		}
+		renderShootingParticles(level, shooter);
 
 		if (!level.isClientSide()) {
 			Vec3 startPos = shooter.getEyePosition(1.0F);

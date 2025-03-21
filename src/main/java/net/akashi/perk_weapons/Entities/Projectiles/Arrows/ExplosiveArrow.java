@@ -28,8 +28,8 @@ import org.joml.Vector3f;
 
 
 public class ExplosiveArrow extends BaseArrow {
-	public static final ResourceLocation EXPLOSIVE_ARROW_LOCATION =
-			new ResourceLocation(PerkWeapons.MODID, "textures/entity/projectiles/explosive_arrow.png");
+	public ResourceLocation EXPLOSIVE_ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
+			"textures/entity/projectiles/explosive_arrow.png");
 	private int fuseTime = 30;
 	private int attachedEntityID = 0;
 
@@ -47,6 +47,10 @@ public class ExplosiveArrow extends BaseArrow {
 		super(pEntityType, pLevel, pShooter);
 		this.fuseTime = fuseTime;
 		this.pickup = Pickup.DISALLOWED;
+	}
+
+	public void setTextureLocation(ResourceLocation location) {
+		EXPLOSIVE_ARROW_LOCATION = location;
 	}
 
 	public ExplosiveArrow(PlayMessages.SpawnEntity spawnEntity, Level level) {
