@@ -22,4 +22,9 @@ public class HarmAllEffect extends MobEffect {
 	public boolean isInstantenous() {
 		return true;
 	}
+
+	@Override
+	public boolean isBeneficial() {
+		return false;
+	}
 }

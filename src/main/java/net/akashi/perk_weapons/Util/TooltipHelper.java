@@ -85,6 +85,11 @@ public class TooltipHelper {
 		return getRatioModifierWithStyle("tooltip.perk_weapons.arrow_damage_modifier", deltaRatio);
 	}
 
+	public static MutableComponent getRatioModifierWithStyle(float deltaRatio) {
+		MutableComponent component = Component.literal(getPercentageWithSign(deltaRatio));
+		return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
 	public static MutableComponent getRatioModifierWithStyle(String key, float deltaRatio) {
 		MutableComponent component = Component.translatable(key, getPercentageWithSign(deltaRatio));
 		return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
@@ -97,6 +102,16 @@ public class TooltipHelper {
 
 	public static MutableComponent getDeltaModifierWithStyle(String key, float delta) {
 		MutableComponent component = Component.translatable(key, getDeltaWithSign(delta));
+		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(int delta) {
+		MutableComponent component = Component.literal(getDeltaWithSign(delta));
+		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(float delta) {
+		MutableComponent component = Component.literal(getDeltaWithSign(delta));
 		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
 	}
 

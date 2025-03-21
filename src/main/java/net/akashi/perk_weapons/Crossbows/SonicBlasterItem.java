@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -190,6 +191,9 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 
 
 	protected void renderShootingParticles(Level level, LivingEntity shooter) {
+		if (level.isClientSide())
+			return;
+
 		Vec3 particleXYZ = new Vec3(shooter.getX(), shooter.getBoundingBox().getYsize() * 0.5 + shooter.getY(),
 				shooter.getZ());
 		float interval = 1.2F;
@@ -197,8 +201,8 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		int particleAmount = Math.round(MAX_ATTACK_RANGE / interval);
 
 		for (int i = 0; i < particleAmount; i++) {
-			level.addParticle(ParticleTypes.SONIC_BOOM, particleXYZ.x, particleXYZ.y, particleXYZ.z,
-					0, 0, 0);
+			((ServerLevel) level).sendParticles(ParticleTypes.SONIC_BOOM, particleXYZ.x, particleXYZ.y, particleXYZ.z,
+					1, 0, 0, 0, 0);
 			particleXYZ = particleXYZ.add(delta);
 		}
 	}

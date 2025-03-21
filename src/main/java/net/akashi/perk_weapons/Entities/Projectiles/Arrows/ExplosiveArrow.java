@@ -3,8 +3,10 @@ package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPacket;
 import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
+import net.akashi.perk_weapons.Util.ModExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -14,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,10 +31,17 @@ import org.joml.Vector3f;
 
 
 public class ExplosiveArrow extends BaseArrow {
-	public ResourceLocation EXPLOSIVE_ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
+	public static ResourceLocation EXPLOSIVE_ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
 			"textures/entity/projectiles/explosive_arrow.png");
 	private int fuseTime = 30;
-	private int attachedEntityID = 0;
+	private float innerRadius = 2;
+	private float outerRadius = 5;
+	private float innerDamage = 30;
+	private float outerDamage = 15;
+	private float expForce = 1;
+	private boolean expIgnoreWall = false;
+	private int internalExpDuration = 20;
+	private int internalExpAmplifier = 0;
 
 	public ExplosiveArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -49,22 +59,31 @@ public class ExplosiveArrow extends BaseArrow {
 		this.pickup = Pickup.DISALLOWED;
 	}
 
-	public void setTextureLocation(ResourceLocation location) {
-		EXPLOSIVE_ARROW_LOCATION = location;
-	}
-
 	public ExplosiveArrow(PlayMessages.SpawnEntity spawnEntity, Level level) {
 		this(ModEntities.EXPLOSIVE_ARROW.get(), level);
 	}
 
+	public void setExplosionAttributes(float innerRadius, float outerRadius, float innerDamage, float outerDamage,
+	                                   float knockback, boolean ignoreWall,
+	                                   int internalExpDuration, int internalExpAmplifier) {
+		this.innerRadius = innerRadius;
+		this.innerDamage = innerDamage;
+		this.outerRadius = outerRadius;
+		this.outerDamage = outerDamage;
+		this.expForce = knockback;
+		this.expIgnoreWall = ignoreWall;
+		this.internalExpDuration = internalExpDuration;
+		this.internalExpAmplifier = internalExpAmplifier;
+	}
+
 	@Override
 	public void setPierceLevel(byte pPierceLevel) {
-		super.setPierceLevel((byte) 1);
+		super.setPierceLevel((byte) 127);
 	}
 
 	@Override
 	public byte getPierceLevel() {
-		return 1;
+		return 127;
 	}
 
 	@Override
@@ -79,33 +98,25 @@ public class ExplosiveArrow extends BaseArrow {
 			this.level().addParticle(ParticleTypes.SMOKE,
 					this.getX(), this.getY(), this.getZ(),
 					0.0D, 0.0D, 0.0D);
-		} else {
-			if (this.fuseTime > 0)
-				this.fuseTime--;
+		} else if (this.fuseTime > 0) {
+			this.fuseTime--;
 			if (this.fuseTime == 0) {
 				this.explode();
 			}
 		}
-
-		Entity entity = level().getEntity(this.attachedEntityID);
-		if (entity == null)
-			return;
-
-		this.setPos(entity.position());
 	}
 
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		super.onHitEntity(pResult);
 		Entity entity = pResult.getEntity();
-		if (entity.isAlive()) {
-			this.attachedEntityID = entity.getId();
-			this.setNoPhysics(true);
-			this.setInvisible(true);
+		if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
+			livingEntity.addEffect(new MobEffectInstance(ModEffects.INTERNAL_EXPLOSION.get(),
+					internalExpDuration, internalExpAmplifier, false, false), this.getOwner());
+			this.discard();
 		} else {
 			this.setDeltaMovement(this.getDeltaMovement().multiply(
-					-0.01D, -0.1D, -0.01D
-			));
+					-0.01D, -0.1D, -0.01D));
 		}
 	}
 
@@ -113,41 +124,37 @@ public class ExplosiveArrow extends BaseArrow {
 	public void readAdditionalSaveData(CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		this.fuseTime = pCompound.getInt("fuseTime");
-		this.attachedEntityID = pCompound.getInt("attID");
+		this.innerRadius = pCompound.getFloat("innerRadius");
+		this.outerRadius = pCompound.getFloat("outerRadius");
+		this.innerDamage = pCompound.getFloat("innerDamage");
+		this.outerDamage = pCompound.getFloat("outerDamage");
+		this.expForce = pCompound.getFloat("expForce");
+		this.expIgnoreWall = pCompound.getBoolean("expIgnoreWall");
+		this.internalExpDuration = pCompound.getInt("internalExpDuration");
+		this.internalExpAmplifier = pCompound.getInt("internalExpAmplifier");
 	}
 
 	@Override
 	public void addAdditionalSaveData(CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.putInt("fuseTime", this.fuseTime);
-		pCompound.putInt("attID", this.attachedEntityID);
-	}
-
-	private void putVec3(CompoundTag tag, String key, Vec3 vec3) {
-		tag.putDouble(key + "_x", vec3.x);
-		tag.putDouble(key + "_y", vec3.y);
-		tag.putDouble(key + "_z", vec3.z);
-	}
-
-	private Vec3 readVec3(CompoundTag tag, String key) {
-		double x = tag.getDouble(key + "_x");
-		double y = tag.getDouble(key + "_y");
-		double z = tag.getDouble(key + "_z");
-		return new Vec3(x, y, z);
+		pCompound.putFloat("innerRadius", this.innerRadius);
+		pCompound.putFloat("outerRadius", this.outerRadius);
+		pCompound.putFloat("innerDamage", this.innerDamage);
+		pCompound.putFloat("outerDamage", this.outerDamage);
+		pCompound.putBoolean("expIgnoreWall", this.expIgnoreWall);
+		pCompound.putInt("internalExpDuration", this.internalExpDuration);
+		pCompound.putInt("internalExpAmplifier", this.internalExpAmplifier);
 	}
 
 	public void explode() {
 		Level level = this.level();
-		if (!level.isClientSide()) {
-			level.explode(this.getOwner(), this.getX(), this.getY(), this.getZ(),
-					4.0F, Level.ExplosionInteraction.NONE);
-
-			if (this.getOwnerSqrDistance() > 64 * 64) {
-				if (this.getOwner() instanceof Player player) {
-					ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-							new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
-				}
-			}
+		ModExplosion.createExplosion(level, (LivingEntity) this.getOwner(), this.getX(), this.getY(), this.getZ(),
+				innerRadius, outerRadius, innerDamage, outerDamage, expForce, expIgnoreWall);
+		if (!level.isClientSide() && this.getOwnerSqrDistance() > 64 * 64 &&
+				this.getOwner() instanceof Player player) {
+			ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
+					new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
 		}
 		this.discard();
 	}

@@ -1,6 +1,5 @@
 package net.akashi.perk_weapons.Block.Entity;
 
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FurnaceCoreBlockEntity extends AbstractFurnaceBlockEntity {
 	public FurnaceCoreBlockEntity(BlockPos pPos, BlockState pBlockState) {
-		super(ModBlockEntities.FURNACE_CORE_BLOCK_ENTITY.get(), pPos, pBlockState, RecipeType.BLASTING);
+		super(ModBlockEntities.FURNACE_CORE_BLOCK_ENTITY.get(), pPos, pBlockState, RecipeType.SMELTING);
 	}
 
 	@Override
@@ -25,7 +24,7 @@ public class FurnaceCoreBlockEntity extends AbstractFurnaceBlockEntity {
 
 	@Override
 	protected int getBurnDuration(@NotNull ItemStack pFuel) {
-		return Integer.MAX_VALUE;
+		return 165000000;
 	}
 
 	@Override

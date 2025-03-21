@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.common.ForgeConfigSpec;
 
@@ -17,11 +18,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class StarShooterArrow extends BaseArrow {
-	private static List<EntityType<?>> FLYING_ENTITY = new ArrayList<>(Arrays.asList(
-			EntityType.PHANTOM,
-			EntityType.ENDER_DRAGON,
-			EntityType.BLAZE
-	));
+	public static float DAMAGE_MODIFIER_PER_METER = 0.03F;
+	public static float DAMAGE_MODIFIER_MAX = 4.0F;
+	public static float DAMAGE_MODIFIER_MIN = 0.0F;
 
 	public StarShooterArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -43,22 +42,24 @@ public class StarShooterArrow extends BaseArrow {
 					this.getX(), this.getY(), this.getZ(),
 					0.0D, 0.0D, 0.0D);
 		}
+		if (!this.level().isClientSide()) {
+			this.flyDist += (float) getDeltaMovement().length();
+		}
+	}
+
+	@Override
+	protected void onHitBlock(BlockHitResult pResult) {
+		super.onHitBlock(pResult);
+		this.flyDist = 0;
 	}
 
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
-		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity livingEntity) {
-			if (!livingEntity.onGround() || FLYING_ENTITY.stream().anyMatch(
-					(entity) -> livingEntity.getType() == entity)) {
-				this.setBaseDamage(getBaseDamage() * (1 + HouYiItem.DAMAGE_MODIFIER_STAR_SHOOTER));
-			} else {
-				this.setBaseDamage(getBaseDamage() * (1 + HouYiItem.DAMAGE_MODIFIER_AIR_STAR_SHOOTER));
-			}
+		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity) {
+			this.setBaseDamage(getBaseDamage() * (1 + Math.max(DAMAGE_MODIFIER_MAX,
+					Math.min(this.flyDist * DAMAGE_MODIFIER_PER_METER, DAMAGE_MODIFIER_MIN))
+			));
 		}
 		super.onHitEntity(pResult);
-	}
-
-	public static void updateEntityTypeListFromConfig(List<? extends String> EntityTypeStringList) {
-		FLYING_ENTITY = EntityTypeListReader.convertStringsToEntityType(EntityTypeStringList);
 	}
 }

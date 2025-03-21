@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
 import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -18,6 +19,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -40,11 +42,17 @@ import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
 import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
-	public static final ResourceLocation ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
-			"textures/entity/projectiles/fire_arrow.png");
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
 	public static byte PIERCE_LEVEL = 5;
-	public static int FUSE_TIME;
+	public static int FUSE_TIME = 30;
+	public static float EXP_INNER_R = 2;
+	public static float EXP_INNER_DMG = 30;
+	public static float EXP_OUTER_R = 5;
+	public static float EXP_OUTER_DMG = 5;
+	public static float EXP_KNOCKBACK = 1;
+	public static boolean EXP_IGNORE_WALL = false;
+	public static int INTERNAL_EXP_DURATION = 20;
+	public static int INTERNAL_EXP_LEVEL = 1;
 
 	public PurgatoryItem(Properties properties) {
 		super(properties);
@@ -72,13 +80,8 @@ public class PurgatoryItem extends BaseBowItem {
 	}
 
 	@Override
-	protected void onPlayerBowShoot(Level level, Player player) {
-		if (!level.isClientSide()) {
-			Vec3 viewVec = player.getViewVector(0);
-			Vec3 pos = player.getPosition(0).add(viewVec.normalize().scale(8.0));
-			level.playSound(null, pos.x, pos.y, pos.z, SoundEvents.CREEPER_PRIMED, SoundSource.PLAYERS,
-					1.0f, 1.0f);
-		}
+	protected SoundEvent getShootingSound() {
+		return SoundEvents.BLAZE_SHOOT;
 	}
 
 	@Override
@@ -90,7 +93,8 @@ public class PurgatoryItem extends BaseBowItem {
 			} else {
 				arrow.setEffectsFromItem(arrowStack);
 			}
-			arrow.setTextureLocation(ARROW_LOCATION);
+			arrow.setExplosionAttributes(EXP_INNER_R, EXP_OUTER_R, EXP_INNER_DMG, EXP_OUTER_DMG,
+					EXP_KNOCKBACK, EXP_IGNORE_WALL, INTERNAL_EXP_DURATION, INTERNAL_EXP_LEVEL - 1);
 			return setArrowAttributes(arrow);
 		} else {
 			PurgatoryArrow arrow = new PurgatoryArrow(ModEntities.PURGATORY_ARROW.get(), level, player);
@@ -109,6 +113,14 @@ public class PurgatoryItem extends BaseBowItem {
 		if (properties instanceof PurgatoryProperties pProperties) {
 			FUSE_TIME = pProperties.FUSE_TIME.get();
 			PIERCE_LEVEL = pProperties.PIERCE_LEVEL.get().byteValue();
+			EXP_INNER_R = pProperties.EXPLOSION_PROPERTIES.INNER_R.get().floatValue();
+			EXP_OUTER_R = pProperties.EXPLOSION_PROPERTIES.OUTER_R.get().floatValue();
+			EXP_INNER_DMG = pProperties.EXPLOSION_PROPERTIES.INNER_DMG.get().floatValue();
+			EXP_OUTER_DMG = pProperties.EXPLOSION_PROPERTIES.OUTER_DMG.get().floatValue();
+			EXP_KNOCKBACK = pProperties.EXPLOSION_PROPERTIES.KNOCKBACK.get().floatValue();
+			EXP_IGNORE_WALL = pProperties.EXPLOSION_PROPERTIES.IGNORE_WALL.get();
+			INTERNAL_EXP_DURATION = pProperties.INTERNAL_EXP_EFFECT_TIME.get();
+			INTERNAL_EXP_LEVEL = pProperties.INTERNAL_EXP_EFFECT_LEVEL.get();
 		}
 		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
 	}
@@ -136,6 +148,12 @@ public class PurgatoryItem extends BaseBowItem {
 		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_5",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FUSE_TIME)))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_6")));
+
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				ModEffects.INTERNAL_EXPLOSION.get().getDisplayName(),
+				TooltipHelper.getRomanNumeral(1),
+				TooltipHelper.convertTicksToSeconds(INTERNAL_EXP_DURATION))));
 
 		return list;
 	}

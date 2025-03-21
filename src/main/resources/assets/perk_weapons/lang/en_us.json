@@ -102,6 +102,7 @@
   "tooltip.perk_weapons.purgatory_perk_3": "Arrow pierces through up to %d entities",
   "tooltip.perk_weapons.purgatory_perk_4": "Arrow no longer pierce through entities",
   "tooltip.perk_weapons.purgatory_perk_5": "Arrow automatically detonates after %f seconds",
+  "tooltip.perk_weapons.purgatory_perk_6": "Applies following effects to hit entities:",
 
   "tooltip.perk_weapons.forest_keeper": "\"Wanders through the woods, ever elusive.\"",
   "tooltip.perk_weapons.forest_keeper_perk_1": "No slowdown when drawing the bow",
@@ -127,7 +128,8 @@
 
   "tooltip.perk_weapons.hou_yi": "\"A relic forged in the radiance of a dying sun.\"",
   "tooltip.perk_weapons.hou_yi_perk_1": "Arrow isn't affected by gravity",
-  "tooltip.perk_weapons.hou_yi_perk_2": "%s Arrow Damage to entities in air",
+  "tooltip.perk_weapons.hou_yi_perk_2": "Arrow Damage %s every meter travelled",
+  "tooltip.perk_weapons.hou_yi_perk_3": "Damage Modifier Range: [%s, %s]",
 
   "tooltip.perk_weapons.devourer": "\"FEED ME...\"",
   "tooltip.perk_weapons.devourer_perk_1": "Arrow pierces through up to %d entities",
@@ -171,5 +173,6 @@
   "perk_weapons.entity.hound": "Hound",
 
   "effect.perk_weapons.harm_all": "Harming",
+  "effect.perk_weapons.internal_explosion": "Internal Explosion",
   "container.perk_weapons.furnace_core": "Furnace Core"
 }

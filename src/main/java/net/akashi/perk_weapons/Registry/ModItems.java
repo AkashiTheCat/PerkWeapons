@@ -151,7 +151,7 @@ public class ModItems {
 	public static final RegistryObject<LiberatorItem> LIBERATOR = addToTab(
 			ITEMS.register("liberator",
 					() -> new LiberatorItem(50, 10, 2.4F,
-							1.0F, -0.3F, true,
+							1.0F, 0.0F, false,
 							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<TaintedFortuneItem> TAINTED_FORTUNE = addToTab(
 			ITEMS.register("tainted_fortune",

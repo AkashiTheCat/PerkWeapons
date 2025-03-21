@@ -13,6 +13,7 @@ import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -144,12 +145,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 					AbstractArrow abstractarrow = createArrow(pLevel, arrowitem, pStack, itemstack, player);
 					abstractarrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, VELOCITY, INACCURACY);
 
-					//Handle Enchantments
-					//Power
-					int powerLevel = pStack.getEnchantmentLevel(POWER_ARROWS);
-					if (powerLevel > 0) {
-						abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() * (1 + 0.25 * powerLevel));
-					}
+					abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() * getDamageMultiplier(pStack));
+
 					//Punch
 					int punchLevel = pStack.getEnchantmentLevel(PUNCH_ARROWS);
 					if (punchLevel > 0) {
@@ -176,7 +173,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 				}
 
 				pLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
-						SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 1.0F,
+						getShootingSound(), SoundSource.PLAYERS, 1.0F,
 						1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + (float) 10 / DRAW_TIME);
 				if (!flag1 && !player.getAbilities().instabuild) {
 					itemstack.shrink(1);
@@ -185,14 +182,13 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 					}
 				}
 
-				onPlayerBowShoot(pLevel, player);
-
 				player.awardStat(Stats.ITEM_USED.get(this));
 			}
 		}
 	}
 
-	protected void onPlayerBowShoot(Level level, Player player) {
+	protected SoundEvent getShootingSound() {
+		return SoundEvents.ARROW_SHOOT;
 	}
 
 	@Override
@@ -261,6 +257,11 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		return arrow;
 	}
 
+	public double getDamageMultiplier(ItemStack stack) {
+		int powerLevel = stack.getEnchantmentLevel(POWER_ARROWS);
+		return 1F + 0.25F * powerLevel;
+	}
+
 	public void updateAttributesFromConfig(BowProperties properties) {
 		this.DRAW_TIME = properties.DRAW_TIME.get();
 		this.PROJECTILE_DAMAGE = properties.DAMAGE.get().floatValue();
@@ -306,9 +307,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
 
-		int powerLevel = stack.getEnchantmentLevel(POWER_ARROWS);
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
-						TooltipHelper.convertToEmbeddedElement(PROJECTILE_DAMAGE * (1F + 0.25F * powerLevel)))
+						TooltipHelper.convertToEmbeddedElement(PROJECTILE_DAMAGE * getDamageMultiplier(stack)))
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
 						TooltipHelper.convertToEmbeddedElement(VELOCITY))

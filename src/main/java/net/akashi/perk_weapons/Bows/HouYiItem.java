@@ -25,7 +25,6 @@ import java.util.List;
 
 public class HouYiItem extends BaseBowItem {
 	public static float DAMAGE_MODIFIER_STAR_SHOOTER = -0.5f;
-	public static float DAMAGE_MODIFIER_AIR_STAR_SHOOTER = 1.0f;
 
 	public HouYiItem(Properties properties) {
 		super(properties);
@@ -44,8 +43,10 @@ public class HouYiItem extends BaseBowItem {
 		} else {
 			arrow = new BaseArrow(ModEntities.BASE_ARROW.get(), level, player);
 		}
+
+		arrow.setBaseDamage((PROJECTILE_DAMAGE / VELOCITY));
 		arrow.setNoGravity(true);
-		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
+
 		if (arrowItem instanceof SpectralArrowItem) {
 			arrow.setSpectralArrow(true);
 		} else {
@@ -55,12 +56,19 @@ public class HouYiItem extends BaseBowItem {
 	}
 
 	@Override
+	public double getDamageMultiplier(ItemStack stack) {
+		return super.getDamageMultiplier(stack) * (1 + DAMAGE_MODIFIER_STAR_SHOOTER);
+	}
+
+	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		AddGeneralEnchant(ModEnchantments.STAR_SHOOTER.get());
 		if (properties instanceof HouYiProperties hProperties) {
 			DAMAGE_MODIFIER_STAR_SHOOTER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER.get().floatValue();
-			DAMAGE_MODIFIER_AIR_STAR_SHOOTER = hProperties.STAR_SHOOTER_AIR_DAMAGE_MODIFIER.get().floatValue();
+			StarShooterArrow.DAMAGE_MODIFIER_PER_METER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_PER_METER.get().floatValue();
+			StarShooterArrow.DAMAGE_MODIFIER_MAX = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_MAX.get().floatValue();
+			StarShooterArrow.DAMAGE_MODIFIER_MIN = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_MIN.get().floatValue();
 		}
 	}
 
@@ -78,8 +86,16 @@ public class HouYiItem extends BaseBowItem {
 				TooltipHelper.convertToEmbeddedElement(ModEnchantments.STAR_SHOOTER.get(), 1))));
 
 		list.add(TooltipHelper.getArrowDamageModifier(DAMAGE_MODIFIER_STAR_SHOOTER));
+
 		list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.hou_yi_perk_2",
-				DAMAGE_MODIFIER_AIR_STAR_SHOOTER));
+				StarShooterArrow.DAMAGE_MODIFIER_PER_METER));
+
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.hou_yi_perk_3",
+				Component.literal(TooltipHelper.getPercentageWithSign(StarShooterArrow.DAMAGE_MODIFIER_MIN))
+						.withStyle(ChatFormatting.GRAY),
+				Component.literal(TooltipHelper.getPercentageWithSign(StarShooterArrow.DAMAGE_MODIFIER_MAX))
+						.withStyle(ChatFormatting.GRAY)
+		)));
 
 		return list;
 	}

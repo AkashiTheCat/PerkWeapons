@@ -102,6 +102,7 @@
   "tooltip.perk_weapons.purgatory_perk_3": "箭矢能够穿透至多 %d 个生物",
   "tooltip.perk_weapons.purgatory_perk_4": "箭矢不再穿透生物",
   "tooltip.perk_weapons.purgatory_perk_5": "箭矢会在 %f 秒后自动引爆",
+  "tooltip.perk_weapons.purgatory_perk_6": "对命中的生物施加以下效果:",
 
   "tooltip.perk_weapons.forest_keeper": "\"游荡在林间，让人捉摸不透。\"",
   "tooltip.perk_weapons.forest_keeper_perk_1": "拉弓时不会产生减速效果",
@@ -127,7 +128,8 @@
 
   "tooltip.perk_weapons.hou_yi": "\"于正在消亡的恒星的光辉中锻造的遗物。\"",
   "tooltip.perk_weapons.hou_yi_perk_1": "箭矢不受重力影响",
-  "tooltip.perk_weapons.hou_yi_perk_2": "%s 对位于空中的生物的伤害",
+  "tooltip.perk_weapons.hou_yi_perk_2": "箭矢每飞行1米 %s 伤害",
+  "tooltip.perk_weapons.hou_yi_perk_3": "伤害加成范围: [%s, %s]",
 
   "tooltip.perk_weapons.devourer": "\"以骨肉...供奉我...\"",
   "tooltip.perk_weapons.devourer_perk_1": "箭矢能够穿透至多 %d 个生物",
@@ -171,6 +173,6 @@
   "perk_weapons.entity.hound": "猎犬",
 
   "effect.perk_weapons.harm_all": "全体伤害",
+  "effect.perk_weapons.internal_explosion": "内爆",
   "container.perk_weapons.furnace_core": "熔炉核心"
-
 }

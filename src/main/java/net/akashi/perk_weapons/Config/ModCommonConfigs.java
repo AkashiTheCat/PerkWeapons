@@ -3,18 +3,15 @@ package net.akashi.perk_weapons.Config;
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.*;
+import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.StarShooterArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.util.Arrays;
-import java.util.List;
 
 import static net.minecraft.world.item.ProjectileWeaponItem.ARROW_ONLY;
 
@@ -31,10 +28,12 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
-	public static ForgeConfigSpec.ConfigValue<List<? extends String>> ALWAYS_AS_FLYING;
 	public static ForgeConfigSpec.DoubleValue SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE;
 	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
 	public static ForgeConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
+
+	//Effect Configs
+	public static ModExplosionProperties INTERNAL_EXP_PROPERTIES;
 
 
 	//Spear Configs
@@ -83,15 +82,19 @@ public class ModCommonConfigs {
 				.define("CrossbowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_FIREWORK = BUILDER.comment("Set True To Allow Modded Crossbows Use Fireworks As Ammo")
 				.define("CrossbowAcceptFirework", true);
-		ALWAYS_AS_FLYING = BUILDER.comment("List Of EntityTypes That Are Always Considered As Flying By Star Shooter Enchantment")
-				.defineList("FlyingEntities", Arrays.asList("minecraft:phantom", "minecraft:blaze",
-						"minecraft:ender_dragon"), obj -> obj instanceof String);
 		SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE = BUILDER.comment("Ranged Damage Buff Ratio Per Power Level When Enchanted" +
 				" On Modded Spears").defineInRange("PowerBuff", 0.2, 0, 255);
 		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required By Each Repairer To Repair Something On Anvil")
 				.defineInRange("RepairerCost", 5, 0, 255);
 		REPAIRER_REPAIR_PERCENTAGE = BUILDER.comment("Ratio Of Durability Repaired By Each Repairer")
 				.defineInRange("RepairRatio", 0.2, 0, 1);
+		BUILDER.pop();
+
+		//Effects
+		BUILDER.push("Effect: Internal Explosion");
+		INTERNAL_EXP_PROPERTIES = new ModExplosionProperties(BUILDER,
+				5, 5, 20, 20,
+				1.0, false);
 		BUILDER.pop();
 
 		//Spears
@@ -152,8 +155,12 @@ public class ModCommonConfigs {
 		PURGATORY_PROPERTIES = new PurgatoryProperties(BUILDER, "Purgatory",
 				50, 25,
 				4.5, 0.2,
-				4, 30,
-				-1.0, 0.15, true);
+				4, -1.0,
+				0.15, true,
+				30, 3, 6,
+				30, 8,
+				1.0, false,
+				20, 1);
 		FOREST_KEEPER_PROPERTIES = new ForestKeeperProperties(BUILDER, "Forest Keeper",
 				12, 8,
 				2.25, 1.0,
@@ -177,7 +184,8 @@ public class ModCommonConfigs {
 				40, 15,
 				4.5, 0.2,
 				-0.5, 0.15,
-				-0.5, 1.0,
+				-0.5, 0.03,
+				4.0, -1.0,
 				true);
 		DEVOURER_PROPERTIES = new DevourerProperties(BUILDER, "Devourer",
 				20, 7,
@@ -195,9 +203,9 @@ public class ModCommonConfigs {
 		LIBERATOR_PROPERTIES = new LiberatorProperties(BUILDER, "Liberator",
 				50, 10.0,
 				2.4, 1.0,
-				-0.3, (byte) 1,
+				0.0, (byte) 1,
 				1, 2,
-				true);
+				false);
 		TAINTED_FORTUNE_PROPERTIES = new TaintedFortuneProperties(BUILDER, "Tainted Fortune",
 				25, 10.0,
 				2.0, 1.2,
@@ -225,7 +233,6 @@ public class ModCommonConfigs {
 	public static void onConfigLoad(ModConfigEvent event) {
 		if (event.getConfig().getSpec() != SPEC)
 			return;
-		StarShooterArrow.updateEntityTypeListFromConfig(ALWAYS_AS_FLYING.get());
 
 		if (BOW_ACCEPT_ALL_ARROW.get()) {
 			BaseBowItem.SUPPORTED_PROJECTILE = ARROW_ONLY;
