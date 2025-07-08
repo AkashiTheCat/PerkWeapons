@@ -23,7 +23,7 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -45,7 +45,8 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+	public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity,
+	                          int pSlotId, boolean pIsSelected) {
 		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 		if (!pLevel.isClientSide() && pEntity instanceof Player player && pIsSelected) {
 			UUID uuid = player.getUUID();
@@ -58,7 +59,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		boolean flag = !CD_MAP.containsKey(pPlayer.getUUID());
 		if (pPlayer.isCrouching() && (flag || CD_MAP.get(pPlayer.getUUID()) == 0)) {
 			if (!pLevel.isClientSide()) {
@@ -90,6 +91,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 		} else {
 			arrow.setEffectsFromItem(arrowStack);
 		}
+		arrow.setIgnoreInvulnerableTime(true);
 		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
 		return arrow;
 	}
@@ -131,7 +133,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_1",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FROZEN_TIME)))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_2")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));
 
 		list.add(Component.empty());
 

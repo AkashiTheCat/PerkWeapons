@@ -1,54 +1,43 @@
 package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Client.ClientHelper;
-import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
-import net.akashi.perk_weapons.Registry.ModItems;
-import net.akashi.perk_weapons.Util.INoUseSlowdownItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.jetbrains.annotations.NotNull;
 
-import javax.tools.Tool;
 import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
-public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSlowdownItem {
+public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public static final String TAG_LAST_PERK_LEVEL_CHANGE_TIME = "last_perk_change";
 	public static final String TAG_PERK_LEVEL = "perk_level";
 	public static byte MAX_PERK_LEVEL = 5;
 	public static float PERK_BUFF = 0.1F;
 	public static int PERK_DROP_INTERVAL = 40;
-	public static boolean ENABLE_SLOWDOWN_REMOVAL = true;
 
 	public ForestKeeperItem(Properties properties) {
 		super(properties);
 		RemoveGeneralEnchant(PUNCH_ARROWS);
 		if (FMLEnvironment.dist.isClient())
-			ClientHelper.registerPerkBowPropertyOverrides(this);
+			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
 
 	public ForestKeeperItem(int drawTime, float projectileDamage, float velocity,
@@ -57,11 +46,12 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		RemoveGeneralEnchant(PUNCH_ARROWS);
 		if (FMLEnvironment.dist.isClient())
-			ClientHelper.registerPerkBowPropertyOverrides(this);
+			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
+	                          int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		int nbtPerkLevel = getNbtPerkLevel(stack);
 		if (nbtPerkLevel == 0)
@@ -94,7 +84,6 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 			MAX_PERK_LEVEL = fProperties.MAX_PERK_LEVEL.get().byteValue();
 			PERK_DROP_INTERVAL = fProperties.PERK_DROP_INTERVAL.get();
 			PERK_BUFF = fProperties.PERK_DAMAGE_BUFF.get().floatValue();
-			ENABLE_SLOWDOWN_REMOVAL = fProperties.ENABLE_SLOWDOWN_REMOVAL.get();
 		}
 	}
 
@@ -155,7 +144,8 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem, INoUseSl
 			}
 
 			if (!stack.isEmpty()) {
-
+				ForestKeeperItem item = (ForestKeeperItem) stack.getItem();
+				item.setNbtPerkLevel(stack, 0);
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -34,8 +33,6 @@ public class FrostHunterArrow extends BaseArrow {
 
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
-		Entity entity = pResult.getEntity();
-		entity.invulnerableTime = 0;
 		super.onHitEntity(pResult);
 		pResult.getEntity().setTicksFrozen(FROZEN_TIME * 2);
 	}

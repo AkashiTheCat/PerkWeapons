@@ -1,6 +1,5 @@
 package net.akashi.perk_weapons.Bows;
 
-import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.HouYiProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
@@ -10,14 +9,11 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
@@ -57,7 +53,8 @@ public class HouYiItem extends BaseBowItem {
 
 	@Override
 	public double getDamageMultiplier(ItemStack stack) {
-		return super.getDamageMultiplier(stack) * (1 + DAMAGE_MODIFIER_STAR_SHOOTER);
+		return super.getDamageMultiplier(stack) * (1 + (stack.getEnchantmentLevel(ModEnchantments.STAR_SHOOTER.get()) > 0 ?
+				DAMAGE_MODIFIER_STAR_SHOOTER : 0));
 	}
 
 	@Override

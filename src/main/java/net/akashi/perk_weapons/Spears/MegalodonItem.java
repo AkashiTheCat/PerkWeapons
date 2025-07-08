@@ -1,20 +1,16 @@
 package net.akashi.perk_weapons.Spears;
 
-import com.mojang.blaze3d.shaders.Effect;
 import net.akashi.perk_weapons.Config.Properties.Spear.MegalodonProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownMegalodon;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import org.stringtemplate.v4.ST;
 
 import java.util.ArrayList;
 import java.util.List;

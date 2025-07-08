@@ -1,9 +1,7 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
 import com.google.common.collect.Sets;
-import net.akashi.perk_weapons.Registry.ModEntities;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -11,14 +9,12 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
@@ -26,7 +22,6 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.network.PlayMessages;
 
 import java.util.Collection;
 import java.util.Set;
@@ -44,6 +39,7 @@ public class BaseArrow extends AbstractArrow {
 	private final Set<MobEffectInstance> effects = Sets.newHashSet();
 	private boolean fixedColor;
 	private float magicDamage = 0.0F;
+	private boolean ignoreInvulnerableTime = false;
 
 	public BaseArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
@@ -202,6 +198,7 @@ public class BaseArrow extends AbstractArrow {
 			pCompound.put("CustomPotionEffects", listtag);
 		}
 		pCompound.putFloat("magicDamage", this.magicDamage);
+		pCompound.putBoolean("ignoreInvulnerableTime", this.ignoreInvulnerableTime);
 	}
 
 	@Override
@@ -221,10 +218,15 @@ public class BaseArrow extends AbstractArrow {
 			this.updateColor();
 		}
 		this.magicDamage = pCompound.getFloat("magicDamage");
+		this.ignoreInvulnerableTime = pCompound.getBoolean("ignoreInvulnerableTime");
 	}
 
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
+		if (ignoreInvulnerableTime) {
+			var e = pResult.getEntity();
+			e.invulnerableTime = 0;
+		}
 		super.onHitEntity(pResult);
 		if (magicDamage > 0.0F) {
 			pResult.getEntity().hurt(this.damageSources().magic(), magicDamage);
@@ -293,5 +295,9 @@ public class BaseArrow extends AbstractArrow {
 
 	public void setMagicDamage(float damageAmount) {
 		this.magicDamage = damageAmount;
+	}
+
+	public void setIgnoreInvulnerableTime(boolean ignoreInvulnerableTime) {
+		this.ignoreInvulnerableTime = ignoreInvulnerableTime;
 	}
 }

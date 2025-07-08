@@ -24,7 +24,6 @@ import net.minecraft.world.phys.*;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -45,15 +44,17 @@ public class BeholderItem extends BaseCrossbowItem {
 	}
 
 	public BeholderItem(int chargeTicks, float damage, float velocity,
+	                    int ammoCapacity, int fireInterval,
 	                    float inaccuracy, float speedModifier,
 	                    boolean onlyMainHand, Properties pProperties) {
-		super(chargeTicks, damage, velocity, inaccuracy, speedModifier, onlyMainHand, pProperties);
+		super(chargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
+				speedModifier, onlyMainHand, pProperties);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerOppressorPropertyOverrides(this);
 	}
 
 	@Override
-	public @NotNull InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
 		if (pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
@@ -62,7 +63,8 @@ public class BeholderItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
+	                          int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		boolean isClient = level.isClientSide();
 		if (!isSelected || !entity.isCrouching()) {
@@ -113,8 +115,8 @@ public class BeholderItem extends BaseCrossbowItem {
 				activatePerk(level, stack, entity, target);
 				long time = level.getGameTime();
 				if (time - getLastSoundPlayedTime(stack) > 60) {
-					level.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
-							SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.PLAYERS, 0.6f, 0.9f);
+					level.playSound(null, entity, SoundEvents.ELDER_GUARDIAN_CURSE,
+							SoundSource.PLAYERS, 0.6f, 0.9f);
 					setLastSoundPlayedTime(stack, time);
 				}
 			}
@@ -192,7 +194,7 @@ public class BeholderItem extends BaseCrossbowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.beholder_perk_1")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.beholder_perk_2")));

@@ -33,14 +33,14 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	public ElfsHarpItem(Properties properties) {
 		super(properties);
 		if (FMLEnvironment.dist.isClient())
-			ClientHelper.registerPerkBowPropertyOverrides(this);
+			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
 
 	public ElfsHarpItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
 	                    float zoomFactor, boolean onlyMainHand, Properties properties) {
 		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		if (FMLEnvironment.dist.isClient())
-			ClientHelper.registerPerkBowPropertyOverrides(this);
+			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
 
 	@Override

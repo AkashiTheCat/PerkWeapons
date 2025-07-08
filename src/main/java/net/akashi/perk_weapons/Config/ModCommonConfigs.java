@@ -64,6 +64,7 @@ public class ModCommonConfigs {
 	public static TaintedFortuneProperties TAINTED_FORTUNE_PROPERTIES;
 	public static SonicBlasterProperties SONIC_BLASTER_PROPERTIES;
 	public static IncineratorProperties INCINERATOR_PROPERTIES;
+	public static QueenBeeProperties QUEEN_BEE_PROPERTIES;
 
 
 	static {
@@ -198,23 +199,27 @@ public class ModCommonConfigs {
 		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Beholder",
 				37, 12.0,
 				4.4, 0.5,
+				1, 0,
 				-0.5, (byte) 2,
 				(byte) 1, 40,
 				true);
 		LIBERATOR_PROPERTIES = new LiberatorProperties(BUILDER, "Liberator",
 				50, 10.0,
 				2.4, 1.0,
+				1, 0,
 				0.0, (byte) 1,
 				1, 2,
 				false);
 		TAINTED_FORTUNE_PROPERTIES = new TaintedFortuneProperties(BUILDER, "Tainted Fortune",
 				25, 10.0,
 				2.0, 1.2,
+				1, 0,
 				0.0, 1.0,
 				false);
 		SONIC_BLASTER_PROPERTIES = new SonicBlasterProperties(BUILDER, "Sonic Blaster",
 				37, 20.0,
 				0.1, 0.0,
+				1, 0,
 				-0.5, 1.0,
 				24, 1.0,
 				-1, false,
@@ -222,10 +227,18 @@ public class ModCommonConfigs {
 		INCINERATOR_PROPERTIES = new IncineratorProperties(BUILDER, "Incinerator",
 				80, 13.0,
 				3.2, 0.8,
-				-0.25, 7,
-				10, 10,
-				1, true);
-
+				7, 10,
+				-0.25, 10,
+				10, 1,
+				true);
+		QUEEN_BEE_PROPERTIES = new QueenBeeProperties(BUILDER, "Queen Bee",
+				10, 8D,
+				2.0, 1.2,
+				1, 0,
+				7, 4,
+				100, 1,
+				80, 40,
+				0.0, false);
 
 		SPEC = BUILDER.build();
 	}
@@ -276,6 +289,6 @@ public class ModCommonConfigs {
 		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
 		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);
 		ModItems.INCINERATOR.get().updateAttributesFromConfig(INCINERATOR_PROPERTIES);
-
+		ModItems.QUEEN_BEE_CROSSBOW.get().updateAttributesFromConfig(QUEEN_BEE_PROPERTIES);
 	}
 }

@@ -27,8 +27,9 @@ public class ModEntities {
 						.build(new ResourceLocation(PerkWeapons.MODID, name).toString()));
 	}
 
-	private static <T extends Entity> RegistryObject<EntityType<T>> EntityRegistry(String name, EntityType.EntityFactory<T> factory,
-	                                                                               float w, float h, int updateInterval) {
+	private static <T extends Entity> RegistryObject<EntityType<T>> EntityRegistry(
+			String name, EntityType.EntityFactory<T> factory,
+			float w, float h, int updateInterval) {
 		return ENTITIES.register(name,
 				() -> EntityType.Builder.of(factory, MobCategory.MISC)
 						.sized(w, h)
@@ -54,6 +55,7 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<StarShooterArrow>> STAR_SHOOTER_ARROW = EntityRegistry("star_shooter_arrow", StarShooterArrow::new);
 	public static final RegistryObject<EntityType<DevourerArrow>> DEVOURER_ARROW = EntityRegistry("devourer_arrow", DevourerArrow::new);
 	public static final RegistryObject<EntityType<IncineratorArrow>> INCINERATOR_ARROW = EntityRegistry("incinerator_arrow", IncineratorArrow::new);
+	public static final RegistryObject<EntityType<QueenBeeArrow>> QUEEN_BEE_ARROW = EntityRegistry("queen_bee_arrow", QueenBeeArrow::new);
 
 	//Util
 	public static final RegistryObject<EntityType<BeholderBeamEntity>> BEHOLDER_BEAM_SRC = EntityRegistry(

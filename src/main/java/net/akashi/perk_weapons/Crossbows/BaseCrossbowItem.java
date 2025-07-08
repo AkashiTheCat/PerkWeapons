@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Client.ClientHelper;
-import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
@@ -12,15 +11,15 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -32,13 +31,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -63,6 +62,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	private static final String TAG_CHARGED_PROJECTILES = "ChargedProjectiles";
 	protected int AMMO_CAPACITY = 1;
 	protected int MAX_CHARGE_TICKS = 25;
+	protected int FIRE_INTERVAL = 0;
 	protected float DAMAGE = 10.0F;
 	protected float VELOCITY = 4.0F;
 	protected float INACCURACY = 1.0F;
@@ -90,13 +90,16 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	 * To avoid a bug caused by the vanilla equipment update method, if speedModifier!=0, onlyAllowMainHand will be forced set true
 	 **/
 	public BaseCrossbowItem(int maxChargeTicks, float damage, float velocity,
-	                        float inaccuracy, float speedModifier, boolean onlyAllowMainHand,
+	                        float inaccuracy, int ammoCapacity, int fireInterval,
+	                        float speedModifier, boolean onlyAllowMainHand,
 	                        Properties pProperties) {
 		super(pProperties);
 		this.MAX_CHARGE_TICKS = maxChargeTicks;
 		this.DAMAGE = damage;
 		this.VELOCITY = velocity;
 		this.INACCURACY = inaccuracy;
+		this.AMMO_CAPACITY = ammoCapacity;
+		this.FIRE_INTERVAL = fireInterval;
 		this.onlyAllowMainHand = onlyAllowMainHand;
 		if (speedModifier != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -113,7 +116,10 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	//General overrides
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(
+			@NotNull Level pLevel,
+			Player pPlayer,
+			@NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
 		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
@@ -122,8 +128,11 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
 			consumeAndSetCharged(itemstack);
+			if (getChargedProjectileAmount(itemstack) > 0) {
+				pPlayer.getCooldowns().addCooldown(itemstack.getItem(), FIRE_INTERVAL);
+			}
 			return InteractionResultHolder.consume(itemstack);
-		} else if (!pPlayer.getProjectile(itemstack).isEmpty()) {
+		} else if (canLoadAmmo(pPlayer, itemstack)) {
 			if (!isCrossbowCharged(itemstack)) {
 				pPlayer.startUsingItem(pHand);
 			}
@@ -135,27 +144,29 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	@Override
-	public void onUseTick(Level level, LivingEntity livingEntity, ItemStack crossbowStack, int useTimeLeft) {
+	public void onUseTick(Level level, @NotNull LivingEntity livingEntity,
+	                      @NotNull ItemStack crossbowStack, int useTimeLeft) {
 		if (!level.isClientSide()) {
-			SoundEvent startSoundEvent = this.getStartSound(crossbowStack);
-			SoundEvent middleSoundEvent = this.getMiddleSound(crossbowStack);
+			SoundEventHolder startSoundEvent = this.getStartSound(crossbowStack);
+			SoundEventHolder middleSoundEvent = this.getMiddleSound(crossbowStack);
 			byte progress = getChargeProgressFrom0To10(livingEntity, crossbowStack);
 
-			if (progress == 2) {
-				level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
-						startSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
+			if (progress == (byte) (getMaxChargeTicks(crossbowStack) * 0.1) && startSoundEvent.soundEvent != null) {
+				level.playSound(null, livingEntity, startSoundEvent.soundEvent, SoundSource.PLAYERS,
+						startSoundEvent.volume, startSoundEvent.pitch);
 			}
 
-			if (progress == 6 && middleSoundEvent != null) {
-				level.playSound(null, livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
-						middleSoundEvent, SoundSource.PLAYERS, 0.5F, 1.0F);
+			if (progress == (byte) (getMaxChargeTicks(crossbowStack) * 0.6) && middleSoundEvent.soundEvent != null) {
+				level.playSound(null, livingEntity, middleSoundEvent.soundEvent, SoundSource.PLAYERS,
+						middleSoundEvent.volume, middleSoundEvent.pitch);
 			}
 
 		}
 	}
 
 	@Override
-	public void releaseUsing(ItemStack crossbowStack, Level level, LivingEntity shooter, int useTimeLeft) {
+	public void releaseUsing(@NotNull ItemStack crossbowStack, @NotNull Level level,
+	                         @NotNull LivingEntity shooter, int useTimeLeft) {
 		float progress = getChargeProgress(shooter, crossbowStack);
 
 		if (progress >= 1.0F && !isCrossbowCharged(crossbowStack)) {
@@ -169,20 +180,37 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			if (loaded) {
 				setCrossbowCharged(crossbowStack, true);
 				SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-				level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-						getEndSound(crossbowStack), soundsource, 1.0F,
-						1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+				SoundEventHolder endSound = getEndSound(crossbowStack);
+				if (endSound.soundEvent != null) {
+					float pitch = endSound.pitch / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F;
+					level.playSound(null, shooter, endSound.soundEvent, soundsource, endSound.volume, pitch);
+				}
 			}
 		}
 	}
 
 	@Override
-	public @NotNull UseAnim getUseAnimation(ItemStack pStack) {
+	public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
+		if (!entity.level().isClientSide() && entity instanceof Player player && player.isCrouching()) {
+			List<ItemStack> ammoStackList = getChargedProjectiles(stack);
+			Level level = player.level();
+			for (ItemStack ammoStack : ammoStackList) {
+				if (!player.addItem(ammoStack))
+					level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), ammoStack));
+			}
+			clearChargedProjectiles(stack);
+			setCrossbowCharged(stack, false);
+		}
+		return super.onEntitySwing(stack, entity);
+	}
+
+	@Override
+	public @NotNull UseAnim getUseAnimation(@NotNull ItemStack pStack) {
 		return UseAnim.CROSSBOW;
 	}
 
 	@Override
-	public int getUseDuration(ItemStack pStack) {
+	public int getUseDuration(@NotNull ItemStack pStack) {
 		return 72000;
 	}
 
@@ -234,6 +262,13 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 
 		awardPlayerStats(level, shooter, crossbowStack);
+	}
+
+	protected boolean canLoadAmmo(LivingEntity shooter, ItemStack crossbowStack) {
+		if (shooter instanceof Player player) {
+			return !player.getProjectile(crossbowStack).isEmpty();
+		}
+		return true;
 	}
 
 	//Ammo loading related
@@ -311,22 +346,24 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		ModPackets.NETWORK.send(PacketDistributor.ALL.noArg(),
 				new ArrowVelocitySyncPacket(projectile.getDeltaMovement(), projectile.getId()));
 
-		level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-				getShootSound(crossbowStack), SoundSource.PLAYERS, 1.0F, getShotPitch(shooter.getRandom()));
+		SoundEventHolder shootSound = getShootSound(crossbowStack);
+		if (shootSound.soundEvent != null) {
+			level.playSound(null, shooter, shootSound.soundEvent, SoundSource.PLAYERS,
+					shootSound.volume, getShotPitch(shootSound.pitch, shooter.getRandom()));
+		}
 	}
 
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
 		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
-		Item ammoItem = ammoStack.getItem();
 
-		if (ammoItem instanceof FireworkRocketItem) {
+		if (ammoStack.is(Items.FIREWORK_ROCKET)) {
 			return new FireworkRocketEntity(level, ammoStack, shooter, shooter.getX(),
 					shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true);
 		}
 
 		BaseArrow arrow = new BaseArrow(ModEntities.BASE_ARROW.get(), level, shooter);
-		if (ammoItem instanceof SpectralArrowItem) {
+		if (ammoStack.is(Items.SPECTRAL_ARROW)) {
 			arrow.setSpectralArrow(true);
 		} else {
 			arrow.setEffectsFromItem(ammoStack);
@@ -421,33 +458,43 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	//Miscellaneous
 	protected static float getShotPitch(RandomSource pRandom) {
 		boolean flag = pRandom.nextBoolean();
-		return getRandomShotPitch(flag, pRandom);
+		return getRandomShotPitch(1F, flag, pRandom);
 	}
 
-	protected static float getRandomShotPitch(boolean pIsHighPitched, RandomSource pRandom) {
+	protected static float getShotPitch(float basePitch, RandomSource pRandom) {
+		boolean flag = pRandom.nextBoolean();
+		return getRandomShotPitch(basePitch, flag, pRandom);
+	}
+
+	protected static float getRandomShotPitch(float basePitch, boolean pIsHighPitched, RandomSource pRandom) {
 		float f = pIsHighPitched ? 0.63F : 0.43F;
-		return 1.0F / (pRandom.nextFloat() * 0.5F + 1.8F) + f;
+		return basePitch / (pRandom.nextFloat() * 0.5F + 1.8F) + f;
 	}
 
-	protected SoundEvent getStartSound(ItemStack crossbowStack) {
+	@NotNull
+	protected SoundEventHolder getStartSound(ItemStack crossbowStack) {
 		return switch (crossbowStack.getEnchantmentLevel(QUICK_CHARGE)) {
-			case 1 -> SoundEvents.CROSSBOW_QUICK_CHARGE_1;
-			case 2 -> SoundEvents.CROSSBOW_QUICK_CHARGE_2;
-			case 3 -> SoundEvents.CROSSBOW_QUICK_CHARGE_3;
-			default -> SoundEvents.CROSSBOW_LOADING_START;
+			case 1 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_1, 0.5F, 1F);
+			case 2 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_2, 0.5F, 1F);
+			case 3 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_3, 0.5F, 1F);
+			default -> new SoundEventHolder(SoundEvents.CROSSBOW_LOADING_START, 0.5F, 1F);
 		};
 	}
 
-	protected SoundEvent getMiddleSound(ItemStack crossbowStack) {
-		return getMaxChargeTicks(crossbowStack) > 20 ? SoundEvents.CROSSBOW_LOADING_MIDDLE : null;
+	@NotNull
+	protected SoundEventHolder getMiddleSound(ItemStack crossbowStack) {
+		return getMaxChargeTicks(crossbowStack) > 20 ? new SoundEventHolder(SoundEvents.CROSSBOW_LOADING_MIDDLE,
+				0.5F, 1F) : SoundEventHolder.empty();
 	}
 
-	protected SoundEvent getEndSound(ItemStack crossbowStack) {
-		return SoundEvents.CROSSBOW_LOADING_END;
+	@NotNull
+	protected SoundEventHolder getEndSound(ItemStack crossbowStack) {
+		return new SoundEventHolder(SoundEvents.CROSSBOW_LOADING_END);
 	}
 
-	protected SoundEvent getShootSound(ItemStack crossbowStack) {
-		return SoundEvents.CROSSBOW_SHOOT;
+	@NotNull
+	protected SoundEventHolder getShootSound(ItemStack crossbowStack) {
+		return new SoundEventHolder(SoundEvents.CROSSBOW_SHOOT);
 	}
 
 	protected void awardPlayerStats(Level level, LivingEntity shooter, ItemStack crossbowStack) {
@@ -465,6 +512,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		this.DAMAGE = properties.DAMAGE.get().floatValue();
 		this.VELOCITY = properties.VELOCITY.get().floatValue();
 		this.INACCURACY = properties.INACCURACY.get().floatValue();
+		this.AMMO_CAPACITY = properties.AMMO_CAPACITY.get();
+		this.FIRE_INTERVAL = properties.FIRE_INTERVAL.get();
 		this.onlyAllowMainHand = properties.ONLY_MAINHAND.get();
 		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
 		if (speedModifier != 0.0F) {
@@ -512,7 +561,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	//Tooltip descriptions
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip,
+	                            @NotNull TooltipFlag isAdvanced) {
 		if (level == null || !level.isClientSide()) {
 			super.appendHoverText(stack, level, tooltip, isAdvanced);
 			return;
@@ -537,6 +587,11 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_charge_time",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(
 						getMaxChargeTicks(stack)))).withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_ammo_capacity",
+				TooltipHelper.convertToEmbeddedElement(getAmmoCapacity(stack))).withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_fire_interval",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(
+						FIRE_INTERVAL))).withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.empty());
 
 		ItemStack ammoStack = getLastChargedProjectile(stack);
@@ -554,10 +609,23 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 				}
 			}
 		}
+
+		Component ammo = Component.literal(String.valueOf(this.getChargedProjectileAmount(stack)))
+				.withStyle(ChatFormatting.GRAY);
+		tooltip.add(Component.translatable("tooltip.perk_weapons.crossbow_ammo_amount", ammo)
+				.withStyle(ChatFormatting.DARK_AQUA));
+
+		Minecraft mc = Minecraft.getInstance();
+		Component crouch = mc.options.keyShift.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		Component attack = mc.options.keyAttack.getTranslatedKeyMessage().copy()
+				.withStyle(ChatFormatting.AQUA);
+		tooltip.add(Component.translatable("tooltip.perk_weapons.ammo_unload_hint",
+				crouch, attack).withStyle(ChatFormatting.DARK_GRAY));
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		return List.of();
+		return new ArrayList<>();
 	}
 
 	public Component getWeaponDescription(ItemStack stack, Level level) {
