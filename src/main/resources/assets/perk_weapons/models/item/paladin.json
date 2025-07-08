@@ -1,39 +1,39 @@
 {
-    "parent": "perk_weapons:item/base/base_crossbow",
+    "parent": "perk_weapons:item/base/base_large_crossbow",
     "textures": {
-        "layer0": "perk_weapons:item/crossbow/tainted_fortune/tainted_fortune_standby"
+        "layer0": "perk_weapons:item/crossbow/paladin/paladin_standby"
     },
     "overrides": [
         {
             "predicate": {
                 "perk_weapons:pull": 0.05
             },
-            "model": "perk_weapons:item/tainted_fortune_pulling_0"
+            "model": "perk_weapons:item/paladin_pulling_0"
         },
         {
             "predicate": {
                 "perk_weapons:pull": 0.45
             },
-            "model": "perk_weapons:item/tainted_fortune_pulling_1"
+            "model": "perk_weapons:item/paladin_pulling_1"
         },
         {
             "predicate": {
-                "perk_weapons:pull": 0.85
+                "perk_weapons:pull": 0.8
             },
-            "model": "perk_weapons:item/tainted_fortune_pulling_2"
+            "model": "perk_weapons:item/paladin_pulling_2"
         },
         {
             "predicate": {
                 "perk_weapons:charged": 1
             },
-            "model": "perk_weapons:item/tainted_fortune_arrow"
+            "model": "perk_weapons:item/paladin_arrow"
         },
         {
             "predicate": {
                 "perk_weapons:charged": 1,
                 "perk_weapons:firework": 1
             },
-            "model": "perk_weapons:item/tainted_fortune_firework"
+            "model": "perk_weapons:item/paladin_firework"
         }
     ]
 }

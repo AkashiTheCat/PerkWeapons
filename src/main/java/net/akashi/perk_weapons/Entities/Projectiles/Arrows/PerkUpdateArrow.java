@@ -71,6 +71,7 @@ public class PerkUpdateArrow extends BaseArrow {
 					item = pItem;
 				}
 				if (perkItemStack != ItemStack.EMPTY) {
+					System.out.println(1);
 					item.gainPerkLevel(player, perkItemStack);
 				}
 			}

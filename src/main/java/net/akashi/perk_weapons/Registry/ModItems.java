@@ -165,10 +165,16 @@ public class ModItems {
 			BOW_TAB);
 	public static final RegistryObject<IncineratorItem> INCINERATOR = addToTab(
 			ITEMS.register("incinerator", () -> new IncineratorItem(new Item.Properties()
-					.rarity(Rarity.UNCOMMON))), BOW_TAB);
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 	public static final RegistryObject<QueenBeeCrossbowItem> QUEEN_BEE_CROSSBOW = addToTab(
 			ITEMS.register("queen_bee_crossbow", () -> new QueenBeeCrossbowItem(new Item.Properties()
 					.durability(1280)
-					.rarity(Rarity.UNCOMMON)))
-			, BOW_TAB);
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
+	public static final RegistryObject<PaladinItem> PALADIN = addToTab(
+			ITEMS.register("paladin", () -> new PaladinItem(new Item.Properties()
+					.durability(1280)
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 }

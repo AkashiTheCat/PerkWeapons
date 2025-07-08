@@ -4,6 +4,7 @@ import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
+import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -19,6 +20,7 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,9 +28,9 @@ import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
+@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public static final String TAG_LAST_PERK_LEVEL_CHANGE_TIME = "last_perk_change";
-	public static final String TAG_PERK_LEVEL = "perk_level";
 	public static byte MAX_PERK_LEVEL = 5;
 	public static float PERK_BUFF = 0.1F;
 	public static int PERK_DROP_INTERVAL = 40;
@@ -53,12 +55,12 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
 	                          int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
-		int nbtPerkLevel = getNbtPerkLevel(stack);
-		if (nbtPerkLevel == 0)
+		int perkLevel = (int) getPerkLevel(null, stack);
+		if (perkLevel == 0)
 			return;
 
-		if (Math.ceil(getPerkLevel((LivingEntity) entity, stack)) < nbtPerkLevel) {
-			setNbtPerkLevel(stack, nbtPerkLevel - 1);
+		if (Math.ceil(getPerkLevel((LivingEntity) entity, stack)) < perkLevel) {
+			setPerkLevel(stack, (byte) (perkLevel - 1));
 			setLastPerkChangeTime(stack, level.getGameTime());
 		}
 	}
@@ -73,7 +75,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 			arrow.setEffectsFromItem(arrowStack);
 		}
 
-		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * getNbtPerkLevel(bowStack)) / VELOCITY);
+		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * getPerkLevel(player, bowStack)) / VELOCITY);
 		return arrow;
 	}
 
@@ -90,36 +92,6 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	@Override
 	public byte getMaxPerkLevel() {
 		return MAX_PERK_LEVEL;
-	}
-
-	@Override
-	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
-		long timeElapsed = entity.level().getGameTime() - getLastPerkChangeTime(stack);
-		return Math.max(getNbtPerkLevel(stack) - (float) timeElapsed / PERK_DROP_INTERVAL, 0);
-	}
-
-	@Override
-	public boolean isPerkMax(LivingEntity entity, ItemStack stack) {
-		return ((byte) Math.ceil(getPerkLevel(entity, stack))) == MAX_PERK_LEVEL;
-	}
-
-	@Override
-	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
-		int level = getNbtPerkLevel(stack);
-		setLastPerkChangeTime(stack, entity.level().getGameTime());
-		if (level < getMaxPerkLevel()) {
-			setNbtPerkLevel(stack, level + 1);
-		}
-	}
-
-	public void setNbtPerkLevel(ItemStack stack, int level) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putInt(TAG_PERK_LEVEL, level);
-	}
-
-	public int getNbtPerkLevel(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
-		return tag.contains(TAG_PERK_LEVEL) ? tag.getInt(TAG_PERK_LEVEL) : 0;
 	}
 
 	public void setLastPerkChangeTime(ItemStack stack, long time) {
@@ -145,7 +117,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 
 			if (!stack.isEmpty()) {
 				ForestKeeperItem item = (ForestKeeperItem) stack.getItem();
-				item.setNbtPerkLevel(stack, 0);
+				item.setPerkLevel(stack, (byte) 0);
 			}
 		}
 	}

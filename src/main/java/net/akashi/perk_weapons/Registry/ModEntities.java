@@ -56,6 +56,7 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<DevourerArrow>> DEVOURER_ARROW = EntityRegistry("devourer_arrow", DevourerArrow::new);
 	public static final RegistryObject<EntityType<IncineratorArrow>> INCINERATOR_ARROW = EntityRegistry("incinerator_arrow", IncineratorArrow::new);
 	public static final RegistryObject<EntityType<QueenBeeArrow>> QUEEN_BEE_ARROW = EntityRegistry("queen_bee_arrow", QueenBeeArrow::new);
+	public static final RegistryObject<EntityType<PaladinArrow>> PALADIN_ARROW = EntityRegistry("paladin_arrow", PaladinArrow::new);
 
 	//Util
 	public static final RegistryObject<EntityType<BeholderBeamEntity>> BEHOLDER_BEAM_SRC = EntityRegistry(

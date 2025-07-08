@@ -1,26 +1,19 @@
 package net.akashi.perk_weapons.Bows;
 
 import com.google.common.collect.ImmutableMultimap;
-import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.PurgatoryProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -29,10 +22,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -44,6 +34,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
+	public static double KNOCKBACK_RESISTANCE = 10;
 	public static byte PIERCE_LEVEL = 5;
 	public static int FUSE_TIME = 30;
 	public static float EXP_INNER_R = 2;
@@ -57,6 +48,7 @@ public class PurgatoryItem extends BaseBowItem {
 
 	public PurgatoryItem(Properties properties) {
 		super(properties);
+		buildAttributeModifierMap();
 		RemoveGeneralEnchant(FLAMING_ARROWS);
 		RemoveGeneralEnchant(UNBREAKING);
 	}
@@ -65,14 +57,21 @@ public class PurgatoryItem extends BaseBowItem {
 	                     float speedModifier, float knockBackResistance,
 	                     float zoomFactor, boolean onlyMainHand, Properties properties) {
 		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-				"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-		builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
-				"Tool modifier", knockBackResistance, AttributeModifier.Operation.MULTIPLY_TOTAL));
-		this.AttributeModifiers = builder.build();
+		KNOCKBACK_RESISTANCE = knockBackResistance;
+		buildAttributeModifierMap();
 		RemoveGeneralEnchant(FLAMING_ARROWS);
 		RemoveGeneralEnchant(UNBREAKING);
+	}
+
+	private void buildAttributeModifierMap() {
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		if (AttributeModifiers != null)
+			builder.putAll(AttributeModifiers);
+		builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(
+				KNOCKBACK_RESISTANCE_UUID, "Knockback Resistance", KNOCKBACK_RESISTANCE,
+				AttributeModifier.Operation.ADDITION
+		));
+		AttributeModifiers = builder.build();
 	}
 
 	@Override
@@ -112,6 +111,7 @@ public class PurgatoryItem extends BaseBowItem {
 	public void updateAttributesFromConfig(BowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof PurgatoryProperties pProperties) {
+			KNOCKBACK_RESISTANCE = pProperties.KNOCKBACK_RESISTANCE.get();
 			FUSE_TIME = pProperties.FUSE_TIME.get();
 			PIERCE_LEVEL = pProperties.PIERCE_LEVEL.get().byteValue();
 			EXP_INNER_R = pProperties.EXPLOSION_PROPERTIES.INNER_R.get().floatValue();
@@ -122,6 +122,7 @@ public class PurgatoryItem extends BaseBowItem {
 			EXP_IGNORE_WALL = pProperties.EXPLOSION_PROPERTIES.IGNORE_WALL.get();
 			INTERNAL_EXP_DURATION = pProperties.INTERNAL_EXP_EFFECT_TIME.get();
 			INTERNAL_EXP_LEVEL = pProperties.INTERNAL_EXP_EFFECT_LEVEL.get();
+			buildAttributeModifierMap();
 		}
 		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
 	}

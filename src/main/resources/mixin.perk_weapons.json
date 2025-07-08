@@ -8,5 +8,8 @@
   ],
   "server": [
   ],
-  "mixins": ["AnvilMenuMixin"]
+  "mixins": [
+    "AnvilMenuMixin",
+    "LivingEntityMixin"
+  ]
 }

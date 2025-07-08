@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/paladin",
+    "textures": {
+        "layer0": "perk_weapons:item/crossbow/paladin/paladin_pulling_2"
+    }
+}

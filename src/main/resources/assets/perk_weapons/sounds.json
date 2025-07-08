@@ -1,0 +1,11 @@
+{
+  "paladin_fire": {
+    "sounds": [
+      {
+        "name": "perk_weapons:paladin_fire",
+        "volume": 1.0,
+        "pitch": 1.0
+      }
+    ]
+  }
+}

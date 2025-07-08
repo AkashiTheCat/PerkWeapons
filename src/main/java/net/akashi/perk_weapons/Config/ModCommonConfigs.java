@@ -65,6 +65,7 @@ public class ModCommonConfigs {
 	public static SonicBlasterProperties SONIC_BLASTER_PROPERTIES;
 	public static IncineratorProperties INCINERATOR_PROPERTIES;
 	public static QueenBeeProperties QUEEN_BEE_PROPERTIES;
+	public static PaladinProperties PALADIN_PROPERTIES;
 
 
 	static {
@@ -132,7 +133,7 @@ public class ModCommonConfigs {
 				10, 2.5F,
 				4.0, 6.0,
 				60, 5,
-				0.5, 40,
+				50, 40,
 				200);
 		SCOURGE_PROPERTIES = new ScourgeProperties(BUILDER, "Scourge",
 				8, 1.0,
@@ -159,7 +160,8 @@ public class ModCommonConfigs {
 				4.5, 0.2,
 				4, -1.0,
 				0.15, true,
-				30, 3, 6,
+				1.0, 30,
+				3, 6,
 				30, 8,
 				1.0, false,
 				20, 1);
@@ -239,6 +241,15 @@ public class ModCommonConfigs {
 				100, 1,
 				80, 40,
 				0.0, false);
+		PALADIN_PROPERTIES = new PaladinProperties(BUILDER, "Paladin",
+				20, 10.0,
+				3.5, 1.0,
+				1, 0,
+				1.0, 50,
+				-30, 10,
+				0.07, 10,
+				60, -0.3,
+				true);
 
 		SPEC = BUILDER.build();
 	}
@@ -290,5 +301,6 @@ public class ModCommonConfigs {
 		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);
 		ModItems.INCINERATOR.get().updateAttributesFromConfig(INCINERATOR_PROPERTIES);
 		ModItems.QUEEN_BEE_CROSSBOW.get().updateAttributesFromConfig(QUEEN_BEE_PROPERTIES);
+		ModItems.PALADIN.get().updateAttributesFromConfig(PALADIN_PROPERTIES);
 	}
 }

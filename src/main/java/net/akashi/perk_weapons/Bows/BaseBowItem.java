@@ -50,7 +50,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	public float ZOOM_FACTOR = 0.1f;
 	public float INACCURACY = 1.0f;
 
-	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			INFINITY_ARROWS,
 			FLAMING_ARROWS,
 			POWER_ARROWS,
@@ -59,7 +59,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			UNBREAKING,
 			MOB_LOOTING
 	));
-	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
+	private final Set<Enchantment> ConflictEnchants = new HashSet<>();
 
 	@Override
 	public boolean isValidRepairItem(@NotNull ItemStack pStack, @NotNull ItemStack pRepairCandidate) {

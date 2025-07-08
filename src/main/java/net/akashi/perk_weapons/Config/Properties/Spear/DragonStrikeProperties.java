@@ -25,7 +25,7 @@ public class DragonStrikeProperties extends SpearProperties {
 		AFFECT_DURATION = builder.comment("Affect Cloud Duration(In Ticks)")
 				.defineInRange("AffectCloudDuration", defaultAffectCloudDuration, 0, 3600);
 		MAGIC_RESISTANCE = builder.comment("Percentage Of Magic Resistance Given When Held In Hand")
-				.defineInRange("MagicResistance", defaultMagicResistance, 0, 1);
+				.defineInRange("MagicResistance", defaultMagicResistance, 0, 100);
 		EFFECT_DAMAGE = builder.comment("Damage Per Second Of The Affect Cloud Effect")
 				.defineInRange("EffectDamage", defaultAffectCloudDamage, 1, Integer.MAX_VALUE);
 		RETURN_TIME = builder.comment("How Long In Ticks Will The Spear Automatically Return If Didn't Hit Anything")

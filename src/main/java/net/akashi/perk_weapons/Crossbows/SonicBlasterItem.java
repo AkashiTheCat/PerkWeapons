@@ -33,7 +33,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 public class SonicBlasterItem extends BaseCrossbowItem {
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("add5510b-4b2c-773b-3211-3e42a2331a49");
 	public static final String TAG_AMMO_LOADED = "ammo_loaded";
-	public static float KNOCKBACK_RESISTANCE = 1.0F;
+	public static float KNOCKBACK_RESISTANCE = 10;
 	public static int MAX_ATTACK_RANGE = 24;
 	public static double DAMAGE_RADIUS = 1.0;
 	public static int PIERCE_LEVEL = -1;
@@ -42,6 +42,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 
 	public SonicBlasterItem(Properties pProperties) {
 		super(pProperties);
+		buildAttributeModifierMap();
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
 		RemoveGeneralEnchant(POWER_ARROWS);
@@ -56,6 +57,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	                        boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
 				speedModifier, onlyAllowMainHand, pProperties);
+		buildAttributeModifierMap();
 		AMMO_CAPACITY = 0;
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
@@ -63,15 +65,15 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		if (PIERCE_LEVEL == -1) {
 			RemoveGeneralEnchant(PIERCING);
 		}
+	}
+
+	private void buildAttributeModifierMap() {
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		if (speedModifier != 0.0F) {
-			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.onlyAllowMainHand = true;
-		}
+		if (AttributeModifiers != null)
+			builder.putAll(AttributeModifiers);
 		if (KNOCKBACK_RESISTANCE != 0.0F) {
 			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
-					"Tool modifier", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.MULTIPLY_TOTAL));
+					"Tool modifier", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADDITION));
 			this.onlyAllowMainHand = true;
 		}
 		this.AttributeModifiers = builder.build();
@@ -87,20 +89,8 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 			PIERCE_LEVEL = sProperties.PIERCE_LEVEL.get();
 			HAS_KNOCKBACK = sProperties.ENABLE_KNOCKBACK.get();
 			KNOCKBACK_FORCE = sProperties.KNOCKBACK_FORCE.get();
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			float speedModifier = sProperties.SPEED_MODIFIER.get().floatValue();
 			KNOCKBACK_RESISTANCE = sProperties.KNOCKBACK_RESISTANCE.get().floatValue();
-			if (speedModifier != 0.0F) {
-				builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-						"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-				this.onlyAllowMainHand = true;
-			}
-			if (KNOCKBACK_RESISTANCE != 0.0F) {
-				builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
-						"Tool modifier", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.MULTIPLY_TOTAL));
-				this.onlyAllowMainHand = true;
-			}
-			this.AttributeModifiers = builder.build();
+			buildAttributeModifierMap();
 
 			if (PIERCE_LEVEL == -1 && this.GeneralEnchants.contains(PIERCING)) {
 				RemoveGeneralEnchant(PIERCING);

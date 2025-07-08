@@ -26,6 +26,8 @@ public class PerkIndicatorHud {
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
+		if (player == null)
+			return;
 
 		ItemStack stack = ItemStack.EMPTY;
 		if (player.getMainHandItem().getItem() instanceof IPerkItem) {
@@ -49,7 +51,7 @@ public class PerkIndicatorHud {
 			int centerY = Math.round((float) screenHeight / 2);
 
 			byte MaxPerkLevel = perkItem.getMaxPerkLevel();
-			startY = centerY + 10;
+			startY = centerY + 20;
 
 			if (MaxPerkLevel < 5) {
 				startX = centerX - 3 * MaxPerkLevel;

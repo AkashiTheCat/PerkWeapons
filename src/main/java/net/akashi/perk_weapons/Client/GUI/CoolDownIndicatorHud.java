@@ -1,19 +1,16 @@
 package net.akashi.perk_weapons.Client.GUI;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
-import net.akashi.perk_weapons.Util.IPerkItem;
+import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -29,7 +26,8 @@ public class CoolDownIndicatorHud {
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
-		Level level = mc.level;
+		if (player == null)
+			return;
 
 		ItemStack stack = ItemStack.EMPTY;
 		if (player.getMainHandItem().getItem() instanceof ICoolDownItem) {
@@ -49,7 +47,7 @@ public class CoolDownIndicatorHud {
 
 
 			int startX = Math.round((float) screenWidth / 2);
-			if (coolDownItem instanceof BaseBowItem && ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get()) {
+			if (coolDownItem instanceof IDoubleLineCrosshairItem && ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get()) {
 				startX += 32;
 			} else {
 				startX += 10;
@@ -59,7 +57,7 @@ public class CoolDownIndicatorHud {
 			byte drawHeight = (byte) (coolDownItem.getCoolDownProgress(player, stack) * 21);
 			guiGraphics.blit(HUD_TEXTURE, startX, startY, 0, 7, 2, 21);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.8F);
-			guiGraphics.blit(HUD_TEXTURE, startX, startY, 3, 7, 2, drawHeight);
+			guiGraphics.blit(HUD_TEXTURE, startX, startY + 21 - drawHeight, 3, 7, 2, drawHeight);
 			poseStack.popPose();
 		}
 	});

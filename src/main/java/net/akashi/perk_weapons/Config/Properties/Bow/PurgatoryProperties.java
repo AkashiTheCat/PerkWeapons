@@ -4,6 +4,7 @@ import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class PurgatoryProperties extends BowProperties {
+	public ForgeConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
 	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
 	public ForgeConfigSpec.IntValue FUSE_TIME;
 	public ForgeConfigSpec.IntValue INTERNAL_EXP_EFFECT_TIME;
@@ -12,13 +13,17 @@ public class PurgatoryProperties extends BowProperties {
 
 	public PurgatoryProperties(ForgeConfigSpec.Builder builder, String name,
 	                           int defaultDrawTime, double defaultDamage, double defaultVelocity,
-	                           double defaultInaccuracy, int defaultPierceLevel, double defaultSpeedModifier,
-	                           double defaultZoomFactor, boolean onlyMainHand,
+	                           double defaultInaccuracy, int defaultPierceLevel,
+	                           double defaultSpeedModifier, double defaultZoomFactor,
+	                           boolean onlyMainHand, double defaultKnockbackResistance,
 	                           int fuseTime, double expInnerR, double expOuterR,
 	                           double expInnerDmg, double expOuterDmg, double expKnockback,
 	                           boolean expIgnoreWall, int internalExpTime, int internalExpLevel) {
 		super(builder, name, defaultDrawTime, defaultDamage,
 				defaultVelocity, defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand, false);
+		KNOCKBACK_RESISTANCE = builder.comment("Knockback Resistance Provided By " + name + " When In MainHand")
+				.comment("1.0 means You Wont Take Any Knockback At All")
+				.defineInRange("KnockbackResistance", defaultKnockbackResistance, -10.0, 1.0);
 		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name + "'s Arrow")
 				.defineInRange("PierceLevel", defaultPierceLevel, 0, 127);
 

@@ -23,6 +23,8 @@ public class PerkWeapons {
 		ModEntities.ENTITIES.register(bus);
 		ModEffects.EFFECTS.register(bus);
 		ModEnchantments.ENCHANTMENTS.register(bus);
+		ModAttributes.ATTRIBUTES.register(bus);
+		ModSoundEvents.SOUND_EVENTS.register(bus);
 
 		ModPackets.registerPackets();
 

@@ -9,7 +9,6 @@ import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -26,8 +25,6 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem {
-	public static final String TAG_PERK_LEVEL = "perk_level";
-
 	private static int POISON_LEVEL = 4;
 	private static int POISON_TICKS = 100;
 	private static byte MAX_PERK_LEVEL = 7;
@@ -58,7 +55,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 			pPlayer.addEffect(new MobEffectInstance(
 					ModEffects.ROYAL_JELLY.get(), ROYAL_JELLY_TICKS, ROYAL_JELLY_LEVEL - 1
 			));
-			setNbtPerkLevel(stack, 0);
+			setPerkLevel(stack, (byte) 0);
 			pPlayer.getCooldowns().addCooldown(stack.getItem(), CROUCH_USE_COOLDOWN_TICKS);
 			pLevel.playSound(null, pPlayer, SoundEvents.HONEY_DRINK, SoundSource.PLAYERS,
 					1F, 1F);
@@ -94,31 +91,6 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 	@Override
 	public byte getMaxPerkLevel() {
 		return MAX_PERK_LEVEL;
-	}
-
-	@Override
-	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
-		setNbtPerkLevel(stack, Math.min(getNbtPerkLevel(stack) + 1, getMaxPerkLevel()));
-	}
-
-	@Override
-	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
-		return getNbtPerkLevel(stack);
-	}
-
-	@Override
-	public boolean isPerkMax(LivingEntity entity, ItemStack stack) {
-		return getNbtPerkLevel(stack) == getMaxPerkLevel();
-	}
-
-	private void setNbtPerkLevel(ItemStack stack, int level) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putByte(TAG_PERK_LEVEL, (byte) level);
-	}
-
-	private int getNbtPerkLevel(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
-		return tag.getByte(TAG_PERK_LEVEL);
 	}
 
 	@Override

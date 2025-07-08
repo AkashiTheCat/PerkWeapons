@@ -1,44 +1,39 @@
 package net.akashi.perk_weapons.Spears;
 
+import com.google.common.collect.ImmutableMultimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.DragonStrikeProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownDragonStrike;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
-import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Registry.ModAttributes;
 import net.akashi.perk_weapons.Registry.ModEntities;
-import net.akashi.perk_weapons.Registry.ModItems;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
+	public static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("2c00bbd1-4733-4d9b-ace2-ff5d6cab868e");
 	public static final String TAG_LAST_USED = "lastUsed";
-	private static double MagicResistance = 0.5;
+	private static double MAGIC_RESISTANCE = 50;
 	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
 	public static float MAX_AFFECT_CLOUD_RADIUS = 6.0F;
 	public static int AFFECT_CLOUD_DURATION = 60;
@@ -48,29 +43,42 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	public DragonStrikeItem(Properties pProperties) {
 		super(pProperties);
+		buildAttributeModifiers();
 		this.RemoveGeneralEnchant(LOYALTY);
 	}
 
 	public DragonStrikeItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
 	                        boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
+		buildAttributeModifiers();
 		this.RemoveGeneralEnchant(LOYALTY);
+	}
+
+	private void buildAttributeModifiers() {
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		if (AttributeModifiers != null)
+			builder.putAll(AttributeModifiers);
+		builder.put(ModAttributes.MAGIC_RESISTANCE.get(), new AttributeModifier(
+				MAGIC_RESISTANCE_UUID, "Magic Resistance", MAGIC_RESISTANCE,
+				AttributeModifier.Operation.MULTIPLY_BASE
+		));
+		AttributeModifiers = builder.build();
 	}
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof DragonStrikeProperties dProperties) {
-			MagicResistance = dProperties.MAGIC_RESISTANCE.get();
+			MAGIC_RESISTANCE = dProperties.MAGIC_RESISTANCE.get();
 			COOLDOWN_TICKS = dProperties.ABILITY_COOLDOWN_TIME.get();
 			INIT_AFFECT_CLOUD_RADIUS = dProperties.INIT_AFFECT_RADIUS.get().floatValue();
 			MAX_AFFECT_CLOUD_RADIUS = dProperties.MAX_AFFECT_RADIUS.get().floatValue();
 			AFFECT_CLOUD_DURATION = dProperties.AFFECT_DURATION.get();
 			EFFECT_DAMAGE = dProperties.EFFECT_DAMAGE.get();
 			RETURN_TIME = dProperties.RETURN_TIME.get();
+			buildAttributeModifiers();
 		}
 	}
-
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
@@ -78,7 +86,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		ItemStack stack = pPlayer.getItemInHand(pHand);
 		if (getCoolDownProgress(pPlayer, stack) == 1.0 && pPlayer.isCrouching()) {
 			double x = pPlayer.getX();
@@ -134,8 +142,6 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 		List<Component> list = new ArrayList<>();
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_2")));
-		list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.dragon_strike_perk_3",
-				(float) MagicResistance));
 
 		list.add(Component.empty());
 		list.add(TooltipHelper.getCrouchUseAbilityHint());
@@ -143,14 +149,5 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_ability_1")));
 
 		return list;
-	}
-
-	@SubscribeEvent
-	public static void onPlayerHurt(LivingHurtEvent event) {
-		if (event.getEntity() instanceof Player player && event.getSource().is(DamageTypes.MAGIC)
-				&& player.getMainHandItem().is(ModItems.DRAGON_STRIKE.get())) {
-			float reducedDamage = event.getAmount() * (1F - (float) MagicResistance);
-			event.setAmount(reducedDamage);
-		}
 	}
 }

@@ -9,8 +9,6 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -32,15 +30,11 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -51,7 +45,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	public float MELEE_SPEED = 1.1F;
 	public float THROW_DAMAGE = 5F;
 
-	private final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			POWER_ARROWS,
 			KNOCKBACK,
 			MOB_LOOTING,
@@ -59,7 +53,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 			MENDING,
 			UNBREAKING
 	));
-	private final List<Enchantment> ConflictEnchants = new ArrayList<>(Arrays.asList(
+	private final Set<Enchantment> ConflictEnchants = new HashSet<>(Set.of(
 			SMITE,
 			BANE_OF_ARTHROPODS,
 			SHARPNESS
@@ -107,7 +101,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	}
 
 	@Override
-	public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
+	public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
 			int usedTicks = this.getUseDuration(pStack) - pTimeLeft;
 			if (usedTicks >= 10) {
@@ -179,7 +173,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer,
+	                                                       @NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
 		if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
 			return InteractionResultHolder.fail(itemstack);
@@ -246,7 +241,9 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	//Tooltips
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level,
+	                            @NotNull List<Component> tooltip,
+	                            @NotNull TooltipFlag isAdvanced) {
 		if (level == null || !level.isClientSide()) {
 			super.appendHoverText(stack, level, tooltip, isAdvanced);
 			return;

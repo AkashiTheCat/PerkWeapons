@@ -31,6 +31,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -72,7 +73,7 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	@Override
-	public boolean hurtEnemy(ItemStack pStack, LivingEntity pTarget, LivingEntity pAttacker) {
+	public boolean hurtEnemy(@NotNull ItemStack pStack, LivingEntity pTarget, @NotNull LivingEntity pAttacker) {
 		pTarget.addEffect(new MobEffectInstance(MobEffects.WITHER, WITHER_DURATION, WITHER_LEVEL - 1));
 		pTarget.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, SLOWNESS_DURATION, SLOWNESS_LEVEL - 1));
 		return super.hurtEnemy(pStack, pTarget, pAttacker);
@@ -107,7 +108,7 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		Level level = pPlayer.level();
 		if (pPlayer.isCrouching() && !level.isClientSide()) {
 			ItemStack stack = pPlayer.getItemInHand(pHand);
@@ -127,7 +128,8 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
+	                          int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		if (!level.isClientSide() && entity instanceof Player player) {
 			long tickPassed = level.getGameTime() - getLastAbilityUsedTime(stack);

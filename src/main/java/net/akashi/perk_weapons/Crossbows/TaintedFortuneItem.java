@@ -23,6 +23,7 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 
 	public TaintedFortuneItem(Properties pProperties) {
 		super(pProperties);
+		buildAttributeModifierMap();
 	}
 
 	public TaintedFortuneItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
@@ -30,13 +31,16 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 	                          boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
 				speedModifier, onlyAllowMainHand, pProperties);
-		if (KNOCKBACK_MODIFIER != 0.0F) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
-					"Tool modifier", KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADDITION));
-			this.OffhandAttributeModifiers = builder.build();
-		}
+		buildAttributeModifierMap();
+	}
 
+	private void buildAttributeModifierMap() {
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> offHandMapBuilder = ImmutableMultimap.builder();
+		if (KNOCKBACK_MODIFIER != 0.0F) {
+			offHandMapBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
+					"Tool modifier", KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADDITION));
+		}
+		this.OffhandAttributeModifiers = offHandMapBuilder.build();
 	}
 
 	@Override
@@ -55,12 +59,7 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof TaintedFortuneProperties tProperties) {
 			KNOCKBACK_MODIFIER = tProperties.KNOCKBACK_MODIFIER.get().floatValue();
-			if (KNOCKBACK_MODIFIER != 0.0F) {
-				ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-				builder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
-						"Tool modifier", KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADDITION));
-				this.OffhandAttributeModifiers = builder.build();
-			}
+			buildAttributeModifierMap();
 		}
 	}
 

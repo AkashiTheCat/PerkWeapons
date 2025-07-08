@@ -86,33 +86,81 @@ public class TooltipHelper {
 	}
 
 	public static MutableComponent getRatioModifierWithStyle(float deltaRatio) {
+		return getRatioModifierWithStyle(deltaRatio, true);
+	}
+
+	public static MutableComponent getRatioModifierWithStyle(float deltaRatio, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.literal(getPercentageWithSign(deltaRatio));
-		return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return deltaRatio >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getRatioModifierWithStyle(String key, float deltaRatio) {
+		return getRatioModifierWithStyle(key, deltaRatio, true);
+	}
+
+	public static MutableComponent getRatioModifierWithStyle(String key, float deltaRatio, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.translatable(key, getPercentageWithSign(deltaRatio));
-		return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return deltaRatio >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return deltaRatio >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getDeltaModifierWithStyle(String key, int delta) {
+		return getDeltaModifierWithStyle(key, delta, true);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(String key, int delta, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.translatable(key, getDeltaWithSign(delta));
-		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return delta >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getDeltaModifierWithStyle(String key, float delta) {
+		return getDeltaModifierWithStyle(key, delta, true);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(String key, float delta, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.translatable(key, getDeltaWithSign(delta));
-		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return delta >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getDeltaModifierWithStyle(int delta) {
+		return getDeltaModifierWithStyle(delta, true);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(int delta, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.literal(getDeltaWithSign(delta));
-		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return delta >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getDeltaModifierWithStyle(float delta) {
+		return getDeltaModifierWithStyle(delta, true);
+	}
+
+	public static MutableComponent getDeltaModifierWithStyle(float delta, boolean isBuffWhenPositive) {
 		MutableComponent component = Component.literal(getDeltaWithSign(delta));
-		return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		if (isBuffWhenPositive) {
+			return delta >= 0 ? setBuffStyle(component) : setDebuffStyle(component);
+		} else {
+			return delta >= 0 ? setDebuffStyle(component) : setBuffStyle(component);
+		}
 	}
 
 	public static MutableComponent getAmmoCapacityModifier(int delta) {

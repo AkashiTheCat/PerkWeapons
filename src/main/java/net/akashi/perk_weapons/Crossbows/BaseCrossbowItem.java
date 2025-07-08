@@ -53,7 +53,6 @@ import java.util.function.Predicate;
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrosshairItem {
-
 	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
@@ -67,7 +66,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	protected float VELOCITY = 4.0F;
 	protected float INACCURACY = 1.0F;
 
-	protected final List<Enchantment> GeneralEnchants = new ArrayList<>(Arrays.asList(
+	protected final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			QUICK_CHARGE,
 			MULTISHOT,
 			PIERCING,
@@ -77,7 +76,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			MOB_LOOTING
 	));
 
-	protected final List<Enchantment> ConflictEnchants = new ArrayList<>();
+	protected final Set<Enchantment> ConflictEnchants = new HashSet<>();
 
 
 	public BaseCrossbowItem(Properties pProperties) {
@@ -286,7 +285,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 		ItemStack ammoToLoad = ammoStack.copyWithCount(1);
 
-		if (isShooterPlayer && !isCreative) {
+		if (isShooterPlayer && !isCreative && getCrossbowEnchantmentLevel(crossbowStack, INFINITY_ARROWS) == 0) {
 			ammoStack.shrink(1);
 			if (ammoStack.isEmpty())
 				((Player) shooter).getInventory().removeItem(ammoStack);
@@ -306,7 +305,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	public float getChargeProgress(LivingEntity shooter, ItemStack crossbowStack) {
-		return Math.min((float) shooter.getTicksUsingItem() / (float) getMaxChargeTicks(crossbowStack), 1.0f);
+		return Math.min((float) shooter.getTicksUsingItem() / getMaxChargeTicks(crossbowStack), 1.0f);
 	}
 
 	//Projectile / Charge state related
@@ -467,8 +466,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	protected static float getRandomShotPitch(float basePitch, boolean pIsHighPitched, RandomSource pRandom) {
-		float f = pIsHighPitched ? 0.63F : 0.43F;
-		return basePitch / (pRandom.nextFloat() * 0.5F + 1.8F) + f;
+		float f = basePitch * (pIsHighPitched ? 0.63F : 0.43F);
+		return 1 / (pRandom.nextFloat() * 0.5F + 1.8F) + f;
 	}
 
 	@NotNull
