@@ -10,8 +10,6 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -31,14 +29,11 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
-import javax.tools.Tool;
 import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
@@ -119,7 +114,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 			setBuffed(stack, true);
 
-			shootAbilitySpear(level, pPlayer, stack);
+			shootAbilitySpears(level, pPlayer, stack);
 			setAbilityShotsRemain(stack, ABILITY_SHOTS_COUNT - 1);
 			setLastAbilityUsedTime(stack, level.getGameTime());
 
@@ -138,7 +133,7 @@ public class ScourgeItem extends BaseSpearItem {
 			long tickPassed = level.getGameTime() - getLastAbilityUsedTime(stack);
 			int shotsRemain = getAbilityShotsRemain(stack);
 			if (shotsRemain > 0 && tickPassed % ABILITY_SHOTS_INTERVAL == 0) {
-				shootAbilitySpear(level, player, stack);
+				shootAbilitySpears(level, player, stack);
 				setAbilityShotsRemain(stack, shotsRemain - 1);
 			}
 			if (isBuffed(stack) && tickPassed > ABILITY_BUFF_DURATION) {
@@ -154,7 +149,7 @@ public class ScourgeItem extends BaseSpearItem {
 		return spear;
 	}
 
-	public void shootAbilitySpear(Level level, Player player, ItemStack stack) {
+	public void shootAbilitySpears(Level level, Player player, ItemStack stack) {
 		for (int angle = -10; angle <= 10; angle += 10) {
 			ThrownSpear thrownspear = this.createThrownSpear(level, player, stack);
 			if (thrownspear instanceof ThrownScourge scourge) {
@@ -165,6 +160,7 @@ public class ScourgeItem extends BaseSpearItem {
 				Vector3f vector3f = vec3.toVector3f().rotate(quaternionf);
 				scourge.shoot(vector3f.x(), vector3f.y(), vector3f.z(), VELOCITY, 1.0F);
 				scourge.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
+				scourge.setIsAbilityShot(true);
 				level.addFreshEntity(scourge);
 				level.playSound(null, scourge, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
 						1.0F, 1.0F);

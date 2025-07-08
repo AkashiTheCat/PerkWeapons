@@ -6,19 +6,20 @@ import com.mojang.math.Axis;
 import net.akashi.perk_weapons.Entities.BeholderBeamEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.GuardianRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Guardian;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
@@ -33,23 +34,39 @@ public class BeholderBeamRenderer extends EntityRenderer<BeholderBeamEntity> {
 	}
 
 	@Override
-	protected int getSkyLightLevel(BeholderBeamEntity pEntity, BlockPos pPos) {
+	public boolean shouldRender(@NotNull BeholderBeamEntity pLivingEntity, @NotNull Frustum pCamera,
+	                            double pCamX, double pCamY, double pCamZ) {
+		if (super.shouldRender(pLivingEntity, pCamera, pCamX, pCamY, pCamZ))
+			return true;
+
+		Entity target = pLivingEntity.getTargetEntity();
+		if (target != null) {
+			Vec3 targetPos = this.getPosition(target, target.getBbHeight() * 0.5D, 1.0F);
+			Vec3 srcPos = this.getPosition(pLivingEntity, pLivingEntity.getEyeHeight(), 1.0F);
+			return pCamera.isVisible(new AABB(srcPos.x, srcPos.y, srcPos.z, targetPos.x, targetPos.y, targetPos.z));
+		}
+
+		return false;
+	}
+
+	@Override
+	protected int getSkyLightLevel(@NotNull BeholderBeamEntity pEntity, @NotNull BlockPos pPos) {
 		return 15;
 	}
 
 	@Override
-	protected int getBlockLightLevel(BeholderBeamEntity pEntity, BlockPos pPos) {
+	protected int getBlockLightLevel(@NotNull BeholderBeamEntity pEntity, @NotNull BlockPos pPos) {
 		return 15;
 	}
 
 	@Override
-	public ResourceLocation getTextureLocation(BeholderBeamEntity pEntity) {
-		return null;
+	public @NotNull ResourceLocation getTextureLocation(@NotNull BeholderBeamEntity pEntity) {
+		return BEAM_LOCATION;
 	}
 
 	@Override
-	public void render(BeholderBeamEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pPoseStack,
-	                   MultiBufferSource pBuffer, int pPackedLight) {
+	public void render(@NotNull BeholderBeamEntity pEntity, float pEntityYaw, float pPartialTicks,
+	                   @NotNull PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
 		super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
 		Entity target = pEntity.getTargetEntity();
 		if (target != null) {

@@ -13,12 +13,13 @@ public class SonicBlasterProperties extends CrossbowProperties {
 	public SonicBlasterProperties(ForgeConfigSpec.Builder builder, String name,
 	                              int defaultChargeTime, double defaultDamage,
 	                              double defaultVelocity, double defaultInaccuracy,
+	                              int defaultAmmoCapacity, int defaultFireInterval,
 	                              double defaultSpeedModifier, double defaultKnockbackResistance,
 	                              int defaultMaxRange, double defaultDamageRadius,
 	                              int defaultPierceLevel, boolean defaultEnableKnockback,
 	                              double defaultKnockbackForce, boolean onlyAllowMainHand) {
 		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultSpeedModifier, onlyAllowMainHand, false);
+				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
 		KNOCKBACK_RESISTANCE = builder.comment("Knockback Resistance Given When Holding " + name + " In MainHand")
 				.defineInRange("KnockbackResistance", defaultKnockbackResistance, -10.0, 10.0);
 		MAX_RANGE = builder.comment("Max Attack Range Of The Sonic Boom")

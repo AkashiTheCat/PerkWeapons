@@ -6,7 +6,6 @@ public class ForestKeeperProperties extends BowProperties {
 	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
 	public ForgeConfigSpec.IntValue PERK_DROP_INTERVAL;
 	public ForgeConfigSpec.DoubleValue PERK_DAMAGE_BUFF;
-	public ForgeConfigSpec.BooleanValue ENABLE_SLOWDOWN_REMOVAL;
 
 	public ForestKeeperProperties(ForgeConfigSpec.Builder builder, String name,
 	                              int defaultDrawTime, double defaultDamage, double defaultVelocity,
@@ -22,8 +21,6 @@ public class ForestKeeperProperties extends BowProperties {
 				.defineInRange("PerkDropInterval", defaultPerkDropInterval, 0, Integer.MAX_VALUE);
 		PERK_DAMAGE_BUFF = builder.comment("The Damage Bonus Percent Each Perk Level Will Provide")
 				.defineInRange("PerkBonus", defaultPerkDamageBuff, 0, 10);
-		ENABLE_SLOWDOWN_REMOVAL = builder.comment("Set True To Make Player Don't Slowdown When Drawing " + name)
-				.define("EnableSlowdownRemoval", defaultSlowdownRemovalEnabled);
 		builder.pop();
 	}
 }

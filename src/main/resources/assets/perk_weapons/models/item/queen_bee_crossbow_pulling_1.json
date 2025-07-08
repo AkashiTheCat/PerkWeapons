@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/queen_bee_crossbow",
+    "textures": {
+        "layer0": "perk_weapons:item/crossbow/queen_bee_crossbow/queen_bee_crossbow_pulling_1"
+    }
+}

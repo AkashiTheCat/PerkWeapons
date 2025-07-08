@@ -3,12 +3,13 @@ package net.akashi.perk_weapons.Crossbows;
 import com.google.common.collect.ImmutableMultimap;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.SonicBlasterProperties;
+import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -22,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +32,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class SonicBlasterItem extends BaseCrossbowItem {
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("add5510b-4b2c-773b-3211-3e42a2331a49");
+	public static final String TAG_AMMO_LOADED = "ammo_loaded";
 	public static float KNOCKBACK_RESISTANCE = 1.0F;
 	public static int MAX_ATTACK_RANGE = 24;
 	public static double DAMAGE_RADIUS = 1.0;
@@ -50,8 +52,10 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	public SonicBlasterItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
-	                        float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
-		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier, onlyAllowMainHand, pProperties);
+	                        int ammoCapacity, int fireInterval, float speedModifier,
+	                        boolean onlyAllowMainHand, Properties pProperties) {
+		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
+				speedModifier, onlyAllowMainHand, pProperties);
 		AMMO_CAPACITY = 0;
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
@@ -109,45 +113,49 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public void releaseUsing(ItemStack crossbowStack, Level level, LivingEntity shooter, int useTimeLeft) {
+	public void releaseUsing(@NotNull ItemStack crossbowStack, @NotNull Level level, @NotNull LivingEntity shooter, int useTimeLeft) {
 		float progress = getChargeProgress(shooter, crossbowStack);
 
 		if (progress >= 1.0F && !isCrossbowCharged(crossbowStack)) {
 			setCrossbowCharged(crossbowStack, true);
+			setAmmoLoaded(crossbowStack, getAmmoCapacity(crossbowStack));
 			SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-			level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-					getEndSound(crossbowStack), soundsource, 1.0F,
-					1.0F / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+			SoundEventHolder endSound = getEndSound(crossbowStack);
+			if (endSound.soundEvent != null) {
+				level.playSound(null, shooter, endSound.soundEvent, soundsource, endSound.volume,
+						endSound.pitch / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
+			}
 		}
 	}
 
 	@Override
-	protected SoundEvent getEndSound(ItemStack crossbowStack) {
-		return SoundEvents.WARDEN_HEARTBEAT;
+	protected @NotNull SoundEventHolder getEndSound(ItemStack crossbowStack) {
+		return new SoundEventHolder(SoundEvents.WARDEN_HEARTBEAT, 0.5F, 1F);
 	}
 
 	@Override
-	protected SoundEvent getStartSound(ItemStack crossbowStack) {
-		return SoundEvents.WARDEN_SONIC_CHARGE;
+	protected @NotNull SoundEventHolder getStartSound(ItemStack crossbowStack) {
+		return new SoundEventHolder(SoundEvents.WARDEN_SONIC_CHARGE, 0.5F, 1F);
 	}
 
 	@Override
-	protected SoundEvent getMiddleSound(ItemStack crossbowStack) {
-		return null;
+	protected @NotNull SoundEventHolder getMiddleSound(ItemStack crossbowStack) {
+		return SoundEventHolder.empty();
 	}
 
 	@Override
-	protected SoundEvent getShootSound(ItemStack crossbowStack) {
-		return super.getShootSound(crossbowStack);
+	protected boolean canLoadAmmo(LivingEntity shooter, ItemStack crossbowStack) {
+		return true;
 	}
 
 	@Override
-	public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+	public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity,
+	                          int pSlotId, boolean pIsSelected) {
 		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 		if (pLevel.isClientSide() && pEntity instanceof Player player && pIsSelected && isCrossbowCharged(pStack) &&
 				pLevel.getGameTime() % 40 == 0) {
-			pLevel.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.WARDEN_HEARTBEAT,
-					SoundSource.PLAYERS, 0.8f, 1.0f);
+			pLevel.playSound(player, player, SoundEvents.WARDEN_HEARTBEAT, SoundSource.PLAYERS,
+					0.8f, 1.0f);
 		}
 	}
 
@@ -182,13 +190,12 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 			}
 
 			SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-			level.playSound(null, shooter.getX(), shooter.getY(), shooter.getZ(),
-					SoundEvents.WARDEN_SONIC_BOOM, soundsource, 1.0F,
+			level.playSound(null, shooter, SoundEvents.WARDEN_SONIC_BOOM, soundsource, 1.0F,
 					0.8F + level.random.nextFloat() * 0.4F);
+
 		}
 
 	}
-
 
 	protected void renderShootingParticles(Level level, LivingEntity shooter) {
 		if (level.isClientSide())
@@ -211,6 +218,30 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + crossbowStack.getEnchantmentLevel(PIERCING);
 	}
 
+	private int getAmmoLoaded(ItemStack crossbowStack) {
+		CompoundTag nbt = crossbowStack.getOrCreateTag();
+		return nbt.contains(TAG_AMMO_LOADED) ? nbt.getInt(TAG_AMMO_LOADED) : 0;
+	}
+
+	private void setAmmoLoaded(ItemStack crossbowStack, int amount) {
+		CompoundTag nbt = crossbowStack.getOrCreateTag();
+		nbt.putInt(TAG_AMMO_LOADED, amount);
+	}
+
+	@Override
+	public void consumeAndSetCharged(ItemStack crossbowStack) {
+		int ammoLeft = getAmmoLoaded(crossbowStack) - 1;
+		setAmmoLoaded(crossbowStack, ammoLeft);
+		if (ammoLeft <= 0) {
+			setCrossbowCharged(crossbowStack, false);
+		}
+	}
+
+	@Override
+	public int getChargedProjectileAmount(ItemStack crossbowStack) {
+		return getAmmoLoaded(crossbowStack);
+	}
+
 	@Override
 	public Component getWeaponDescription(ItemStack stack, Level level) {
 		return Component.translatable("tooltip.perk_weapons.sonic_blaster").withStyle(ChatFormatting.GRAY);
@@ -218,7 +249,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.sonic_blaster_perk_1")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.sonic_blaster_perk_2",

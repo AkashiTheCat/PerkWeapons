@@ -5,26 +5,22 @@ import net.akashi.perk_weapons.Config.Properties.Crossbow.IncineratorProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.IncineratorArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
-import javax.tools.Tool;
-import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class IncineratorItem extends MagFedCrossbowItem {
+public class IncineratorItem extends BaseCrossbowItem {
 	public static int FIRE_ARROW_KNOCKBACK_BONUS = 1;
 	public static int BLAZE_AMMO_CAPACITY = 10;
 	public static int BLAZE_RELOAD_ADDITION = 10;
@@ -37,9 +33,10 @@ public class IncineratorItem extends MagFedCrossbowItem {
 	}
 
 	public IncineratorItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
-	                       float speedModifier, boolean onlyAllowMainHand, Properties pProperties) {
-		super(maxChargeTicks, damage, velocity, inaccuracy, speedModifier,
-				7, onlyAllowMainHand, pProperties);
+	                       int ammoCapacity, int fireInterval, float speedModifier,
+	                       boolean onlyAllowMainHand, Properties pProperties) {
+		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
+				speedModifier, onlyAllowMainHand, pProperties);
 		RemoveGeneralEnchant(MULTISHOT);
 		RemoveGeneralEnchant(UNBREAKING);
 		AddConflictEnchant(MULTISHOT);
@@ -49,7 +46,6 @@ public class IncineratorItem extends MagFedCrossbowItem {
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof IncineratorProperties IProperties) {
-			AMMO_CAPACITY = IProperties.NORMAL_AMMO_CAPACITY.get();
 			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
 			BLAZE_RELOAD_ADDITION = IProperties.BLAZE_RELOAD_INCREMENT.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
@@ -58,23 +54,22 @@ public class IncineratorItem extends MagFedCrossbowItem {
 	}
 
 	@Override
-	protected SoundEvent getShootSound(ItemStack crossbowStack) {
-		return SoundEvents.BLAZE_SHOOT;
+	protected @NotNull SoundEventHolder getShootSound(ItemStack crossbowStack) {
+		return new SoundEventHolder(SoundEvents.BLAZE_SHOOT);
 	}
 
 	@Override
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
 		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
-		Item ammoItem = ammoStack.getItem();
 
-		if (ammoItem instanceof FireworkRocketItem) {
+		if (ammoStack.is(Items.FIREWORK_ROCKET)) {
 			return new FireworkRocketEntity(level, ammoStack, shooter, shooter.getX(),
 					shooter.getEyeY() - (double) 0.15F, shooter.getZ(), true);
 		}
 
 		IncineratorArrow arrow = new IncineratorArrow(ModEntities.INCINERATOR_ARROW.get(), level, shooter);
-		if (ammoItem instanceof SpectralArrowItem) {
+		if (ammoStack.is(Items.SPECTRAL_ARROW)) {
 			arrow.setSpectralArrow(true);
 		} else {
 			arrow.setEffectsFromItem(ammoStack);
@@ -104,13 +99,11 @@ public class IncineratorItem extends MagFedCrossbowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_1")));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2",
-				TooltipHelper.setEmbeddedElementStyle(TooltipHelper.convertToEmbeddedElement(getAmmoCapacity(stack))))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_2")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_3")));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_4")));
 		list.add(Component.empty());
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
 				TooltipHelper.convertToEmbeddedElement(ModEnchantments.BLAZE.get(), 1))));

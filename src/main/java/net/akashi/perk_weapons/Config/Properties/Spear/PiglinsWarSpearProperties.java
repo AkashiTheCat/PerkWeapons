@@ -29,8 +29,8 @@ public class PiglinsWarSpearProperties extends SpearProperties {
 		builder.pop();
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<String> getArmorList() {
-		//is actually safe since we define obj as instanceof String at defineList
 		return (List<String>) ALLOWED_ARMOR.get();
 	}
 

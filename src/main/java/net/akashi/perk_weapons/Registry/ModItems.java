@@ -144,29 +144,31 @@ public class ModItems {
 
 	//Crossbows
 	public static final RegistryObject<BeholderItem> OPPRESSOR = addToTab(
-			ITEMS.register("beholder",
-					() -> new BeholderItem(37, 12, 4.4F,
-							0.5F, -0.5F, true,
-							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
+			ITEMS.register("beholder", () -> new BeholderItem(new Item.Properties()
+					.durability(640)
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 	public static final RegistryObject<LiberatorItem> LIBERATOR = addToTab(
-			ITEMS.register("liberator",
-					() -> new LiberatorItem(50, 10, 2.4F,
-							1.0F, 0.0F, false,
-							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
+			ITEMS.register("liberator", () -> new LiberatorItem(new Item.Properties()
+					.durability(640)
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 	public static final RegistryObject<TaintedFortuneItem> TAINTED_FORTUNE = addToTab(
-			ITEMS.register("tainted_fortune",
-					() -> new TaintedFortuneItem(25, 8, 2.0F,
-							1.0F, 0.0F, false,
-							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
+			ITEMS.register("tainted_fortune", () -> new TaintedFortuneItem(new Item.Properties()
+					.durability(1280)
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 	public static final RegistryObject<SonicBlasterItem> SONIC_BLASTER = addToTab(
-			ITEMS.register("sonic_blaster",
-					() -> new SonicBlasterItem(37, 20, -1F,
-							0.0F, -0.5F, true,
-							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), BOW_TAB);
+			ITEMS.register("sonic_blaster", () -> new SonicBlasterItem(new Item.Properties()
+					.durability(640)
+					.rarity(Rarity.UNCOMMON))),
+			BOW_TAB);
 	public static final RegistryObject<IncineratorItem> INCINERATOR = addToTab(
-			ITEMS.register("incinerator",
-					() -> new IncineratorItem(80, 11, 3.2F,
-							0.8F, -0.25F, true,
-							new Item.Properties().rarity(Rarity.UNCOMMON))), BOW_TAB);
-
+			ITEMS.register("incinerator", () -> new IncineratorItem(new Item.Properties()
+					.rarity(Rarity.UNCOMMON))), BOW_TAB);
+	public static final RegistryObject<QueenBeeCrossbowItem> QUEEN_BEE_CROSSBOW = addToTab(
+			ITEMS.register("queen_bee_crossbow", () -> new QueenBeeCrossbowItem(new Item.Properties()
+					.durability(1280)
+					.rarity(Rarity.UNCOMMON)))
+			, BOW_TAB);
 }

@@ -1,21 +1,11 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
-import net.akashi.perk_weapons.Bows.HouYiItem;
-import net.akashi.perk_weapons.Util.EntityTypeListReader;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class StarShooterArrow extends BaseArrow {
 	public static float DAMAGE_MODIFIER_PER_METER = 0.03F;
@@ -56,8 +46,8 @@ public class StarShooterArrow extends BaseArrow {
 	@Override
 	protected void onHitEntity(EntityHitResult pResult) {
 		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity) {
-			this.setBaseDamage(getBaseDamage() * (1 + Math.max(DAMAGE_MODIFIER_MAX,
-					Math.min(this.flyDist * DAMAGE_MODIFIER_PER_METER, DAMAGE_MODIFIER_MIN))
+			this.setBaseDamage(getBaseDamage() * (1 + Math.min(DAMAGE_MODIFIER_MAX,
+					Math.max(this.flyDist * DAMAGE_MODIFIER_PER_METER, DAMAGE_MODIFIER_MIN))
 			));
 		}
 		super.onHitEntity(pResult);

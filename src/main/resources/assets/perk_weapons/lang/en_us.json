@@ -46,9 +46,13 @@
   "item.perk_weapons.sonic_blaster": "Sonic Blaster",
   "item.perk_weapons.incinerator": "Incinerator",
 
-  "tooltip.perk_weapons.mag_fed_crossbow_hint": "Press %s + %s to unload ammo",
+  "tooltip.perk_weapons.ammo_unload_hint": "Press %s + %s to unload ammo",
+  "tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint": "Arrow ignores invulnerable time",
+  "tooltip.perk_weapons.crossbow_ammo_capacity": "Ammo Capacity: %d",
+  "tooltip.perk_weapons.crossbow_fire_interval": "Fire Interval: %d s",
   "tooltip.perk_weapons.crossbow_ammo_amount": "Ammo loaded: %d",
   "tooltip.perk_weapons.crossbow_projectile": "Projectile: %s",
+  "tooltip.perk_weapons.auto_loading_crossbow_perk": "Automatically reloads ammo",
 
   "tooltip.perk_weapons.crouch_use_key": "[%s + %s]:",
   "tooltip.perk_weapons.key_shift": "SHIFT",
@@ -122,7 +126,6 @@
 
   "tooltip.perk_weapons.frost_hunter": "\"Draws frostbitten vows — a ghostpack bound to the hunter's moon.\"",
   "tooltip.perk_weapons.frost_hunter_perk_1": "Freezes enemy for %f seconds on hit",
-  "tooltip.perk_weapons.frost_hunter_perk_2": "Arrow ignores invulnerable time",
   "tooltip.perk_weapons.frost_hunter_cd_hint": "Only cools down when held",
   "tooltip.perk_weapons.frost_hunter_ability_1": "Summon %d tamed wolfs, despawn after %f seconds",
 
@@ -142,11 +145,10 @@
   "tooltip.perk_weapons.beholder_perk_2": "Applies following effects to entity being aimed at:",
 
   "tooltip.perk_weapons.liberator": "\"Unleashes twin-cursed bolts — a kingsbane's wrath crystallized in shadowed crown splitters.\"",
-  "tooltip.perk_weapons.liberator_perk_1": "Arrow pierces through up to %d entities",
-  "tooltip.perk_weapons.liberator_perk_2": "+%d %s level",
+  "tooltip.perk_weapons.liberator_perk_1": "+%d %s level",
+  "tooltip.perk_weapons.liberator_perk_2": "Arrow pierces through up to %d entities",
 
   "tooltip.perk_weapons.tainted_fortune": "\"Not tainted actually.\"",
-  "tooltip.perk_weapons.tainted_fortune_perk_1": "Automatically reloads ammo",
 
   "tooltip.perk_weapons.sonic_blaster": "\"§kSCULK§r? §kWARDEN§r, §kDEEP DARK§r, §kLISTEN§r... §kHE§r §kCOMES§r.\"",
   "tooltip.perk_weapons.sonic_blaster_perk_1": "Fires sonic boom instead of arrows",
@@ -154,9 +156,8 @@
 
   "tooltip.perk_weapons.incinerator": "\"Your warrior soul burns eternal in this repeating inferno.\"",
   "tooltip.perk_weapons.incinerator_perk_1": "Unbreakable",
-  "tooltip.perk_weapons.incinerator_perk_2": "Magazine fed - Ammo capacity: %d",
-  "tooltip.perk_weapons.incinerator_perk_3": "Sets hit entities on fire",
-  "tooltip.perk_weapons.incinerator_perk_4": "Applies additional knockback when hit an entity on fire",
+  "tooltip.perk_weapons.incinerator_perk_2": "Sets hit entities on fire",
+  "tooltip.perk_weapons.incinerator_perk_3": "Applies additional knockback when hit an entity on fire",
 
   "entity.perk_weapons.thrown_spear": "Spear",
   "entity.perk_weapons.thrown_megalodon": "Megalodon",

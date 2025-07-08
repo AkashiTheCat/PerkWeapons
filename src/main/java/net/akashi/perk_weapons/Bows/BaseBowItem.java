@@ -28,9 +28,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.player.AnvilRepairEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
@@ -64,7 +62,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	private final List<Enchantment> ConflictEnchants = new ArrayList<>();
 
 	@Override
-	public boolean isValidRepairItem(ItemStack pStack, ItemStack pRepairCandidate) {
+	public boolean isValidRepairItem(@NotNull ItemStack pStack, @NotNull ItemStack pRepairCandidate) {
 		return super.isValidRepairItem(pStack, pRepairCandidate);
 	}
 
@@ -122,7 +120,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	@Override
-	public void releaseUsing(ItemStack pStack, Level pLevel, LivingEntity pEntityLiving, int pTimeLeft) {
+	public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel,
+	                         @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
 			boolean flag = player.getAbilities().instabuild || pStack.getEnchantmentLevel(INFINITY_ARROWS) > 0;
 			ItemStack itemstack = player.getProjectile(pStack);
@@ -172,9 +171,11 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 							new ArrowVelocitySyncPacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
 				}
 
-				pLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
-						getShootingSound(), SoundSource.PLAYERS, 1.0F,
-						1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + (float) 10 / DRAW_TIME);
+				SoundEvent shootSound = getShootingSound();
+				if (shootSound != null) {
+					pLevel.playSound(null, player, getShootingSound(), SoundSource.PLAYERS, 1.0F,
+							1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + (float) 10 / DRAW_TIME);
+				}
 				if (!flag1 && !player.getAbilities().instabuild) {
 					itemstack.shrink(1);
 					if (itemstack.isEmpty()) {
@@ -192,12 +193,12 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	@Override
-	public @NotNull UseAnim getUseAnimation(ItemStack pStack) {
+	public @NotNull UseAnim getUseAnimation(@NotNull ItemStack pStack) {
 		return UseAnim.BOW;
 	}
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pHand) {
+	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
 		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
@@ -205,7 +206,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 		boolean flag = !pPlayer.getProjectile(itemstack).isEmpty();
 
-		InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(itemstack, pLevel, pPlayer, pHand, flag);
+		InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(
+				itemstack, pLevel, pPlayer, pHand, flag);
 		if (ret != null) return ret;
 
 		if (!pPlayer.getAbilities().instabuild && !flag) {
@@ -293,7 +295,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	//Tooltips
 
 	@Override
-	public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag isAdvanced) {
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip,
+	                            @NotNull TooltipFlag isAdvanced) {
 		if (level == null || !level.isClientSide()) {
 			super.appendHoverText(stack, level, tooltip, isAdvanced);
 			return;

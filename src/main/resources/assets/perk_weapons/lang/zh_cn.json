@@ -46,9 +46,13 @@
   "item.perk_weapons.sonic_blaster": "音爆",
   "item.perk_weapons.incinerator": "焚烬",
 
-  "tooltip.perk_weapons.mag_fed_crossbow_hint": "按下 %s + %s 来取出装载的弹药",
+  "tooltip.perk_weapons.ammo_unload_hint": "按下 %s + %s 来取出装载的弹药",
+  "tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint": "箭矢不受受击无敌帧影响",
+  "tooltip.perk_weapons.crossbow_ammo_capacity": "弹匣容量: %d",
+  "tooltip.perk_weapons.crossbow_fire_interval": "开火间隔: %d s",
   "tooltip.perk_weapons.crossbow_ammo_amount": "装载弹药数: %d",
   "tooltip.perk_weapons.crossbow_projectile": "弹药: %s",
+  "tooltip.perk_weapons.auto_loading_crossbow_perk": "自动装填弹药",
 
   "tooltip.perk_weapons.crouch_use_key": "[%s + %s]:",
   "tooltip.perk_weapons.key_shift": "SHIFT",
@@ -122,7 +126,6 @@
 
   "tooltip.perk_weapons.frost_hunter": "\"拉响冰封誓约，幽狼群缚于猎月。\"",
   "tooltip.perk_weapons.frost_hunter_perk_1": "命中冰冻目标 %s 秒",
-  "tooltip.perk_weapons.frost_hunter_perk_2": "箭矢不受受击无敌帧影响",
   "tooltip.perk_weapons.frost_hunter_cd_hint": "仅在持有时冷却",
   "tooltip.perk_weapons.frost_hunter_ability_1": "召唤 %d 只猎犬, 猎犬存在时间:%f 秒",
 
@@ -142,11 +145,10 @@
   "tooltip.perk_weapons.beholder_perk_2": "对瞄准的生物施加以下效果:",
 
   "tooltip.perk_weapons.liberator": "\"迸射双重咒矢——弑君者之怒凝为裂冕者，缚于暴君暮光。\"",
-  "tooltip.perk_weapons.liberator_perk_1": "箭矢能够穿透至多 %d 个生物",
-  "tooltip.perk_weapons.liberator_perk_2": "+%d %s 等级",
+  "tooltip.perk_weapons.liberator_perk_1": "+%d %s 等级",
+  "tooltip.perk_weapons.liberator_perk_2": "箭矢能够穿透至多 %d 个生物",
 
   "tooltip.perk_weapons.tainted_fortune": "\"并非不义。\"",
-  "tooltip.perk_weapons.tainted_fortune_perk_1": "自动装填弹药",
 
   "tooltip.perk_weapons.sonic_blaster": "\"§k何人敢闯地城§r？§k幽暗深处异动起§r，§k且听§r，§k腐土噬魂守亡魂§r。\"",
   "tooltip.perk_weapons.sonic_blaster_perk_1": "发射音爆攻击而非箭矢",
@@ -154,9 +156,8 @@
 
   "tooltip.perk_weapons.incinerator": "\"你的战士之魂在轮回业火中永恒燃烧。\"",
   "tooltip.perk_weapons.incinerator_perk_1": "不会损坏",
-  "tooltip.perk_weapons.incinerator_perk_2": "弹匣供弹 - 弹容量: %d",
-  "tooltip.perk_weapons.incinerator_perk_3": "箭矢命中时点燃生物",
-  "tooltip.perk_weapons.incinerator_perk_4": "箭矢对着火的生物造成额外击退",
+  "tooltip.perk_weapons.incinerator_perk_2": "箭矢命中时点燃生物",
+  "tooltip.perk_weapons.incinerator_perk_3": "箭矢对着火的生物造成额外击退",
 
   "entity.perk_weapons.thrown_spear": "投矛",
   "entity.perk_weapons.thrown_megalodon": "巨齿鲨",

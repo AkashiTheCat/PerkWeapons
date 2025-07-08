@@ -19,7 +19,7 @@ public class ClientHelper {
 				shooter != null && shooter.getUseItem() == stack ? bowItem.getDrawProgress(shooter) : 0.0f);
 	}
 
-	public static <T extends IPerkItem> void registerPerkBowPropertyOverrides(T perkItem) {
+	public static <T extends IPerkItem> void registerPerkItemPropertyOverrides(T perkItem) {
 		ItemProperties.register((Item) perkItem, ModelOverrides.PERK, (stack, world, entity, value) ->
 				entity != null ? perkItem.getPerkLevel(entity, stack) : 0.0f);
 		ItemProperties.register((Item) perkItem, ModelOverrides.PERK_MAX, (stack, world, entity, value) ->
