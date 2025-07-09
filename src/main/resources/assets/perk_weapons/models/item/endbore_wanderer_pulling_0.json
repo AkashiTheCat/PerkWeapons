@@ -1,0 +1,6 @@
+{
+    "parent": "perk_weapons:item/endbore_wanderer",
+    "textures": {
+        "layer0": "perk_weapons:item/bow/endbore_wanderer/endbore_wanderer_pulling_0"
+    }
+}

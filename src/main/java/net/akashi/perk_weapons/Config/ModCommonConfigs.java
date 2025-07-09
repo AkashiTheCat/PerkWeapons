@@ -57,6 +57,7 @@ public class ModCommonConfigs {
 	public static FrostHunterProperties FROST_HUNTER_PROPERTIES;
 	public static HouYiProperties HOU_YI_PROPERTIES;
 	public static DevourerProperties DEVOURER_PROPERTIES;
+	public static EndboreWandererProperties ENDBORE_WANDERER_PROPERTIES;
 
 	//Crossbow Configs
 	public static BeholderProperties BEHOLDER_PROPERTIES;
@@ -196,6 +197,14 @@ public class ModCommonConfigs {
 				3.0, 0.8,
 				(byte) 2, 0.0,
 				0.1, true);
+		ENDBORE_WANDERER_PROPERTIES = new EndboreWandererProperties(BUILDER, "Endbore Wanderer",
+				12, 9,
+				2.5, 1.0,
+				3, 10,
+				0.5, 60,
+				8, 70,
+				7, 0.025,
+				0.0, 0.0, false);
 
 		//Crossbows
 		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Beholder",
@@ -294,6 +303,7 @@ public class ModCommonConfigs {
 		ModItems.FROST_HUNTER.get().updateAttributesFromConfig(FROST_HUNTER_PROPERTIES);
 		ModItems.HOU_YI.get().updateAttributesFromConfig(HOU_YI_PROPERTIES);
 		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
+		ModItems.ENDBORE_WANDERER.get().updateAttributesFromConfig(ENDBORE_WANDERER_PROPERTIES);
 
 		ModItems.OPPRESSOR.get().updateAttributesFromConfig(BEHOLDER_PROPERTIES);
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);

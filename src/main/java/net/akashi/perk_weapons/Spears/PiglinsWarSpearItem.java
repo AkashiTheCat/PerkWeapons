@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -17,9 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +23,6 @@ import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class PiglinsWarSpearItem extends BaseSpearItem {
 	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS = new ArrayList<>();
 	public static String TAG_ARMOR_COUNT = "armor_count";
@@ -87,21 +82,6 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		return super.getAttributeModifiers(slot, stack);
 	}
 
-	@SubscribeEvent
-	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-		if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
-			ItemStack itemStack = ItemStack.EMPTY;
-			if (player.getMainHandItem().getItem() instanceof PiglinsWarSpearItem) {
-				itemStack = player.getMainHandItem();
-			} else if (player.getOffhandItem().getItem() instanceof PiglinsWarSpearItem) {
-				itemStack = player.getOffhandItem();
-			}
-			if (itemStack != ItemStack.EMPTY) {
-				setArmorCount(itemStack, getPlayerArmorCount(player));
-			}
-		}
-	}
-
 	public static int getArmorCount(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		return tag.contains(TAG_ARMOR_COUNT) ? tag.getInt(TAG_ARMOR_COUNT) : 0;
@@ -112,7 +92,7 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		tag.putInt(TAG_ARMOR_COUNT, count);
 	}
 
-	private static int getPlayerArmorCount(Player player) {
+	public static int getPlayerArmorCount(Player player) {
 		int count = 0;
 		for (ItemStack armor : player.getArmorSlots()) {
 			if (allowedArmor.stream().anyMatch(pArmor -> pArmor.equals(armor.getItem()))) {

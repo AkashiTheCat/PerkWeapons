@@ -30,3 +30,6 @@ gradle.properties
 gradlew
 gradlew.bat
 settings.gradle
+
+# misc
+count_code.bat

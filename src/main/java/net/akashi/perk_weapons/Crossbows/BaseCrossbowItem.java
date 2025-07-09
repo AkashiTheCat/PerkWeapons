@@ -146,8 +146,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	public void onUseTick(Level level, @NotNull LivingEntity livingEntity,
 	                      @NotNull ItemStack crossbowStack, int useTimeLeft) {
 		if (!level.isClientSide()) {
-			SoundEventHolder startSoundEvent = this.getStartSound(crossbowStack);
-			SoundEventHolder middleSoundEvent = this.getMiddleSound(crossbowStack);
+			SoundEventHolder startSoundEvent = this.getStartSound(livingEntity, crossbowStack);
+			SoundEventHolder middleSoundEvent = this.getMiddleSound(livingEntity, crossbowStack);
 			byte progress = getChargeProgressFrom0To10(livingEntity, crossbowStack);
 
 			if (progress == (byte) (getMaxChargeTicks(crossbowStack) * 0.1) && startSoundEvent.soundEvent != null) {
@@ -179,7 +179,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			if (loaded) {
 				setCrossbowCharged(crossbowStack, true);
 				SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-				SoundEventHolder endSound = getEndSound(crossbowStack);
+				SoundEventHolder endSound = getEndSound(shooter, crossbowStack);
 				if (endSound.soundEvent != null) {
 					float pitch = endSound.pitch / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F;
 					level.playSound(null, shooter, endSound.soundEvent, soundsource, endSound.volume, pitch);
@@ -345,7 +345,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		ModPackets.NETWORK.send(PacketDistributor.ALL.noArg(),
 				new ArrowVelocitySyncPacket(projectile.getDeltaMovement(), projectile.getId()));
 
-		SoundEventHolder shootSound = getShootSound(crossbowStack);
+		SoundEventHolder shootSound = getShootSound(shooter, crossbowStack);
 		if (shootSound.soundEvent != null) {
 			level.playSound(null, shooter, shootSound.soundEvent, SoundSource.PLAYERS,
 					shootSound.volume, getShotPitch(shootSound.pitch, shooter.getRandom()));
@@ -471,7 +471,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	@NotNull
-	protected SoundEventHolder getStartSound(ItemStack crossbowStack) {
+	protected SoundEventHolder getStartSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return switch (crossbowStack.getEnchantmentLevel(QUICK_CHARGE)) {
 			case 1 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_1, 0.5F, 1F);
 			case 2 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_2, 0.5F, 1F);
@@ -481,18 +481,18 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	@NotNull
-	protected SoundEventHolder getMiddleSound(ItemStack crossbowStack) {
+	protected SoundEventHolder getMiddleSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return getMaxChargeTicks(crossbowStack) > 20 ? new SoundEventHolder(SoundEvents.CROSSBOW_LOADING_MIDDLE,
 				0.5F, 1F) : SoundEventHolder.empty();
 	}
 
 	@NotNull
-	protected SoundEventHolder getEndSound(ItemStack crossbowStack) {
+	protected SoundEventHolder getEndSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return new SoundEventHolder(SoundEvents.CROSSBOW_LOADING_END);
 	}
 
 	@NotNull
-	protected SoundEventHolder getShootSound(ItemStack crossbowStack) {
+	protected SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return new SoundEventHolder(SoundEvents.CROSSBOW_SHOOT);
 	}
 

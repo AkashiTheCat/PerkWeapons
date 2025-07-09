@@ -10,10 +10,10 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -40,6 +40,7 @@ import java.util.function.Predicate;
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCrosshairItem {
+	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.ARROW_SHOOT, 1.0F, 1.2F);
 	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
@@ -139,6 +140,12 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 						|| (itemstack.getItem() instanceof ArrowItem
 						&& ((ArrowItem) itemstack.getItem()).isInfinite(itemstack, pStack, player));
 				if (!pLevel.isClientSide) {
+					SoundEventHolder shootSound = getShootingSound(pEntityLiving, pStack);
+					if (shootSound.soundEvent != null) {
+						pLevel.playSound(null, player, shootSound.soundEvent, SoundSource.PLAYERS, shootSound.volume,
+								1.0F / (pLevel.getRandom().nextFloat() * 0.4F + shootSound.pitch) + (float) 10 / DRAW_TIME);
+					}
+
 					ArrowItem arrowitem = (ArrowItem) (itemstack.getItem() instanceof ArrowItem ? itemstack.getItem() : Items.ARROW);
 
 					AbstractArrow abstractarrow = createArrow(pLevel, arrowitem, pStack, itemstack, player);
@@ -171,11 +178,6 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 							new ArrowVelocitySyncPacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
 				}
 
-				SoundEvent shootSound = getShootingSound();
-				if (shootSound != null) {
-					pLevel.playSound(null, player, getShootingSound(), SoundSource.PLAYERS, 1.0F,
-							1.0F / (pLevel.getRandom().nextFloat() * 0.4F + 1.2F) + (float) 10 / DRAW_TIME);
-				}
 				if (!flag1 && !player.getAbilities().instabuild) {
 					itemstack.shrink(1);
 					if (itemstack.isEmpty()) {
@@ -188,8 +190,9 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		}
 	}
 
-	protected SoundEvent getShootingSound() {
-		return SoundEvents.ARROW_SHOOT;
+	@NotNull
+	protected SoundEventHolder getShootingSound(LivingEntity shooter, ItemStack stack) {
+		return SHOOTING_SOUND;
 	}
 
 	@Override

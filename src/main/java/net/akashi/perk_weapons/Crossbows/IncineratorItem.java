@@ -21,6 +21,7 @@ import java.util.List;
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class IncineratorItem extends BaseCrossbowItem {
+	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.BLAZE_SHOOT);
 	public static int FIRE_ARROW_KNOCKBACK_BONUS = 1;
 	public static int BLAZE_AMMO_CAPACITY = 10;
 	public static int BLAZE_RELOAD_ADDITION = 10;
@@ -54,8 +55,8 @@ public class IncineratorItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getShootSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(SoundEvents.BLAZE_SHOOT);
+	protected @NotNull SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return SHOOTING_SOUND;
 	}
 
 	@Override

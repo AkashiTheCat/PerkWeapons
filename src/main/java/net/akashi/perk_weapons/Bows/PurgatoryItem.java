@@ -8,12 +8,13 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
 import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -33,6 +34,7 @@ import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
 import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
+	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.BLAZE_SHOOT);
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
 	public static double KNOCKBACK_RESISTANCE = 10;
 	public static byte PIERCE_LEVEL = 5;
@@ -80,8 +82,8 @@ public class PurgatoryItem extends BaseBowItem {
 	}
 
 	@Override
-	protected SoundEvent getShootingSound() {
-		return SoundEvents.BLAZE_SHOOT;
+	protected @NotNull SoundEventHolder getShootingSound(LivingEntity entity, ItemStack stack) {
+		return SHOOTING_SOUND;
 	}
 
 	@Override

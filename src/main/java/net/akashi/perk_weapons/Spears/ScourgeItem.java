@@ -7,7 +7,6 @@ import net.akashi.perk_weapons.Config.Properties.Spear.ScourgeProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownScourge;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
@@ -29,7 +28,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
@@ -39,7 +37,6 @@ import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ScourgeItem extends BaseSpearItem {
 	public static final String TAG_LAST_USED = "lastUsed";
 	public static final String TAG_SHOTS_REMAIN = "shotsRemain";

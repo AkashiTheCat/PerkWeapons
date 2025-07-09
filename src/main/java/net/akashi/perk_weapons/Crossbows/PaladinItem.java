@@ -34,11 +34,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, ICoolDownItem {
+	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(ModSoundEvents.PALADIN_FIRE.get(),
+			0.7F, 1.0F);
+
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("47e87eb7-7a3f-738c-13a9-7e6fdfa9b838");
 	public static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("936e61dd-10ea-7a2a-d612-44acf75457bd");
 	public static final UUID DAMAGE_RESISTANCE_UUID = UUID.fromString("0c513885-1e62-9178-31b0-716dcda83873");
 	private final List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
 
+	public static final String TAG_CUSTOM_CHARGED = "charged1";
 	public static final String TAG_LAST_SHOT = "last_shot";
 
 	public static float KNOCKBACK_RESISTANCE = 1;
@@ -179,8 +183,20 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getShootSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(ModSoundEvents.PALADIN_FIRE.get(), 0.7F, 1.0F);
+	protected @NotNull SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return SHOOTING_SOUND;
+	}
+
+	@Override
+	public boolean isCrossbowCharged(ItemStack crossbowStack) {
+		CompoundTag nbt = crossbowStack.getOrCreateTag();
+		return nbt.contains(TAG_CUSTOM_CHARGED) && nbt.getBoolean(TAG_CUSTOM_CHARGED);
+	}
+
+	@Override
+	public void setCrossbowCharged(ItemStack crossbowStack, boolean charged) {
+		CompoundTag tag = crossbowStack.getOrCreateTag();
+		tag.putBoolean(TAG_CUSTOM_CHARGED, charged);
 	}
 
 	protected long getLastShotTime(ItemStack stack) {

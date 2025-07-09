@@ -25,6 +25,11 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem {
+	protected static final SoundEventHolder LOADING_START_SOUND = new SoundEventHolder(SoundEvents.BEE_POLLINATE,
+			1.0F, 1.0F);
+	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.BEE_STING,
+			0.7F, 1.0F);
+
 	private static int POISON_LEVEL = 4;
 	private static int POISON_TICKS = 100;
 	private static byte MAX_PERK_LEVEL = 7;
@@ -94,23 +99,23 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getStartSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(SoundEvents.BEE_POLLINATE, 1.0F, 1.0F);
+	protected @NotNull SoundEventHolder getStartSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return LOADING_START_SOUND;
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getMiddleSound(ItemStack crossbowStack) {
+	protected @NotNull SoundEventHolder getMiddleSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return SoundEventHolder.empty();
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getEndSound(ItemStack crossbowStack) {
+	protected @NotNull SoundEventHolder getEndSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return SoundEventHolder.empty();
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getShootSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(SoundEvents.BEE_STING, 0.7F, 1.0F);
+	protected @NotNull SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return SHOOTING_SOUND;
 	}
 
 	@Override

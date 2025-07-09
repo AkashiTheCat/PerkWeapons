@@ -141,6 +141,11 @@ public class ModItems {
 					() -> new DevourerItem(20, 7, 3.0F, 0.8F,
 							0.0F, 0.1F, true,
 							new Item.Properties().durability(960).rarity(Rarity.UNCOMMON))), BOW_TAB);
+	public static final RegistryObject<EndboreWandererItem> ENDBORE_WANDERER = addToTab(
+			ITEMS.register("endbore_wanderer",
+					()->new EndboreWandererItem(12, 9, 2.5F, 0.8F,
+							0.0F, 0.0F, false,
+							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
 
 	//Crossbows
 	public static final RegistryObject<BeholderItem> OPPRESSOR = addToTab(

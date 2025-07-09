@@ -31,6 +31,11 @@ import java.util.UUID;
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class SonicBlasterItem extends BaseCrossbowItem {
+	protected static final SoundEventHolder LOADING_START_SOUND = new SoundEventHolder(SoundEvents.WARDEN_SONIC_CHARGE,
+			0.5F, 1F);
+	protected static final SoundEventHolder LOADING_END_SOUND = new SoundEventHolder(SoundEvents.WARDEN_HEARTBEAT,
+			0.5F, 1F);
+
 	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("add5510b-4b2c-773b-3211-3e42a2331a49");
 	public static final String TAG_AMMO_LOADED = "ammo_loaded";
 	public static float KNOCKBACK_RESISTANCE = 10;
@@ -110,7 +115,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 			setCrossbowCharged(crossbowStack, true);
 			setAmmoLoaded(crossbowStack, getAmmoCapacity(crossbowStack));
 			SoundSource soundsource = shooter instanceof Player ? SoundSource.PLAYERS : SoundSource.HOSTILE;
-			SoundEventHolder endSound = getEndSound(crossbowStack);
+			SoundEventHolder endSound = getEndSound(shooter, crossbowStack);
 			if (endSound.soundEvent != null) {
 				level.playSound(null, shooter, endSound.soundEvent, soundsource, endSound.volume,
 						endSound.pitch / (level.getRandom().nextFloat() * 0.5F + 1.0F) + 0.2F);
@@ -119,17 +124,17 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getEndSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(SoundEvents.WARDEN_HEARTBEAT, 0.5F, 1F);
+	protected @NotNull SoundEventHolder getEndSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return LOADING_END_SOUND;
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getStartSound(ItemStack crossbowStack) {
-		return new SoundEventHolder(SoundEvents.WARDEN_SONIC_CHARGE, 0.5F, 1F);
+	protected @NotNull SoundEventHolder getStartSound(LivingEntity shooter, ItemStack crossbowStack) {
+		return LOADING_START_SOUND;
 	}
 
 	@Override
-	protected @NotNull SoundEventHolder getMiddleSound(ItemStack crossbowStack) {
+	protected @NotNull SoundEventHolder getMiddleSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return SoundEventHolder.empty();
 	}
 
@@ -161,7 +166,8 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 
 			AABB searchAABB = shooter.getBoundingBox().expandTowards(viewVec.scale(MAX_ATTACK_RANGE))
 					.inflate(DAMAGE_RADIUS);
-			List<Entity> entities = level.getEntities(shooter, searchAABB, (entity) -> entity instanceof LivingEntity);
+			List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, searchAABB,
+					entity -> !entity.is(shooter));
 
 			Vec3 knockbackVec = new Vec3(viewVec.x, 0.1F, viewVec.z).normalize().scale(KNOCKBACK_FORCE);
 			int pierceLevel = getPierceLevel(crossbowStack);

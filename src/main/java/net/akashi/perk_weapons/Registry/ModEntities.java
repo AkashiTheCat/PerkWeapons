@@ -57,6 +57,8 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<IncineratorArrow>> INCINERATOR_ARROW = EntityRegistry("incinerator_arrow", IncineratorArrow::new);
 	public static final RegistryObject<EntityType<QueenBeeArrow>> QUEEN_BEE_ARROW = EntityRegistry("queen_bee_arrow", QueenBeeArrow::new);
 	public static final RegistryObject<EntityType<PaladinArrow>> PALADIN_ARROW = EntityRegistry("paladin_arrow", PaladinArrow::new);
+	public static final RegistryObject<EntityType<EndboreWandererArrow>> ENDBORE_WANDERER_ARROW = EntityRegistry("endbore_wanderer_arrow", EndboreWandererArrow::new);
+	public static final RegistryObject<EntityType<EndboreWandererPerkProjectile>> ENDBORE_WANDERER_PERK_PROJECTILE = EntityRegistry("endbore_wanderer_perk_projectile", EndboreWandererPerkProjectile::new);
 
 	//Util
 	public static final RegistryObject<EntityType<BeholderBeamEntity>> BEHOLDER_BEAM_SRC = EntityRegistry(

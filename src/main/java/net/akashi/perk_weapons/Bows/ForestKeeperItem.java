@@ -4,7 +4,6 @@ import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ForestKeeperProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
-import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -18,9 +17,6 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,7 +24,6 @@ import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public static final String TAG_LAST_PERK_LEVEL_CHANGE_TIME = "last_perk_change";
 	public static byte MAX_PERK_LEVEL = 5;
@@ -102,24 +97,6 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public long getLastPerkChangeTime(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		return tag.contains(TAG_LAST_PERK_LEVEL_CHANGE_TIME) ? tag.getLong(TAG_LAST_PERK_LEVEL_CHANGE_TIME) : 0;
-	}
-
-	@SubscribeEvent
-	public static void onEntityHurt(LivingHurtEvent event) {
-		LivingEntity entity = event.getEntity();
-		if (!entity.level().isClientSide()) {
-			ItemStack stack = ItemStack.EMPTY;
-			if (entity.getMainHandItem().getItem() instanceof ForestKeeperItem) {
-				stack = entity.getMainHandItem();
-			} else if (entity.getOffhandItem().getItem() instanceof ForestKeeperItem) {
-				stack = entity.getOffhandItem();
-			}
-
-			if (!stack.isEmpty()) {
-				ForestKeeperItem item = (ForestKeeperItem) stack.getItem();
-				item.setPerkLevel(stack, (byte) 0);
-			}
-		}
 	}
 
 	@Override

@@ -37,6 +37,6 @@ public interface IPerkItem {
 	 * Used For Model Overrides
 	 */
 	default boolean isPerkMax(LivingEntity entity, ItemStack stack) {
-		return getMaxPerkLevel() >= getPerkLevel(entity, stack);
+		return getPerkLevel(entity, stack) >= getMaxPerkLevel();
 	}
 }
