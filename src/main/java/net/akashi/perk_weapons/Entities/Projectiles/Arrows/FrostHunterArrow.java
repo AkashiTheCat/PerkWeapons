@@ -5,6 +5,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import static net.akashi.perk_weapons.Bows.FrostHunterItem.FROZEN_TIME;
 
@@ -32,7 +33,7 @@ public class FrostHunterArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		super.onHitEntity(pResult);
 		pResult.getEntity().setTicksFrozen(FROZEN_TIME * 2);
 	}

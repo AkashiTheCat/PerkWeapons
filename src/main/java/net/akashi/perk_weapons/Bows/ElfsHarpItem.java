@@ -3,7 +3,7 @@ package net.akashi.perk_weapons.Bows;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ElfsHarpProperties;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkUpdateArrow;
+import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkGainingArrow;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -47,7 +47,7 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public AbstractArrow createArrow(Level level, ArrowItem arrowItem, ItemStack bowStack, ItemStack arrowStack, Player player) {
-		PerkUpdateArrow arrow = new PerkUpdateArrow(ModEntities.PERK_UPDATE_ARROW.get(), level, player);
+		PerkGainingArrow arrow = new PerkGainingArrow(ModEntities.PERK_GAINING_ARROW.get(), level, player);
 		if (!(arrowItem instanceof SpectralArrowItem)) {
 			arrow.setEffectsFromItem(arrowStack);
 		}

@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 
@@ -87,7 +88,7 @@ public class ExplosiveArrow extends BaseArrow {
 	}
 
 	@Override
-	protected ItemStack getPickupItem() {
+	protected @NotNull ItemStack getPickupItem() {
 		return ItemStack.EMPTY;
 	}
 
@@ -107,7 +108,7 @@ public class ExplosiveArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		super.onHitEntity(pResult);
 		Entity entity = pResult.getEntity();
 		if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
@@ -121,7 +122,7 @@ public class ExplosiveArrow extends BaseArrow {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
+	public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		this.fuseTime = pCompound.getInt("fuseTime");
 		this.innerRadius = pCompound.getFloat("innerRadius");
@@ -135,7 +136,7 @@ public class ExplosiveArrow extends BaseArrow {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
+	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.putInt("fuseTime", this.fuseTime);
 		pCompound.putFloat("innerRadius", this.innerRadius);

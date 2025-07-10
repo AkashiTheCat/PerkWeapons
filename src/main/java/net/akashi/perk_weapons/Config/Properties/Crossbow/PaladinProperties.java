@@ -9,19 +9,19 @@ public class PaladinProperties extends CrossbowProperties {
 	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
 	public ForgeConfigSpec.DoubleValue RELOAD_REDUCTION_PER_LEVEL;
 	public ForgeConfigSpec.DoubleValue DAMAGE_RESISTANCE_PER_LEVEL;
-	public ForgeConfigSpec.IntValue PERK_CLEAR_TIME_WITHOUT_SHOTS;
+	public ForgeConfigSpec.IntValue PERK_CLEAR_TIME_WITHOUT_HIT;
 
 	public PaladinProperties(ForgeConfigSpec.Builder builder, String name,
 	                         int defaultChargeTime, double defaultDamage,
 	                         double defaultVelocity, double defaultInaccuracy,
 	                         int defaultAmmoCapacity, int defaultFireInterval,
-	                         double defaultKnockbackResistance, double defaultMagicResistance,
-	                         double defaultDamageResistance, int defaultMaxPerkLevel,
-	                         double defaultReloadReductionPerLevel, double defaultDamageResistancePerLevel,
-	                         int defaultPerkClearTimeWithoutShots, double defaultSpeedModifier,
-	                         boolean onlyAllowMainHand) {
+	                         double defaultQuickChargeMultiplier, double defaultKnockbackResistance,
+	                         double defaultMagicResistance, double defaultDamageResistance,
+	                         int defaultMaxPerkLevel, double defaultReloadReductionPerLevel,
+	                         double defaultDamageResistancePerLevel, int defaultPerkClearTimeWithoutHit,
+	                         double defaultSpeedModifier, boolean onlyAllowMainHand) {
 		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
-				defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		KNOCKBACK_RESISTANCE = builder.comment("Knockback Resistance Value For " + name + " When In Hand")
 				.comment("1.0 Means You Won't Take Any Knockback At All")
 				.defineInRange("KnockbackResistance", defaultKnockbackResistance, -10.0, 1.0);
@@ -37,8 +37,8 @@ public class PaladinProperties extends CrossbowProperties {
 				.defineInRange("ReloadReductionPerLevel", defaultReloadReductionPerLevel, 0.0, 1.0);
 		DAMAGE_RESISTANCE_PER_LEVEL = builder.comment("Addition Damage Resistance Per Perk Level")
 				.defineInRange("DamageResistancePerLevel", defaultDamageResistancePerLevel, -1000.0, 100.0);
-		PERK_CLEAR_TIME_WITHOUT_SHOTS = builder.comment("Ticks Without Shooting To Clear Perk Level")
-				.defineInRange("PerkClearTimeWithoutShots", defaultPerkClearTimeWithoutShots, 0, Integer.MAX_VALUE);
+		PERK_CLEAR_TIME_WITHOUT_HIT = builder.comment("After How Many Ticks Without Hitting Anything Will The Perk Level Be Cleared")
+				.defineInRange("PerkClearTimeWithoutHit", defaultPerkClearTimeWithoutHit, 0, Integer.MAX_VALUE);
 		builder.pop();
 	}
 }

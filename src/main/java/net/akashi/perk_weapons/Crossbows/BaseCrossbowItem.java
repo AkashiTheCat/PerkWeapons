@@ -65,6 +65,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	protected float DAMAGE = 10.0F;
 	protected float VELOCITY = 4.0F;
 	protected float INACCURACY = 1.0F;
+	protected float QUICK_CHARGE_RELOAD_TIME_REDUCTION = 5;
 
 	protected final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			QUICK_CHARGE,
@@ -126,7 +127,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
-			consumeAndSetCharged(itemstack);
+			consumeAndSetCharged(pPlayer, itemstack);
 			if (getChargedProjectileAmount(itemstack) > 0) {
 				pPlayer.getCooldowns().addCooldown(itemstack.getItem(), FIRE_INTERVAL);
 			}
@@ -297,7 +298,8 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
 		int quickChargeLevel = getCrossbowEnchantmentLevel(crossbowStack, QUICK_CHARGE);
-		return Math.max(1, quickChargeLevel == 0 ? MAX_CHARGE_TICKS : MAX_CHARGE_TICKS - 5 * quickChargeLevel);
+		return Math.max(1, (int) Math.ceil(MAX_CHARGE_TICKS - QUICK_CHARGE_RELOAD_TIME_REDUCTION * quickChargeLevel)
+		);
 	}
 
 	public byte getChargeProgressFrom0To10(LivingEntity shooter, ItemStack crossbowStack) {
@@ -424,7 +426,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		compoundtag.put(TAG_CHARGED_PROJECTILES, listtag);
 	}
 
-	public void consumeAndSetCharged(ItemStack crossbowStack) {
+	public void consumeAndSetCharged(LivingEntity shooter, ItemStack crossbowStack) {
 		ListTag listtag = getChargedProjectileListTag(crossbowStack);
 		if (!listtag.isEmpty())
 			listtag.remove(listtag.size() - 1);
@@ -514,6 +516,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		this.AMMO_CAPACITY = properties.AMMO_CAPACITY.get();
 		this.FIRE_INTERVAL = properties.FIRE_INTERVAL.get();
 		this.onlyAllowMainHand = properties.ONLY_MAINHAND.get();
+		this.QUICK_CHARGE_RELOAD_TIME_REDUCTION = (float) (5 * properties.QUICK_CHARGE_MULTIPLIER.get());
 		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
 		if (speedModifier != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();

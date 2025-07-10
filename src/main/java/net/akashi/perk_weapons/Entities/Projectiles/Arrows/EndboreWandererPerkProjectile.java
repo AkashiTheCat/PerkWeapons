@@ -50,7 +50,7 @@ public class EndboreWandererPerkProjectile extends EndboreWandererArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		LivingEntity e = (LivingEntity) pResult.getEntity();
 		e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT, 0));
 		super.onHitEntity(pResult);

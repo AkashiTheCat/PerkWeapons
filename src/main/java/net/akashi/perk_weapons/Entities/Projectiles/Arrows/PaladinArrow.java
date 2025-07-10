@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class PaladinArrow extends BaseArrow {
+public class PaladinArrow extends PerkGainingArrow {
 	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(PerkWeapons.MODID,
 			"textures/entity/projectiles/paladin_arrow.png");
 

@@ -2,7 +2,6 @@ package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
 import com.google.common.collect.Sets;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -22,6 +21,8 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Set;
@@ -120,7 +121,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	public void shootFromRotation(Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
+	public void shootFromRotation(@NotNull Entity pShooter, float pX, float pY, float pZ, float pVelocity, float pInaccuracy) {
 		super.shootFromRotation(pShooter, pX, pY, pZ, pVelocity, pInaccuracy);
 	}
 
@@ -159,7 +160,7 @@ public class BaseArrow extends AbstractArrow {
 		if (i != -1 && pParticleAmount > 0) {
 			double d0 = (double) (i >> 16 & 255) / 255.0D;
 			double d1 = (double) (i >> 8 & 255) / 255.0D;
-			double d2 = (double) (i >> 0 & 255) / 255.0D;
+			double d2 = (double) (i & 255) / 255.0D;
 
 			for (int j = 0; j < pParticleAmount; ++j) {
 				this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);
@@ -178,10 +179,11 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
+	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
-		if (this.potion != Potions.EMPTY) {
-			pCompound.putString("Potion", BuiltInRegistries.POTION.getKey(this.potion).toString());
+		var potionKey = ForgeRegistries.POTIONS.getKey(this.potion);
+		if (this.potion != Potions.EMPTY && potionKey != null) {
+			pCompound.putString("Potion", potionKey.toString());
 		}
 
 		if (this.fixedColor) {
@@ -202,7 +204,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
+	public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		if (pCompound.contains("Potion", 8)) {
 			this.potion = PotionUtils.getPotion(pCompound);
@@ -222,7 +224,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		if (ignoreInvulnerableTime) {
 			var e = pResult.getEntity();
 			e.invulnerableTime = 0;
@@ -234,7 +236,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	protected void doPostHurtEffects(LivingEntity pLiving) {
+	protected void doPostHurtEffects(@NotNull LivingEntity pLiving) {
 		super.doPostHurtEffects(pLiving);
 		Entity entity = this.getEffectSource();
 
@@ -257,7 +259,7 @@ public class BaseArrow extends AbstractArrow {
 	}
 
 	@Override
-	protected ItemStack getPickupItem() {
+	protected @NotNull ItemStack getPickupItem() {
 		if (this.entityData.get(ID_IS_SPECTRAL)) {
 			return new ItemStack(Items.SPECTRAL_ARROW);
 		}
@@ -282,7 +284,7 @@ public class BaseArrow extends AbstractArrow {
 			if (i != -1) {
 				double d0 = (double) (i >> 16 & 255) / 255.0D;
 				double d1 = (double) (i >> 8 & 255) / 255.0D;
-				double d2 = (double) (i >> 0 & 255) / 255.0D;
+				double d2 = (double) (i & 255) / 255.0D;
 
 				for (int j = 0; j < 20; ++j) {
 					this.level().addParticle(ParticleTypes.ENTITY_EFFECT, this.getRandomX(0.5D), this.getRandomY(), this.getRandomZ(0.5D), d0, d1, d2);

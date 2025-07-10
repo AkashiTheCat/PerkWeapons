@@ -13,37 +13,45 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
-public class PerkUpdateArrow extends BaseArrow {
+public class PerkGainingArrow extends BaseArrow {
 	private static final EntityDataAccessor<Boolean> ID_RENDER_TRAIL
-			= SynchedEntityData.defineId(PerkUpdateArrow.class, EntityDataSerializers.BOOLEAN);
+			= SynchedEntityData.defineId(PerkGainingArrow.class, EntityDataSerializers.BOOLEAN);
 
-	public PerkUpdateArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
+	public static int MAX_GAINED_LEVEL_FROM_ONE_ARROW = 1;
+	private static final String TAG_GAINED_LEVEL = "gained_level";
+
+	private int gainedLevel = 0;
+
+	public PerkGainingArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
 	}
 
-	public PerkUpdateArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, double pX, double pY, double pZ) {
+	public PerkGainingArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, double pX, double pY, double pZ) {
 		super(pEntityType, pLevel, pX, pY, pZ);
 	}
 
-	public PerkUpdateArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, LivingEntity pShooter) {
+	public PerkGainingArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel, LivingEntity pShooter) {
 		super(pEntityType, pLevel, pShooter);
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
+	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
+		super.addAdditionalSaveData(pCompound);
+		pCompound.putInt(TAG_GAINED_LEVEL, gainedLevel);
+	}
+
+	@Override
+	public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
+		this.gainedLevel = pCompound.getInt(TAG_GAINED_LEVEL);
 	}
 
 	@Override
 	protected void defineSynchedData() {
 		super.defineSynchedData();
 		this.entityData.define(ID_RENDER_TRAIL, false);
-	}
-
-	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
-		super.addAdditionalSaveData(pCompound);
 	}
 
 	@Override
@@ -57,7 +65,7 @@ public class PerkUpdateArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		if (!this.level().isClientSide()) {
 			Entity owner = this.getOwner();
 			if (owner instanceof Player player) {
@@ -70,8 +78,9 @@ public class PerkUpdateArrow extends BaseArrow {
 					perkItemStack = player.getOffhandItem();
 					item = pItem;
 				}
-				if (perkItemStack != ItemStack.EMPTY) {
+				if (perkItemStack != ItemStack.EMPTY && MAX_GAINED_LEVEL_FROM_ONE_ARROW > this.gainedLevel) {
 					item.gainPerkLevel(player, perkItemStack);
+					gainedLevel++;
 				}
 			}
 		}
@@ -81,4 +90,5 @@ public class PerkUpdateArrow extends BaseArrow {
 	public void setRenderTrail(boolean shouldRender) {
 		this.entityData.set(ID_RENDER_TRAIL, shouldRender);
 	}
+
 }

@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class IncineratorArrow extends BaseArrow {
 	public static final ResourceLocation FIRE_ARROW_LOCATION =
@@ -29,7 +30,7 @@ public class IncineratorArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		pResult.getEntity().setSecondsOnFire(5);
 		if (pResult.getEntity().isOnFire()) {
 			this.setKnockback(this.getKnockback() + IncineratorItem.FIRE_ARROW_KNOCKBACK_BONUS);

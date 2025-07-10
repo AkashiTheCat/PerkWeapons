@@ -39,7 +39,7 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 
 		if (isCrossbowCharged(itemstack)) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
-			consumeAndSetCharged(itemstack);
+			consumeAndSetCharged(pPlayer, itemstack);
 			return InteractionResultHolder.consume(itemstack);
 		} else {
 			return InteractionResultHolder.fail(itemstack);

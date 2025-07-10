@@ -13,7 +13,6 @@ import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -43,7 +42,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	private final List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
 
 	public static final String TAG_CUSTOM_CHARGED = "charged1";
-	public static final String TAG_LAST_SHOT = "last_shot";
+	public static final String TAG_LAST_HIT = "last_hit";
 
 	public static float KNOCKBACK_RESISTANCE = 1;
 	public static float MAGIC_RESISTANCE = 50;
@@ -51,14 +50,12 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	public static byte MAX_PERK_LEVEL = 10;
 	public static float RELOAD_REDUCTION_PER_LEVEL = 0.07f;
 	public static float DAMAGE_RESISTANCE_PER_LEVEL = 10F;
-	public static int PERK_CLEAR_TIME_WITHOUT_SHOTS = 60;
+	public static int PERK_CLEAR_TIME_WITHOUT_HIT = 60;
 
 	public PaladinItem(Properties pProperties) {
 		super(pProperties);
 		buildAttributeModifierMap();
-		AddGeneralEnchant(Enchantments.INFINITY_ARROWS);
 		RemoveGeneralEnchant(Enchantments.MULTISHOT);
-		RemoveGeneralEnchant(Enchantments.QUICK_CHARGE);
 	}
 
 	public PaladinItem(int maxChargeTicks, float damage, float velocity,
@@ -67,9 +64,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	                   Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
 				speedModifier, onlyAllowMainHand, pProperties);
-		AddGeneralEnchant(Enchantments.INFINITY_ARROWS);
 		RemoveGeneralEnchant(Enchantments.MULTISHOT);
-		RemoveGeneralEnchant(Enchantments.QUICK_CHARGE);
 	}
 
 	private void buildAttributeModifierMap() {
@@ -122,16 +117,9 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 			setPerkLevel(stack, (byte) 0);
 			return;
 		}
-		if (level.getGameTime() - getLastShotTime(stack) >= PERK_CLEAR_TIME_WITHOUT_SHOTS) {
+		if (level.getGameTime() - getLastHitTime(stack) >= PERK_CLEAR_TIME_WITHOUT_HIT) {
 			setPerkLevel(stack, (byte) 0);
 		}
-	}
-
-	@Override
-	protected void shoot(Level level, LivingEntity shooter, InteractionHand hand, ItemStack crossbowStack, float damage, float velocity, float inaccuracy) {
-		super.shoot(level, shooter, hand, crossbowStack, damage, velocity, inaccuracy);
-		gainPerkLevel(shooter, crossbowStack);
-		setLastShotTime(crossbowStack, level.getGameTime());
 	}
 
 	@Override
@@ -159,7 +147,9 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	@Override
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
 		byte perkLevel = (byte) getPerkLevel(null, crossbowStack);
-		return (int) Math.ceil(super.getMaxChargeTicks(crossbowStack) * (1 - (RELOAD_REDUCTION_PER_LEVEL * perkLevel)));
+		int reloadTicks = (int) Math.ceil(super.getMaxChargeTicks(crossbowStack) * (1 - (RELOAD_REDUCTION_PER_LEVEL * perkLevel)));
+		System.out.println(reloadTicks);
+		return reloadTicks;
 	}
 
 	@Override
@@ -167,6 +157,12 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 		if (enchantment == Enchantments.PIERCING)
 			return stack.getEnchantmentLevel(enchantment) + 1;
 		return super.getCrossbowEnchantmentLevel(stack, enchantment);
+	}
+
+	@Override
+	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
+		IPerkItem.super.gainPerkLevel(entity, stack);
+		setLastHitTime(stack, entity.level().getGameTime());
 	}
 
 	@Override
@@ -178,7 +174,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	public float getCoolDownProgress(LivingEntity owner, ItemStack stack) {
 		if (getPerkLevel(owner, stack) == 0)
 			return 0;
-		float ratio = (float) (owner.level().getGameTime() - getLastShotTime(stack)) / PERK_CLEAR_TIME_WITHOUT_SHOTS;
+		float ratio = (float) (owner.level().getGameTime() - getLastHitTime(stack)) / PERK_CLEAR_TIME_WITHOUT_HIT;
 		return Math.max(1 - ratio, 0);
 	}
 
@@ -186,6 +182,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	protected @NotNull SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return SHOOTING_SOUND;
 	}
+
 
 	@Override
 	public boolean isCrossbowCharged(ItemStack crossbowStack) {
@@ -199,14 +196,14 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 		tag.putBoolean(TAG_CUSTOM_CHARGED, charged);
 	}
 
-	protected long getLastShotTime(ItemStack stack) {
+	protected long getLastHitTime(ItemStack stack) {
 		CompoundTag nbt = stack.getOrCreateTag();
-		return nbt.contains(TAG_LAST_SHOT) ? nbt.getLong(TAG_LAST_SHOT) : 0;
+		return nbt.contains(TAG_LAST_HIT) ? nbt.getLong(TAG_LAST_HIT) : 0;
 	}
 
-	protected void setLastShotTime(ItemStack stack, long time) {
+	protected void setLastHitTime(ItemStack stack, long time) {
 		CompoundTag nbt = stack.getOrCreateTag();
-		nbt.putLong(TAG_LAST_SHOT, time);
+		nbt.putLong(TAG_LAST_HIT, time);
 	}
 
 	@Override
@@ -219,7 +216,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 			RELOAD_REDUCTION_PER_LEVEL = pProperties.RELOAD_REDUCTION_PER_LEVEL.get().floatValue();
 			DAMAGE_RESISTANCE_PER_LEVEL = pProperties.DAMAGE_RESISTANCE_PER_LEVEL.get().floatValue();
 			MAX_PERK_LEVEL = pProperties.MAX_PERK_LEVEL.get().byteValue();
-			PERK_CLEAR_TIME_WITHOUT_SHOTS = pProperties.PERK_CLEAR_TIME_WITHOUT_SHOTS.get();
+			PERK_CLEAR_TIME_WITHOUT_HIT = pProperties.PERK_CLEAR_TIME_WITHOUT_HIT.get();
 			buildAttributeModifierMap();
 		}
 	}

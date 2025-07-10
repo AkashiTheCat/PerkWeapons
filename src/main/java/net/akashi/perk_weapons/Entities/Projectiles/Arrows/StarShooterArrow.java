@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class StarShooterArrow extends BaseArrow {
 	public static float DAMAGE_MODIFIER_PER_METER = 0.03F;
@@ -44,7 +45,7 @@ public class StarShooterArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		if (!this.level().isClientSide() && pResult.getEntity() instanceof LivingEntity) {
 			this.setBaseDamage(getBaseDamage() * (1 + Math.min(DAMAGE_MODIFIER_MAX,
 					Math.max(this.flyDist * DAMAGE_MODIFIER_PER_METER, DAMAGE_MODIFIER_MIN))

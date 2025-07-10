@@ -6,7 +6,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class QueenBeeArrow extends PerkUpdateArrow {
+public class QueenBeeArrow extends PerkGainingArrow {
 	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(PerkWeapons.MODID,
 			"/textures/entity/projectiles/queen_bee_arrow.png");
 

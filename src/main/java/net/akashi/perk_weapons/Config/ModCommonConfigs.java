@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
 import net.akashi.perk_weapons.Effects.InternalExplosionEffect;
+import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkGainingArrow;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,6 +30,7 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
+	public static ForgeConfigSpec.IntValue PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW;
 	public static ForgeConfigSpec.DoubleValue SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE;
 	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
 	public static ForgeConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
@@ -86,6 +88,9 @@ public class ModCommonConfigs {
 				.define("CrossbowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_FIREWORK = BUILDER.comment("Set True To Allow Modded Crossbows Use Fireworks As Ammo")
 				.define("CrossbowAcceptFirework", true);
+		PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW = BUILDER.comment("Max Perk Level That Can Be Gained From One Perk Arrow Shot")
+				.comment("Has Effect When The Arrow Pierces Multiple Enemies")
+				.defineInRange("MaxPerkArrowLevelGain", 1, 0, 255);
 		SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE = BUILDER.comment("Ranged Damage Buff Ratio Per Power Level When Enchanted" +
 				" On Modded Spears").defineInRange("PowerBuff", 0.2, 0, 255);
 		REPAIRER_LEVEL_COST = BUILDER.comment("Level Required By Each Repairer To Repair Something On Anvil")
@@ -211,54 +216,56 @@ public class ModCommonConfigs {
 				37, 12.0,
 				4.4, 0.5,
 				1, 0,
-				-0.5, (byte) 2,
-				(byte) 1, 40,
+				1.0, -0.5,
+				(byte) 2, (byte) 1, 40,
 				true);
 		LIBERATOR_PROPERTIES = new LiberatorProperties(BUILDER, "Liberator",
 				50, 10.0,
 				2.4, 1.0,
 				1, 0,
-				0.0, (byte) 1,
-				1, 2,
-				false);
+				1.0, 0.0,
+				(byte) 1, 1,
+				2, false);
 		TAINTED_FORTUNE_PROPERTIES = new TaintedFortuneProperties(BUILDER, "Tainted Fortune",
 				25, 10.0,
 				2.0, 1.2,
 				1, 0,
-				0.0, 1.0,
-				false);
+				1.0, 0.0,
+				1.0, false);
 		SONIC_BLASTER_PROPERTIES = new SonicBlasterProperties(BUILDER, "Sonic Blaster",
 				37, 20.0,
 				0.1, 0.0,
 				1, 0,
-				-0.5, 1.0,
-				24, 1.0,
-				-1, false,
-				0.6, true);
+				1.0, -0.5,
+				1.0, 24,
+				1.0, -1,
+				false, 0.6,
+				true);
 		INCINERATOR_PROPERTIES = new IncineratorProperties(BUILDER, "Incinerator",
 				80, 13.0,
 				3.2, 0.8,
 				7, 10,
-				-0.25, 10,
-				10, 1,
-				true);
+				1.0, -0.25,
+				10, 10,
+				1, true);
 		QUEEN_BEE_PROPERTIES = new QueenBeeProperties(BUILDER, "Queen Bee",
 				10, 8D,
 				2.0, 1.2,
 				1, 0,
-				7, 4,
-				100, 1,
-				80, 40,
-				0.0, false);
+				1.0, 7,
+				4, 100,
+				1, 80,
+				40, 0.0,
+				false);
 		PALADIN_PROPERTIES = new PaladinProperties(BUILDER, "Paladin",
 				20, 10.0,
 				3.5, 1.0,
 				1, 0,
-				1.0, 50,
-				-30, 10,
-				0.07, 10,
-				60, -0.3,
-				true);
+				0.5, 1.0,
+				50, -30,
+				10, 0.07,
+				10, 100,
+				-0.3, true);
 
 		SPEC = BUILDER.build();
 	}
@@ -312,5 +319,7 @@ public class ModCommonConfigs {
 		ModItems.INCINERATOR.get().updateAttributesFromConfig(INCINERATOR_PROPERTIES);
 		ModItems.QUEEN_BEE_CROSSBOW.get().updateAttributesFromConfig(QUEEN_BEE_PROPERTIES);
 		ModItems.PALADIN.get().updateAttributesFromConfig(PALADIN_PROPERTIES);
+
+		PerkGainingArrow.MAX_GAINED_LEVEL_FROM_ONE_ARROW = PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW.get();
 	}
 }

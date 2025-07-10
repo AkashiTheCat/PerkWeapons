@@ -11,11 +11,11 @@ public class IncineratorProperties extends CrossbowProperties {
 	                             int defaultChargeTime, double defaultDamage,
 	                             double defaultVelocity, double defaultInaccuracy,
 	                             int defaultAmmoCapacity, int defaultFireInterval,
-	                             double defaultSpeedModifier, int defaultBlazeCapacity,
-	                             int defaultBlazeReloadInc, int defaultKnockbackBonus,
-	                             boolean onlyAllowMainHand) {
-		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+	                             double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+	                             int defaultBlazeCapacity, int defaultBlazeReloadInc,
+	                             int defaultKnockbackBonus, boolean onlyAllowMainHand) {
+		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		BLAZE_AMMO_CAPACITY = builder.comment("Ammo Capacity Of " + name + " With Blaze Enchanted")
 				.defineInRange("BlazeAmmoCapacity", defaultBlazeCapacity, 1, 64);
 		BLAZE_RELOAD_INCREMENT = builder.comment("Additional Reload Time Of " + name + " With Blaze Enchanted")

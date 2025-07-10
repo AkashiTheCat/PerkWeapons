@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraftforge.network.PlayMessages;
+import org.jetbrains.annotations.NotNull;
 
 public class PurgatoryArrow extends BaseArrow {
 	public static final ResourceLocation FIRE_ARROW_LOCATION =
@@ -39,7 +40,7 @@ public class PurgatoryArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		Entity entity = pResult.getEntity();
 		if (entity.getType() != EntityType.ENDERMAN) {
 			entity.setSecondsOnFire(5);

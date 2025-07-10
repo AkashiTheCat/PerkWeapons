@@ -9,10 +9,10 @@ public class TaintedFortuneProperties extends CrossbowProperties {
 	                                int defaultChargeTime, double defaultDamage,
 	                                double defaultVelocity, double defaultInaccuracy,
 	                                int defaultAmmoCapacity, int defaultFireInterval,
-	                                double defaultSpeedModifier, double defaultKnockbackBonus,
-	                                boolean onlyAllowMainHand) {
-		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+	                                double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+	                                double defaultKnockbackBonus, boolean onlyAllowMainHand) {
+		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		KNOCKBACK_MODIFIER = builder.comment("Knockback Modifier When Holding " + name + " In Offhand")
 				.defineInRange("KnockbackModifier", defaultKnockbackBonus, -10.0, 10.0);
 		builder.pop();

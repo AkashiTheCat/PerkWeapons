@@ -9,6 +9,7 @@ public class CrossbowProperties {
 	public ForgeConfigSpec.DoubleValue INACCURACY;
 	public ForgeConfigSpec.IntValue AMMO_CAPACITY;
 	public ForgeConfigSpec.IntValue FIRE_INTERVAL;
+	public ForgeConfigSpec.DoubleValue QUICK_CHARGE_MULTIPLIER;
 	public ForgeConfigSpec.DoubleValue SPEED_MODIFIER;
 	public ForgeConfigSpec.BooleanValue ONLY_MAINHAND;
 
@@ -16,8 +17,8 @@ public class CrossbowProperties {
 	                          int defaultChargeTime, double defaultDamage,
 	                          double defaultVelocity, double defaultInaccuracy,
 	                          int defaultAmmoCapacity, int defaultFireInterval,
-	                          double defaultSpeedModifier, boolean onlyAllowMainHand,
-	                          boolean shouldPop) {
+							  double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+							  boolean onlyAllowMainHand, boolean shouldPop) {
 		builder.push(name);
 		topComment(builder, name);
 		CHARGE_TIME = builder.comment("Ammo Charging Time Of " + name + " In Ticks")
@@ -32,6 +33,9 @@ public class CrossbowProperties {
 				.defineInRange("AmmoCapacity", defaultAmmoCapacity, 0, 128);
 		FIRE_INTERVAL = builder.comment("Fire Interval(If Loaded Ammo > 1) In Ticks Of " + name)
 				.defineInRange("FireInterval", defaultFireInterval, 0, Integer.MAX_VALUE);
+		QUICK_CHARGE_MULTIPLIER = builder.comment("Scaler For The Reload Time Decrement Of Quick Charge")
+				.comment("ReloadTime(Ticks) = {BaseReloadTime} - 5 * this * {QuickChargeLevel}")
+				.defineInRange("QuickChargeMultiplier", defaultQuickChargeMultiplier, 0, Double.MAX_VALUE);
 		SPEED_MODIFIER = builder.comment("Speed Modifier When Holding " + name)
 				.defineInRange("SpeedModifier", defaultSpeedModifier, -1.0, 1.0);
 		ONLY_MAINHAND = builder.comment("Set True To Make " + name + " Only Can Be Used In Main Hand.")

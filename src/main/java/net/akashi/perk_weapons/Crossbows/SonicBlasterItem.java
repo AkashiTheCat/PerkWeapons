@@ -225,7 +225,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public void consumeAndSetCharged(ItemStack crossbowStack) {
+	public void consumeAndSetCharged(LivingEntity shooter, ItemStack crossbowStack) {
 		int ammoLeft = getAmmoLoaded(crossbowStack) - 1;
 		setAmmoLoaded(crossbowStack, ammoLeft);
 		if (ammoLeft <= 0) {

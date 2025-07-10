@@ -50,7 +50,7 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<BaseArrow>> BASE_ARROW = EntityRegistry("arrow", BaseArrow::new);
 	public static final RegistryObject<EntityType<PurgatoryArrow>> PURGATORY_ARROW = EntityRegistry("purgatory_arrow", PurgatoryArrow::new);
 	public static final RegistryObject<EntityType<ExplosiveArrow>> EXPLOSIVE_ARROW = EntityRegistry("explosive_arrow", ExplosiveArrow::new);
-	public static final RegistryObject<EntityType<PerkUpdateArrow>> PERK_UPDATE_ARROW = EntityRegistry("perk_arrow", PerkUpdateArrow::new);
+	public static final RegistryObject<EntityType<PerkGainingArrow>> PERK_GAINING_ARROW = EntityRegistry("perk_arrow", PerkGainingArrow::new);
 	public static final RegistryObject<EntityType<FrostHunterArrow>> FROST_HUNTER_ARROW = EntityRegistry("frost_hunter_arrow", FrostHunterArrow::new);
 	public static final RegistryObject<EntityType<StarShooterArrow>> STAR_SHOOTER_ARROW = EntityRegistry("star_shooter_arrow", StarShooterArrow::new);
 	public static final RegistryObject<EntityType<DevourerArrow>> DEVOURER_ARROW = EntityRegistry("devourer_arrow", DevourerArrow::new);

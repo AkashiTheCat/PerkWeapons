@@ -14,12 +14,13 @@ public class SonicBlasterProperties extends CrossbowProperties {
 	                              int defaultChargeTime, double defaultDamage,
 	                              double defaultVelocity, double defaultInaccuracy,
 	                              int defaultAmmoCapacity, int defaultFireInterval,
-	                              double defaultSpeedModifier, double defaultKnockbackResistance,
-	                              int defaultMaxRange, double defaultDamageRadius,
-	                              int defaultPierceLevel, boolean defaultEnableKnockback,
-	                              double defaultKnockbackForce, boolean onlyAllowMainHand) {
-		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+	                              double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+	                              double defaultKnockbackResistance, int defaultMaxRange,
+	                              double defaultDamageRadius, int defaultPierceLevel,
+	                              boolean defaultEnableKnockback, double defaultKnockbackForce,
+	                              boolean onlyAllowMainHand) {
+		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		KNOCKBACK_RESISTANCE = builder.comment("Knockback Resistance Provided By " + name + " When In MainHand")
 				.comment("1.0 means You Wont Take Any Knockback At All")
 				.defineInRange("KnockbackResistance", defaultKnockbackResistance, -10.0, 1.0);

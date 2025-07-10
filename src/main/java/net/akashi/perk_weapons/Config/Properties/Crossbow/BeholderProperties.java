@@ -11,11 +11,11 @@ public class BeholderProperties extends CrossbowProperties {
 	                          int defaultChargeTime, double defaultDamage,
 	                          double defaultVelocity, double defaultInaccuracy,
 	                          int defaultAmmoCapacity, int defaultFireInterval,
-	                          double defaultSpeedModifier, byte defaultSlownessLevel,
-	                          byte defaultWeaknessLevel, int defaultAffectRange,
-	                          boolean onlyAllowMainHand) {
-		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+	                          double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+	                          byte defaultSlownessLevel, byte defaultWeaknessLevel,
+	                          int defaultAffectRange, boolean onlyAllowMainHand) {
+		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		SLOWNESS_LEVEL = builder.comment("Level Of Slowness Effect On Target When Ability Activates")
 				.defineInRange("SlownessLevel", defaultSlownessLevel, 0, 255);
 		WEAKNESS_LEVEL = builder.comment("Level Of Weakness Effect On Target When Ability Activates")

@@ -9,6 +9,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.EvokerFangs;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import org.jetbrains.annotations.NotNull;
 
 public class DevourerArrow extends BaseArrow {
 	public DevourerArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
@@ -34,13 +35,13 @@ public class DevourerArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void doPostHurtEffects(LivingEntity pLiving) {
+	protected void doPostHurtEffects(@NotNull LivingEntity pLiving) {
 		super.doPostHurtEffects(pLiving);
 		pLiving.setDeltaMovement(0, 0, 0);
 	}
 
 	@Override
-	protected void onHitEntity(EntityHitResult pResult) {
+	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		super.onHitEntity(pResult);
 		Level level = this.level();
 		if (!level.isClientSide() && pResult.getEntity() instanceof LivingEntity livingEntity) {

@@ -11,11 +11,11 @@ public class LiberatorProperties extends CrossbowProperties {
 	                           int defaultChargeTime, double defaultDamage,
 	                           double defaultVelocity, double defaultInaccuracy,
 	                           int defaultAmmoCapacity, int defaultFireInterval,
-	                           double defaultSpeedModifier, byte defaultPierceLevel,
-	                           int defaultMultiShotBonus, int defaultCapacityRegicide,
-	                           boolean onlyAllowMainHand) {
-		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy,
-				defaultAmmoCapacity, defaultFireInterval, defaultSpeedModifier, onlyAllowMainHand, false);
+	                           double defaultQuickChargeMultiplier, double defaultSpeedModifier,
+	                           byte defaultPierceLevel, int defaultMultiShotBonus,
+	                           int defaultCapacityRegicide, boolean onlyAllowMainHand) {
+		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
+				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		PIERCE_LEVEL = builder.comment("Pierce Level Of " + name + "'s Arrow")
 				.defineInRange("PierceLevel", defaultPierceLevel, 0, 127);
 		MULTISHOT_BONUS = builder.comment("The MultiSot Bonus Level Of " + name)
