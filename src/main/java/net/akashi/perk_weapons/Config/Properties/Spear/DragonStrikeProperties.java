@@ -11,13 +11,15 @@ public class DragonStrikeProperties extends SpearProperties {
 	public ForgeConfigSpec.IntValue RETURN_TIME;
 	public ForgeConfigSpec.IntValue ABILITY_COOLDOWN_TIME;
 
-	public DragonStrikeProperties(ForgeConfigSpec.Builder builder, String name, float defaultMeleeDamage,
-	                              double defaultAttackSpeed, float defaultRangedDamage, float defaultVelocity,
-	                              double defaultInitAffectCloudRadius, double defaultMaxAffectCloudRadius,
-	                              int defaultAffectCloudDuration, int defaultAffectCloudDamage,
-								  double defaultMagicResistance, int defaultReturnTime,
-	                              int defaultAbilityCoolDownTime) {
-		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity, false);
+	public DragonStrikeProperties(ForgeConfigSpec.Builder builder, String name,
+	                              float defaultMeleeDamage, double defaultAttackSpeed,
+	                              float defaultRangedDamage, float defaultVelocity,
+	                              int defaultMaxChargeTime, double defaultInitAffectCloudRadius,
+	                              double defaultMaxAffectCloudRadius, int defaultAffectCloudDuration,
+	                              int defaultAffectCloudDamage, double defaultMagicResistance,
+	                              int defaultReturnTime, int defaultAbilityCoolDownTime) {
+		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
+				defaultMaxChargeTime, false);
 		INIT_AFFECT_RADIUS = builder.comment("Radius Of Spawned Affect Cloud On Hit")
 				.defineInRange("InitAffectCloudRadius", defaultInitAffectCloudRadius, 0, 10);
 		MAX_AFFECT_RADIUS = builder.comment("Max Radius Of Affect Cloud To Grow Up To")

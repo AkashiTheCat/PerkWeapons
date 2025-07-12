@@ -3,14 +3,15 @@ package net.akashi.perk_weapons.Client.GUI;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
+import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
@@ -22,7 +23,9 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class DoubleLineCrossHair {
+	private static final Minecraft minecraft = Minecraft.getInstance();
 	public static boolean isVanillaCrosshairDisabled = false;
+	protected static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
 	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
 	public static final IGuiOverlay CROSSHAIR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
 		//Check CrossHairs Enabled
@@ -32,6 +35,8 @@ public class DoubleLineCrossHair {
 
 		Minecraft mc = Minecraft.getInstance();
 		Player player = mc.player;
+		if (player == null)
+			return;
 
 		boolean isItemMatched = false;
 		ItemStack stack = ItemStack.EMPTY;
@@ -85,6 +90,28 @@ public class DoubleLineCrossHair {
 
 		//render right
 		guiGraphics.blit(HUD_TEXTURE, rightStartX, startY, 23, 0, 12, 3);
+
+		if (isVanillaCrosshairDisabled) {
+			if (minecraft.options.attackIndicator().get() == AttackIndicatorStatus.CROSSHAIR && minecraft.player != null) {
+				float f = minecraft.player.getAttackStrengthScale(0.0F);
+				boolean flag = false;
+				if (minecraft.crosshairPickEntity instanceof LivingEntity && f >= 1.0F) {
+					flag = minecraft.player.getCurrentItemAttackStrengthDelay() > 5.0F;
+					flag &= minecraft.crosshairPickEntity.isAlive();
+				}
+
+				int j = screenHeight / 2 - 7 + 16;
+				int k = screenWidth / 2 - 8;
+				if (flag) {
+					guiGraphics.blit(GUI_ICONS_LOCATION, k, j, 68, 94, 16, 16);
+				} else if (f < 1.0F) {
+					int l = (int) (f * 17.0F);
+					guiGraphics.blit(GUI_ICONS_LOCATION, k, j, 36, 94, 16, 4);
+					guiGraphics.blit(GUI_ICONS_LOCATION, k, j, 52, 94, l, 4);
+				}
+			}
+		}
+
 		poseStack.popPose();
 	}
 

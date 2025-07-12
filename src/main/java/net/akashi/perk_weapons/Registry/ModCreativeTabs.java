@@ -22,6 +22,7 @@ public class ModCreativeTabs {
 	public static final List<Supplier<? extends ItemLike>> INGREDIENTS_TAB = new ArrayList<>();
 	public static final List<Supplier<? extends ItemLike>> SPEAR_TAB = new ArrayList<>();
 	public static final List<Supplier<? extends ItemLike>> BOW_TAB = new ArrayList<>();
+	public static final List<Supplier<? extends ItemLike>> CROSSBOW_TAB = new ArrayList<>();
 	private static final RegistryObject<CreativeModeTab> ACTUAL_INGREDIENTS_TAB = TABS.register("ingredients_tab",
 			() -> CreativeModeTab.builder()
 					.title(Component.translatable(PerkWeapons.MODID+".itemGroup.ingredients_tab"))
@@ -44,6 +45,14 @@ public class ModCreativeTabs {
 					.icon(ModItems.SHORT_BOW.get()::getDefaultInstance)
 					.displayItems((displayParams, output) ->
 							BOW_TAB.forEach(itemLike -> output.accept(itemLike.get())))
+					.build()
+	);
+	private static final RegistryObject<CreativeModeTab> ACTUAL_CROSSBOW_TAB = TABS.register("crossbow_tab",
+			() -> CreativeModeTab.builder()
+					.title(Component.translatable(PerkWeapons.MODID+".itemGroup.crossbow_tab"))
+					.icon(ModItems.BEHOLDER.get()::getDefaultInstance)
+					.displayItems((displayParams, output) ->
+							CROSSBOW_TAB.forEach(itemLike -> output.accept(itemLike.get())))
 					.build()
 	);
 

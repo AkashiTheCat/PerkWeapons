@@ -46,6 +46,7 @@ public class ModEntities {
 	public static final RegistryObject<EntityType<ThrownDragonStrike>> THROWN_DRAGON_STRIKE = EntityRegistry("thrown_dragon_strike", ThrownDragonStrike::new);
 	public static final RegistryObject<EntityType<ThrownScourge>> THROWN_SCOURGE = EntityRegistry("thrown_scourge", ThrownScourge::new);
 	public static final RegistryObject<EntityType<ThrownNetherGuide>> THROWN_NETHER_GUIDE = EntityRegistry("thrown_nether_guide", ThrownNetherGuide::new);
+	public static final RegistryObject<EntityType<ThrownCenturion>> THROWN_CENTURION = EntityRegistry("thrown_centurion", ThrownCenturion::new);
 
 	//Arrows
 	public static final RegistryObject<EntityType<BaseArrow>> BASE_ARROW = EntityRegistry("arrow", BaseArrow::new);

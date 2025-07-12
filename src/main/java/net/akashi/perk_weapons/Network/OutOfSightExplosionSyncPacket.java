@@ -38,6 +38,8 @@ public class OutOfSightExplosionSyncPacket {
 
 	public static void handle(OutOfSightExplosionSyncPacket packet, Supplier<NetworkEvent.Context> context) {
 		context.get().enqueueWork(() -> {
+			if(Minecraft.getInstance().level == null)
+				return;
 			Entity entity = Minecraft.getInstance().level.getEntity(packet.PlayerID);
 			if (entity instanceof Player player) {
 				Level level = player.level();

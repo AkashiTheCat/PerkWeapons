@@ -18,6 +18,7 @@ import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -60,9 +61,9 @@ public class ScourgeItem extends BaseSpearItem {
 			ClientHelper.registerScourgePropertyOverrides(this);
 	}
 
-	public ScourgeItem(float attackDamage, float attackSpeed, float throwDamage,
-	                   float projectileVelocity, boolean isAdvanced, Properties pProperties) {
-		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
+	public ScourgeItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
+	                   int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
+		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
 
 		if (FMLEnvironment.dist.isClient())
@@ -128,11 +129,11 @@ public class ScourgeItem extends BaseSpearItem {
 	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
 	                          int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
-		if (!level.isClientSide() && entity instanceof Player player) {
+		if (!level.isClientSide() && entity.getType() == EntityType.PLAYER) {
 			long tickPassed = level.getGameTime() - getLastAbilityUsedTime(stack);
 			int shotsRemain = getAbilityShotsRemain(stack);
 			if (shotsRemain > 0 && tickPassed % ABILITY_SHOTS_INTERVAL == 0) {
-				shootAbilitySpears(level, player, stack);
+				shootAbilitySpears(level, (Player) entity, stack);
 				setAbilityShotsRemain(stack, shotsRemain - 1);
 			}
 			if (isBuffed(stack) && tickPassed > ABILITY_BUFF_DURATION) {

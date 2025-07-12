@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public class HandlerForModAttributes {
+public class ModAttributesEventHandler {
 	@SubscribeEvent
 	public static void onLivingEntityHurt(LivingHurtEvent event) {
 		LivingEntity entity = event.getEntity();

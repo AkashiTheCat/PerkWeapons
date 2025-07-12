@@ -13,11 +13,12 @@ public class MegalodonProperties extends SpearProperties {
 	public MegalodonProperties(ForgeConfigSpec.Builder builder, String name,
 	                           float defaultMeleeDamage, double defaultAttackSpeed,
 	                           float defaultRangedDamage, float defaultVelocity,
-	                           int defaultDolphinsGraceLevel, int defaultDolphinsGraceTicks,
-	                           int defaultHasteLevel, int defaultHasteTicks,
-	                           int defaultStrengthLevel, int defaultStrengthTicks) {
-		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage,
-				defaultVelocity, false);
+	                           int defaultMaxChargeTime, int defaultDolphinsGraceLevel,
+	                           int defaultDolphinsGraceTicks, int defaultHasteLevel,
+	                           int defaultHasteTicks, int defaultStrengthLevel,
+	                           int defaultStrengthTicks) {
+		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
+				defaultMaxChargeTime, false);
 		DOLPHINS_GRACE_LEVEL = builder.comment("Level Of Dolphin's Grace Effect Applied To Owner On Hit")
 				.defineInRange("DolphinsGraceLevel", defaultDolphinsGraceLevel, 0, 255);
 		DOLPHINS_GRACE_TICKS = builder.comment("Effect Time In Ticks Of Dolphin's Grace Effect")

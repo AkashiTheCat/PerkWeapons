@@ -3,7 +3,8 @@
 
   "perk_weapons.itemGroup.ingredients_tab": "Perk Weapons: Ingredients",
   "perk_weapons.itemGroup.spear_tab": "Perk Weapons: Spears",
-  "perk_weapons.itemGroup.bow_tab": "Perk Weapons: Bows & Crossbows",
+  "perk_weapons.itemGroup.bow_tab": "Perk Weapons: Bows",
+  "perk_weapons.itemGroup.crossbow_tab": "Perk Weapons: Crossbows",
 
   "enchantment.perk_weapons.melt_down": "Melt Down",
   "enchantment.perk_weapons.star_shooter": "Star Shooter",
@@ -76,6 +77,7 @@
   "tooltip.perk_weapons.attribute_velocity": "Velocity: %f",
   "tooltip.perk_weapons.attribute_draw_time": "Draw Time: %s s",
   "tooltip.perk_weapons.attribute_charge_time": "Charge Time: %s s",
+  "tooltip.perk_weapons.attribute_spear_charge_time": "Charge Time: %s s",
 
   "tooltip.perk_weapons.weapon_description_title": "Description:",
   "tooltip.perk_weapons.description_key_hint": "[Press %s to show description]",

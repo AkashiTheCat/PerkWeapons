@@ -38,7 +38,7 @@ public class InternalExplosionEffect extends MobEffect {
 		return pDuration == 2;
 	}
 
-	public static void updateAttributesFromConfig(ModExplosionProperties IProperties) {
+	public static void updateParamsFromConfig(ModExplosionProperties IProperties) {
 		EXP_INNER_R = IProperties.INNER_R.get().floatValue();
 		EXP_OUTER_R = IProperties.OUTER_R.get().floatValue();
 		EXP_INNER_DMG = IProperties.INNER_DMG.get().floatValue();

@@ -48,8 +48,8 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	}
 
 	public DragonStrikeItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
-	                        boolean isAdvanced, Properties pProperties) {
-		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
+	                        int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
+		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
 		buildAttributeModifiers();
 		this.RemoveGeneralEnchant(LOYALTY);
 	}

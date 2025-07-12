@@ -2,7 +2,7 @@ package net.akashi.perk_weapons.Config.Properties.Spear;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 
-public class ConduitGuardProperties extends SpearProperties{
+public class ConduitGuardProperties extends SpearProperties {
 	public ForgeConfigSpec.DoubleValue HOMING_RANGE;
 	public ForgeConfigSpec.DoubleValue MAX_HOMING_ANGLE;
 	public ForgeConfigSpec.DoubleValue MAX_TURN_RATE;
@@ -13,10 +13,12 @@ public class ConduitGuardProperties extends SpearProperties{
 	public ConduitGuardProperties(ForgeConfigSpec.Builder builder, String name,
 	                              float defaultMeleeDamage, double defaultAttackSpeed,
 	                              float defaultRangedDamage, float defaultVelocity,
-	                              double defaultHomingRange, double defaultMaxHomingAngle,
-	                              double defaultMaxTurnRate, double defaultHomingAcceleration,
-	                              double defaultVelocityMultiplier, int defaultReturnTimer) {
-		super(builder,name,defaultMeleeDamage,defaultAttackSpeed,defaultRangedDamage,defaultVelocity,false);
+	                              int defaultMaxChargeTime, double defaultHomingRange,
+	                              double defaultMaxHomingAngle, double defaultMaxTurnRate,
+	                              double defaultHomingAcceleration, double defaultVelocityMultiplier,
+	                              int defaultReturnTimer) {
+		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
+				defaultMaxChargeTime, false);
 		HOMING_RANGE = builder.comment("Homing Range Of The Projectile")
 				.defineInRange("HomingRange", defaultHomingRange, 0, 32);
 		MAX_HOMING_ANGLE = builder.comment("Maximum Homing Angle (In Degrees) Of The Projectile")

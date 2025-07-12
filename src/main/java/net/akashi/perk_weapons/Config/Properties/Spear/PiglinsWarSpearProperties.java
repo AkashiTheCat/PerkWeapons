@@ -17,8 +17,10 @@ public class PiglinsWarSpearProperties extends SpearProperties {
 	public PiglinsWarSpearProperties(ForgeConfigSpec.Builder builder, String name,
 	                                 float defaultMeleeDamage, double defaultAttackSpeed,
 	                                 float defaultRangedDamage, float defaultVelocity,
-	                                 double defaultDamageBonus, double defaultSpeedBonus) {
-		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity, false);
+	                                 int defaultMaxChargeTime, double defaultDamageBonus,
+	                                 double defaultSpeedBonus) {
+		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
+				defaultMaxChargeTime, false);
 		DAMAGE_BONUS = builder.comment("Damage = BaseDamage * (1 + ArmorCount * this)")
 				.defineInRange("DamageBonus", defaultDamageBonus, 0, 10);
 		SPEED_BONUS = builder.comment("AttackSpeed = BaseAttackSpeed * (1 + ArmorCount * this)")

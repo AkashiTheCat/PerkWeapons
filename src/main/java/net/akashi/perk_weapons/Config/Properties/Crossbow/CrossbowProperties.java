@@ -21,7 +21,7 @@ public class CrossbowProperties {
 							  boolean onlyAllowMainHand, boolean shouldPop) {
 		builder.push(name);
 		topComment(builder, name);
-		CHARGE_TIME = builder.comment("Ammo Charging Time Of " + name + " In Ticks")
+		CHARGE_TIME = builder.comment("Ammo Loading Time Of " + name + " In Ticks")
 				.defineInRange("ChargeTime", defaultChargeTime, 0, Integer.MAX_VALUE);
 		DAMAGE = builder.comment("Damage Of " + name)
 				.defineInRange("Damage", defaultDamage, 0, Double.MAX_VALUE);

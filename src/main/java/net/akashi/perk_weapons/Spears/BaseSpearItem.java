@@ -8,6 +8,7 @@ import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
+import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -40,12 +41,13 @@ import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseSpearItem extends TridentItem implements Vanishable {
-	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
-	public float VELOCITY = 2.5F;
-	public float MELEE_DAMAGE = 5F;
-	public float MELEE_SPEED = 1.1F;
-	public float THROW_DAMAGE = 5F;
+public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLineCrosshairItem {
+	protected Multimap<Attribute, AttributeModifier> AttributeModifiers;
+	protected float VELOCITY = 2.5F;
+	protected float MELEE_DAMAGE = 5F;
+	protected float MELEE_SPEED = 1.1F;
+	protected float THROW_DAMAGE = 5F;
+	protected int MAX_CHARGE_TICKS = 10;
 
 	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			POWER_ARROWS,
@@ -74,13 +76,14 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 			ClientHelper.registerSpearPropertyOverrides(this);
 	}
 
-	public BaseSpearItem(float attackDamage, float attackSpeed, float throwDamage,
-	                     float projectileVelocity, boolean isAdvanced, Properties pProperties) {
+	public BaseSpearItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
+	                     int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
 		super(pProperties);
 		this.VELOCITY = projectileVelocity;
 		this.THROW_DAMAGE = throwDamage;
 		this.MELEE_DAMAGE = attackDamage;
 		this.MELEE_SPEED = attackSpeed;
+		this.MAX_CHARGE_TICKS = maxChargeTicks;
 		if (isAdvanced) {
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
@@ -112,7 +115,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
 			int usedTicks = this.getUseDuration(pStack) - pTimeLeft;
-			if (usedTicks >= 10) {
+			if (usedTicks >= getMaxChargeTicks(player, pStack)) {
 				int riptideLevel = EnchantmentHelper.getRiptide(pStack);
 				if (riptideLevel <= 0 || player.isInWaterOrRain()) {
 					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
@@ -194,6 +197,11 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		}
 	}
 
+	@Override
+	public float getChokeProgress(LivingEntity shooter, ItemStack stack) {
+		return Math.min((float) shooter.getTicksUsingItem() / getMaxChargeTicks(shooter, stack), 1);
+	}
+
 	//Enchantments
 
 	@Override
@@ -229,6 +237,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		this.MELEE_DAMAGE = properties.MELEE_DAMAGE.get().floatValue();
 		this.MELEE_SPEED = properties.ATTACK_SPEED.get().floatValue();
 		this.THROW_DAMAGE = properties.RANGED_DAMAGE.get().floatValue();
+		this.MAX_CHARGE_TICKS = properties.MAX_CHARGE_TICKS.get();
 
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
@@ -244,6 +253,10 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 
 	protected float getProjectileBaseDamage(ItemStack stack) {
 		return THROW_DAMAGE;
+	}
+
+	protected int getMaxChargeTicks(LivingEntity owner, ItemStack stack) {
+		return MAX_CHARGE_TICKS;
 	}
 
 	//Tooltips
@@ -269,6 +282,9 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 				.withStyle(ChatFormatting.DARK_AQUA));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_velocity",
 						TooltipHelper.convertToEmbeddedElement(VELOCITY))
+				.withStyle(ChatFormatting.DARK_AQUA));
+		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_spear_charge_time",
+						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(MAX_CHARGE_TICKS)))
 				.withStyle(ChatFormatting.DARK_AQUA));
 
 		super.appendHoverText(stack, level, tooltip, isAdvanced);

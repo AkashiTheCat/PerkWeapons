@@ -32,8 +32,8 @@ public class ConduitGuardItem extends BaseSpearItem {
 	}
 
 	public ConduitGuardItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
-	                        boolean isAdvanced, Properties pProperties) {
-		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, isAdvanced, pProperties);
+	                        int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
+		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
 		RemoveGeneralEnchant(LOYALTY);
 	}
 

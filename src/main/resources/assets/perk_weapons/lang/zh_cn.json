@@ -3,7 +3,8 @@
 
   "perk_weapons.itemGroup.ingredients_tab": "特异武器库: 材料",
   "perk_weapons.itemGroup.spear_tab": "特异武器库: 投矛",
-  "perk_weapons.itemGroup.bow_tab": "特异武器库: 弓 & 弩",
+  "perk_weapons.itemGroup.bow_tab": "特异武器库: 弓",
+  "perk_weapons.itemGroup.crossbow_tab": "特异武器库: 弩",
 
   "enchantment.perk_weapons.melt_down": "融毁",
   "enchantment.perk_weapons.star_shooter": "射日",
@@ -76,6 +77,7 @@
   "tooltip.perk_weapons.attribute_velocity": "弹速: %f",
   "tooltip.perk_weapons.attribute_draw_time": "拉弓时间: %s s",
   "tooltip.perk_weapons.attribute_charge_time": "装弹时间: %s s",
+  "tooltip.perk_weapons.attribute_spear_charge_time": "蓄力时间: %s s",
 
   "tooltip.perk_weapons.weapon_description_title": "描述:",
   "tooltip.perk_weapons.description_key_hint": "[按 %s 查看描述]",

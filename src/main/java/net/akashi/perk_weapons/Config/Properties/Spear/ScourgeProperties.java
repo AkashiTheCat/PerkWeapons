@@ -14,14 +14,17 @@ public class ScourgeProperties extends SpearProperties {
 	public ForgeConfigSpec.IntValue ABILITY_COOLDOWN;
 	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
 
-	public ScourgeProperties(ForgeConfigSpec.Builder builder, String name, float defaultMeleeDamage,
-	                         double defaultAttackSpeed, float defaultRangedDamage, float defaultVelocity,
-	                         int defaultHitWitherDuration, int defaultHitWitherLevel,
-	                         int defaultHitSlownessDuration, int defaultHitSlownessLevel,
-	                         int defaultAbilityBuffDuration, double defaultAbilityAttackSpeedBonus,
-							 int defaultAbilityShotsInterval, int defaultAbilityShotsCount,
-	                         int defaultAbilityCoolDownTime, int defaultPiercingLevel) {
-		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity, false);
+	public ScourgeProperties(ForgeConfigSpec.Builder builder, String name,
+	                         float defaultMeleeDamage, double defaultAttackSpeed,
+	                         float defaultRangedDamage, float defaultVelocity,
+	                         int defaultMaxChargeTime, int defaultHitWitherDuration,
+	                         int defaultHitWitherLevel, int defaultHitSlownessDuration,
+	                         int defaultHitSlownessLevel, int defaultAbilityBuffDuration,
+	                         double defaultAbilityAttackSpeedBonus, int defaultAbilityShotsInterval,
+	                         int defaultAbilityShotsCount, int defaultAbilityCoolDownTime,
+	                         int defaultPiercingLevel) {
+		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
+				defaultMaxChargeTime, false);
 		HIT_WITHER_LEVEL = builder.comment("Level Of Wither Effect On Hit")
 				.defineInRange("HitWitherLevel", defaultHitWitherLevel, 0, 255);
 		HIT_WITHER_DURATION = builder.comment("Duration Of Wither Effect On Hit(In Ticks)")

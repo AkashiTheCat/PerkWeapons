@@ -1,6 +1,5 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
-import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPacket;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEffects;
@@ -9,13 +8,8 @@ import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.ModExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -177,7 +171,7 @@ public class ExplosiveArrow extends BaseArrow {
 
 	private double getOwnerSqrDistance() {
 		Entity owner = this.getOwner();
-		if (owner instanceof Player) {
+		if (owner != null) {
 			return Vector3f.distanceSquared(
 					(float) this.getX(),
 					(float) this.getY(),

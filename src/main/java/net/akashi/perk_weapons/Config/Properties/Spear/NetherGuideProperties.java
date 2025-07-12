@@ -18,13 +18,13 @@ public class NetherGuideProperties extends SpearProperties {
 	public NetherGuideProperties(ForgeConfigSpec.Builder builder, String name,
 	                             float defaultMeleeDamage, double defaultAttackSpeed,
 	                             float defaultRangedDamage, float defaultVelocity,
-	                             double defaultMeleeBonusWarped, double defaultThrowBonusWarped,
-	                             double defaultDamageResistanceWarped, double defaultMovementBonusWarped,
-	                             int defaultWeaknessLevelCrimson, int defaultWeaknessDurationCrimson,
-	                             int defaultRegenLevelCrimson, int defaultRegenDurationCrimson,
-	                             int defaultModeSwitchCoolDown) {
+	                             int defaultMaxChargeTime, double defaultMeleeBonusWarped,
+	                             double defaultThrowBonusWarped, double defaultDamageResistanceWarped,
+	                             double defaultMovementBonusWarped, int defaultWeaknessLevelCrimson,
+	                             int defaultWeaknessDurationCrimson, int defaultRegenLevelCrimson,
+	                             int defaultRegenDurationCrimson, int defaultModeSwitchCoolDown) {
 		super(builder, name, defaultMeleeDamage, defaultAttackSpeed, defaultRangedDamage, defaultVelocity,
-				false);
+				defaultMaxChargeTime, false);
 
 		WARPED_MELEE_DAMAGE_BONUS_RATIO = builder.comment("Melee Damage Bonus Ratio Of Warped Mode")
 				.defineInRange("WarpedMeleeBonus", defaultMeleeBonusWarped, -1, 10);

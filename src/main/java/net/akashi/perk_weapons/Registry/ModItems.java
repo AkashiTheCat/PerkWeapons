@@ -11,10 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
-import static net.akashi.perk_weapons.Registry.ModCreativeTabs.INGREDIENTS_TAB;
-import static net.akashi.perk_weapons.Registry.ModCreativeTabs.SPEAR_TAB;
-import static net.akashi.perk_weapons.Registry.ModCreativeTabs.BOW_TAB;
-import static net.akashi.perk_weapons.Registry.ModCreativeTabs.addToTab;
+import static net.akashi.perk_weapons.Registry.ModCreativeTabs.*;
 
 public class ModItems {
 	//Simple items
@@ -53,56 +50,51 @@ public class ModItems {
 
 	//Spears
 	public static final RegistryObject<BaseSpearItem> IRON_SPEAR = addToTab(
-			ITEMS.register("iron_spear",
-					() -> new BaseSpearItem(8, 1.1f,
-							7, 2.5F, false,
-							new Item.Properties().durability(256))), SPEAR_TAB);
+			ITEMS.register("iron_spear", () -> new BaseSpearItem(
+					new Item.Properties().durability(256))),
+			SPEAR_TAB);
 	public static final RegistryObject<BaseSpearItem> GOLDEN_SPEAR = addToTab(
-			ITEMS.register("golden_spear",
-					() -> new BaseSpearItem(5, 1.6f,
-							6, 2.5F, false,
-							new Item.Properties().durability(32))), SPEAR_TAB);
+			ITEMS.register("golden_spear", () -> new BaseSpearItem(
+					new Item.Properties().durability(32))),
+			SPEAR_TAB);
 	public static final RegistryObject<BaseSpearItem> DIAMOND_SPEAR = addToTab(
-			ITEMS.register("diamond_spear",
-					() -> new BaseSpearItem(9, 1.1f,
-							8, 2.5F, false,
-							new Item.Properties().durability(640))), SPEAR_TAB);
+			ITEMS.register("diamond_spear", () -> new BaseSpearItem(
+					new Item.Properties().durability(640))),
+			SPEAR_TAB);
 	public static final RegistryObject<BaseSpearItem> NETHERITE_SPEAR = addToTab(
-			ITEMS.register("netherite_spear",
-					() -> new BaseSpearItem(10, 1.1f,
-							9, 2.5F, false,
-							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
+			ITEMS.register("netherite_spear", () -> new BaseSpearItem(
+					new Item.Properties().durability(1280).fireResistant())),
+			SPEAR_TAB);
 	public static final RegistryObject<MegalodonItem> SPEAR_MEGALODON = addToTab(
-			ITEMS.register("megalodon",
-					() -> new MegalodonItem(9, 1.2f,
-							6, 2.5F, true,
-							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
+			ITEMS.register("megalodon", () -> new MegalodonItem(
+					new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
 	public static final RegistryObject<ConduitGuardItem> SPEAR_CONDUIT_GUARD = addToTab(
-			ITEMS.register("conduit_guard",
-					() -> new ConduitGuardItem(9, 1.1f,
-							9, 2.5F, true,
-							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
+			ITEMS.register("conduit_guard", () -> new ConduitGuardItem(
+					new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
 	public static final RegistryObject<PiglinsWarSpearItem> PIGLINS_WARSPEAR = addToTab(
-			ITEMS.register("piglins_warspear",
-					() -> new PiglinsWarSpearItem(5, 1.2f,
-							8, 2.5F, false,
-							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
+			ITEMS.register("piglins_warspear", () -> new PiglinsWarSpearItem(
+					new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
 	public static final RegistryObject<DragonStrikeItem> DRAGON_STRIKE = addToTab(
-			ITEMS.register("dragon_strike", () -> new DragonStrikeItem(10, 1.2f,
-					10, 2.5F, false,
-					new Item.Properties().durability(1280)
-							.fireResistant().rarity(Rarity.UNCOMMON))), SPEAR_TAB);
+			ITEMS.register("dragon_strike", () -> new DragonStrikeItem(
+					new Item.Properties().durability(1280).fireResistant().rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
 	public static final RegistryObject<ScourgeItem> SCOURGE = addToTab(
-			ITEMS.register("scourge", () -> new ScourgeItem(10, 1.2f,
-					10, 2.5F, false,
-					new Item.Properties().durability(1280)
-							.fireResistant().rarity(Rarity.UNCOMMON))),
+			ITEMS.register("scourge", () -> new ScourgeItem(
+					new Item.Properties().durability(1280).fireResistant().rarity(Rarity.UNCOMMON))),
 			SPEAR_TAB);
 	public static final RegistryObject<NetherGuideItem> NETHER_GUIDE = addToTab(
-			ITEMS.register("nether_guide", () -> new NetherGuideItem(10, 1.2f,
-					9, 2.5F, false,
-					new Item.Properties().durability(1280)
-							.fireResistant().rarity(Rarity.UNCOMMON))),
+			ITEMS.register("nether_guide", () -> new NetherGuideItem(
+					new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
+	public static final RegistryObject<CenturionItem> CENTURION = addToTab(
+			ITEMS.register("centurion", () -> new CenturionItem(
+					10, 1.2f,
+					15, 2.5F,
+					40, false,
+					new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))),
 			SPEAR_TAB);
 
 	//Bows
@@ -126,7 +118,6 @@ public class ModItems {
 					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F,
 							0.0F, 0.0F, true,
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
-
 	public static final RegistryObject<ElfsHarpItem> ELFS_HARP = addToTab(
 			ITEMS.register("elfs_harp",
 					() -> new ElfsHarpItem(20, 10, 3.0F, 0.8F,
@@ -154,40 +145,40 @@ public class ModItems {
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
 
 	//Crossbows
-	public static final RegistryObject<BeholderItem> OPPRESSOR = addToTab(
+	public static final RegistryObject<BeholderItem> BEHOLDER = addToTab(
 			ITEMS.register("beholder", () -> new BeholderItem(new Item.Properties()
 					.durability(640)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<LiberatorItem> LIBERATOR = addToTab(
 			ITEMS.register("liberator", () -> new LiberatorItem(new Item.Properties()
 					.durability(640)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<TaintedFortuneItem> TAINTED_FORTUNE = addToTab(
 			ITEMS.register("tainted_fortune", () -> new TaintedFortuneItem(new Item.Properties()
 					.durability(1280)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<SonicBlasterItem> SONIC_BLASTER = addToTab(
 			ITEMS.register("sonic_blaster", () -> new SonicBlasterItem(new Item.Properties()
 					.durability(640)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<IncineratorItem> INCINERATOR = addToTab(
 			ITEMS.register("incinerator", () -> new IncineratorItem(new Item.Properties()
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<QueenBeeCrossbowItem> QUEEN_BEE_CROSSBOW = addToTab(
 			ITEMS.register("queen_bee_crossbow", () -> new QueenBeeCrossbowItem(new Item.Properties()
 					.durability(1280)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 	public static final RegistryObject<PaladinItem> PALADIN = addToTab(
 			ITEMS.register("paladin", () -> new PaladinItem(new Item.Properties()
 					.durability(1280)
 					.rarity(Rarity.UNCOMMON))),
-			BOW_TAB);
+			CROSSBOW_TAB);
 
 	//Special Util
 	public static final RegistryObject<Item> SCOURGE_PERK_TEXTURE_HOLDER =

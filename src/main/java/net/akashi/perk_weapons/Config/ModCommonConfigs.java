@@ -3,11 +3,15 @@ package net.akashi.perk_weapons.Config;
 import net.akashi.perk_weapons.Bows.BaseBowItem;
 import net.akashi.perk_weapons.Config.Properties.Bow.*;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.*;
+import net.akashi.perk_weapons.Config.Properties.Enchantment.EnchantmentProperties;
 import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
+import net.akashi.perk_weapons.Config.Properties.PhalanxEffectProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.*;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
 import net.akashi.perk_weapons.Effects.InternalExplosionEffect;
+import net.akashi.perk_weapons.Effects.PhalanxEffect;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkGainingArrow;
+import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,10 +27,6 @@ public class ModCommonConfigs {
 	public static final ForgeConfigSpec SPEC;
 
 	//General Configs
-	public static ForgeConfigSpec.BooleanValue ENABLE_MELT_DOWN_ON_TABLE;
-	public static ForgeConfigSpec.BooleanValue ENABLE_STAR_SHOOTER_ON_TABLE;
-	public static ForgeConfigSpec.BooleanValue ENABLE_REGICIDE_ON_TABLE;
-	public static ForgeConfigSpec.BooleanValue ENABLE_BLAZE_ON_TABLE;
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
@@ -36,9 +36,15 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
 	public static ForgeConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
 
+	//Enchantment Configs
+	public static EnchantmentProperties BLAZE_ENCHANTMENT_PROPERTIES;
+	public static EnchantmentProperties MELT_DOWN_ENCHANTMENT_PROPERTIES;
+	public static EnchantmentProperties REGICIDE_ENCHANTMENT_PROPERTIES;
+	public static EnchantmentProperties STAR_SHOOTER_ENCHANTMENT_PROPERTIES;
+
 	//Effect Configs
 	public static ModExplosionProperties INTERNAL_EXP_PROPERTIES;
-
+	public static PhalanxEffectProperties PHALANX_EFFECT_PROPERTIES;
 
 	//Spear Configs
 	public static SpearProperties IRON_SPEAR_PROPERTIES;
@@ -51,6 +57,7 @@ public class ModCommonConfigs {
 	public static DragonStrikeProperties DRAGON_STRIKE_PROPERTIES;
 	public static ScourgeProperties SCOURGE_PROPERTIES;
 	public static NetherGuideProperties NETHER_GUIDE_PROPERTIES;
+	public static CenturionProperties CENTURION_PROPERTIES;
 
 	//Bow Configs
 	public static BowProperties SHORT_BOW_PROPERTIES;
@@ -76,14 +83,6 @@ public class ModCommonConfigs {
 	static {
 		//General
 		BUILDER.push("General");
-		ENABLE_MELT_DOWN_ON_TABLE = BUILDER.comment("Set True To Allow Getting Melt Down Enchantment From Enchanting Table")
-				.define("EnableMeltDownOnTable", true);
-		ENABLE_STAR_SHOOTER_ON_TABLE = BUILDER.comment("Set True To Allow Getting Star Shooter Enchantment From Enchanting Table")
-				.define("EnableStarShooterOnTable", true);
-		ENABLE_REGICIDE_ON_TABLE = BUILDER.comment("Set True To Allow Getting Regicide Enchantment From Enchanting Table")
-				.define("EnableRegicideOnTable", true);
-		ENABLE_BLAZE_ON_TABLE = BUILDER.comment("Set True To Allow Getting Blaze Enchantment From Enchanting Table")
-				.define("EnableBlazeOnTable", true);
 		BOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Bows Use Tipped And Spectral Arrows As Ammo")
 				.define("BowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_ALL_ARROW = BUILDER.comment("Set True To Allow Modded Crossbows Use Tipped And Spectral Arrows As Ammo")
@@ -103,65 +102,100 @@ public class ModCommonConfigs {
 				.defineInRange("RepairRatio", 0.2, 0, 1);
 		BUILDER.pop();
 
+		//Enchantments
+		BLAZE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Blaze",
+				true, true,
+				true, false,
+				true, true);
+		MELT_DOWN_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Melt Down",
+				true, true,
+				true, false,
+				true, true);
+		REGICIDE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Regicide",
+				true, true,
+				true, false,
+				true, true);
+		STAR_SHOOTER_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Star Shooter",
+				true, true,
+				true, false,
+				true, true);
+
 		//Effects
 		BUILDER.push("Effect: Internal Explosion");
 		INTERNAL_EXP_PROPERTIES = new ModExplosionProperties(BUILDER,
 				5, 5, 20, 20,
 				1.0, false);
 		BUILDER.pop();
+		BUILDER.push("Effect: Phalanx");
+		PHALANX_EFFECT_PROPERTIES = new PhalanxEffectProperties(BUILDER, "Phalanx",
+				2, 0.04);
+		BUILDER.pop();
 
 		//Spears
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
 				8, 1.1,
-				7, 2.5F, true);
+				7, 2.5F,
+				10, true);
 		GOLDEN_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Golden Spear",
 				5, 1.6,
-				6, 2.5F, true);
+				6, 2.5F,
+				10, true);
 		DIAMOND_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Diamond Spear",
 				9, 1.1,
-				8, 2.5F, true);
+				8, 2.5F,
+				10, true);
 		NETHERITE_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Netherite Spear",
 				10, 1.1,
-				9, 2.5F, true);
+				9, 2.5F,
+				10, true);
 		MEGALODON_PROPERTIES = new MegalodonProperties(BUILDER, "Megalodon",
 				9, 1.2,
 				6, 2.5F,
-				1, 120,
-				1, 120,
-				1, 120);
+				10, 1,
+				120, 1,
+				120, 1,
+				120);
 		CONDUIT_GUARD_PROPERTIES = new ConduitGuardProperties(BUILDER, "Conduit Guard",
 				9, 1.2,
 				9, 2.5F,
-				5.0, 45,
-				4, 0.005,
-				0.5, 80);
+				15, 5.0,
+				45, 4,
+				0.005, 0.5,
+				80);
 		PIGLINS_WARSPEAR_PROPERTIES = new PiglinsWarSpearProperties(BUILDER, "Piglin's WarSpear",
 				5, 1.2,
 				8, 2.5F,
-				0.15, 0.15);
+				10, 0.15,
+				0.15);
 		DRAGON_STRIKE_PROPERTIES = new DragonStrikeProperties(BUILDER, "Dragon Strike",
 				10, 1.2,
 				10, 2.5F,
-				4.0, 6.0,
-				60, 5,
-				50, 40,
-				200);
+				20, 4.0,
+				6.0, 60,
+				5, 50,
+				40, 200);
 		SCOURGE_PROPERTIES = new ScourgeProperties(BUILDER, "Scourge",
 				8, 1.0,
 				8, 2.5F,
-				40, 3,
-				40, 2,
-				120, 0.3,
-				10, 3,
-				600, 127);
+				20, 40,
+				3, 40,
+				2, 120,
+				0.3, 10,
+				3, 600,
+				127);
 		NETHER_GUIDE_PROPERTIES = new NetherGuideProperties(BUILDER, "Nether Guide",
 				10, 1.2,
 				9, 2,
-				0.3, 0.3,
-				-0.3, 0.15,
-				1, 60,
-				1, 60,
-				20);
+				20, 0.3,
+				0.3, -0.3,
+				0.15, 1,
+				60, 1,
+				60, 20);
+		CENTURION_PROPERTIES = new CenturionProperties(BUILDER, "Centurion",
+				10, 1.2,
+				15, 3.2f,
+				40, 16,
+				5, 6);
 
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
@@ -300,7 +334,13 @@ public class ModCommonConfigs {
 					(ammoStack) -> ammoStack.is(Items.FIREWORK_ROCKET));
 		}
 
-		InternalExplosionEffect.updateAttributesFromConfig(INTERNAL_EXP_PROPERTIES);
+		InternalExplosionEffect.updateParamsFromConfig(INTERNAL_EXP_PROPERTIES);
+		PhalanxEffect.updateParamsFromConfig(PHALANX_EFFECT_PROPERTIES);
+
+		ModEnchantments.BLAZE.get().updateFromConfig(BLAZE_ENCHANTMENT_PROPERTIES);
+		ModEnchantments.MELT_DOWN_ARROW.get().updateFromConfig(MELT_DOWN_ENCHANTMENT_PROPERTIES);
+		ModEnchantments.REGICIDE.get().updateFromConfig(REGICIDE_ENCHANTMENT_PROPERTIES);
+		ModEnchantments.STAR_SHOOTER.get().updateFromConfig(STAR_SHOOTER_ENCHANTMENT_PROPERTIES);
 
 		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);
@@ -313,6 +353,7 @@ public class ModCommonConfigs {
 		ModItems.DRAGON_STRIKE.get().updateAttributesFromConfig(DRAGON_STRIKE_PROPERTIES);
 		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
 		ModItems.NETHER_GUIDE.get().updateAttributesFromConfig(NETHER_GUIDE_PROPERTIES);
+		ModItems.CENTURION.get().updateAttributesFromConfig(CENTURION_PROPERTIES);
 
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);
@@ -325,7 +366,7 @@ public class ModCommonConfigs {
 		ModItems.DEVOURER.get().updateAttributesFromConfig(DEVOURER_PROPERTIES);
 		ModItems.ENDBORE_WANDERER.get().updateAttributesFromConfig(ENDBORE_WANDERER_PROPERTIES);
 
-		ModItems.OPPRESSOR.get().updateAttributesFromConfig(BEHOLDER_PROPERTIES);
+		ModItems.BEHOLDER.get().updateAttributesFromConfig(BEHOLDER_PROPERTIES);
 		ModItems.LIBERATOR.get().updateAttributesFromConfig(LIBERATOR_PROPERTIES);
 		ModItems.TAINTED_FORTUNE.get().updateAttributesFromConfig(TAINTED_FORTUNE_PROPERTIES);
 		ModItems.SONIC_BLASTER.get().updateAttributesFromConfig(SONIC_BLASTER_PROPERTIES);

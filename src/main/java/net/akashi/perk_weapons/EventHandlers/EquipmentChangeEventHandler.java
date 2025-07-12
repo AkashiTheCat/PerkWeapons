@@ -4,6 +4,8 @@ import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.akashi.perk_weapons.Spears.PiglinsWarSpearItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
@@ -17,7 +19,9 @@ import static net.akashi.perk_weapons.Spears.PiglinsWarSpearItem.setArmorCount;
 public class EquipmentChangeEventHandler {
 	@SubscribeEvent
 	public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
-		if (event.getEntity() instanceof Player player && !player.level().isClientSide()) {
+		Entity entity = event.getEntity();
+		if (entity.getType() == EntityType.PLAYER && !entity.level().isClientSide()) {
+			Player player = (Player) entity;
 			handlePaladinCase(player);
 			handlePiglinsWarSpearCase(player);
 		}

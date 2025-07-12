@@ -26,6 +26,7 @@ public class ClientModEvents {
 		event.registerEntityRenderer(ModEntities.THROWN_DRAGON_STRIKE.get(), ThrownSpearRenderer::new);
 		event.registerEntityRenderer(ModEntities.THROWN_SCOURGE.get(), ThrownSpearRenderer::new);
 		event.registerEntityRenderer(ModEntities.THROWN_NETHER_GUIDE.get(), ThrownSpearRenderer::new);
+		event.registerEntityRenderer(ModEntities.THROWN_CENTURION.get(), ThrownSpearRenderer::new);
 
 		event.registerEntityRenderer(ModEntities.BASE_ARROW.get(), BaseArrowRenderer::new);
 		event.registerEntityRenderer(ModEntities.PURGATORY_ARROW.get(), BaseArrowRenderer::new);
