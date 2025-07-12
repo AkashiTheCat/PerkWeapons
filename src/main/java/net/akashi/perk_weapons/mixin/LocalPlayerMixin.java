@@ -28,7 +28,7 @@ public class LocalPlayerMixin extends AbstractClientPlayer {
 		//When using item and player is not passenger, the vanilla method will multiply the impulse by 0.2
 		if (!this.isPassenger()) {
 			ItemStack itemStack = this.getUseItem();
-			if (itemStack.is(ModTags.noUsingSlowdownTag)) {
+			if (itemStack.is(ModTags.NO_USING_SLOWDOWN_TAG)) {
 				//If item matched, this will make the impulse is multiplied back to its origin value
 				this.input.leftImpulse *= 5;
 				this.input.forwardImpulse *= 5;

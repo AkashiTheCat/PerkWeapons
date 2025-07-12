@@ -143,7 +143,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		ThrownSpear spear = new ThrownScourge(pLevel, player, pStack, ModEntities.THROWN_SCOURGE.get());
+		ThrownSpear spear = new ThrownScourge(ModEntities.THROWN_SCOURGE.get(), pLevel, player, pStack);
 		spear.setPierceLevel((byte) PIERCE_LEVEL);
 		return spear;
 	}

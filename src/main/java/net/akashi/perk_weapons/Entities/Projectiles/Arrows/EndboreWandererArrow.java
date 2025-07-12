@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
 import net.akashi.perk_weapons.Bows.EndboreWandererItem;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -23,8 +24,8 @@ public class EndboreWandererArrow extends PerkGainingArrow {
 
 	@Override
 	protected void onHitEntity(@NotNull EntityHitResult pResult) {
-		LivingEntity e = (LivingEntity) pResult.getEntity();
-		if (e.hasEffect(MobEffects.LEVITATION)) {
+		Entity entity = pResult.getEntity();
+		if (entity instanceof LivingEntity e && e.hasEffect(MobEffects.LEVITATION)) {
 			this.setBaseDamage(this.getBaseDamage() * (1 + EndboreWandererItem.DAMAGE_BONUS_LEVITATION));
 		}
 		super.onHitEntity(pResult);

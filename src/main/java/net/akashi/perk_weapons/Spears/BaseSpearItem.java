@@ -2,6 +2,7 @@ package net.akashi.perk_weapons.Spears;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,6 +69,9 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
 				1.1 - 4, AttributeModifier.Operation.ADDITION));
 		this.AttributeModifiers = builder.build();
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerSpearPropertyOverrides(this);
 	}
 
 	public BaseSpearItem(float attackDamage, float attackSpeed, float throwDamage,
@@ -86,6 +91,9 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
 				attackSpeed - 4, AttributeModifier.Operation.ADDITION));
 		this.AttributeModifiers = builder.build();
+
+		if (FMLEnvironment.dist.isClient())
+			ClientHelper.registerSpearPropertyOverrides(this);
 	}
 
 	//General Overrides
@@ -231,7 +239,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable {
 	}
 
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownSpear(pLevel, player, pStack, ModEntities.THROWN_SPEAR.get());
+		return new ThrownSpear(ModEntities.THROWN_SPEAR.get(), pLevel, player, pStack);
 	}
 
 	protected float getProjectileBaseDamage(ItemStack stack) {

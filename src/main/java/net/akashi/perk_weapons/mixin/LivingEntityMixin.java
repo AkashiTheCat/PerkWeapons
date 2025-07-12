@@ -10,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
-
 	@Inject(method = "createLivingAttributes", at = @At("RETURN"), cancellable = true)
 	private static void injectCustomAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
 		AttributeSupplier.Builder builder = cir.getReturnValue();
@@ -20,4 +19,5 @@ public class LivingEntityMixin {
 
 		cir.setReturnValue(builder);
 	}
+
 }

@@ -9,6 +9,6 @@ import net.minecraft.world.item.Item;
 public class ModTags {
 	public static final TagKey<Item> REPAIRER_TAG = TagKey.create(Registries.ITEM,
 			new ResourceLocation(PerkWeapons.MODID, "repairer"));
-	public static TagKey<Item> noUsingSlowdownTag = TagKey.create(Registries.ITEM,
+	public static TagKey<Item> NO_USING_SLOWDOWN_TAG = TagKey.create(Registries.ITEM,
 			new ResourceLocation(PerkWeapons.MODID, "no_using_slowdown"));
 }

@@ -1,0 +1,42 @@
+{
+  "parent": "perk_weapons:item/base/base_spear",
+  "textures": {
+    "layer0": "perk_weapons:item/spear/nether_guide_warped"
+  },
+  "overrides": [
+    {
+      "predicate": {
+		"perk_weapons:perk": 0,
+        "perk_weapons:charging": 1
+      },
+      "model": "perk_weapons:item/nether_guide_warped_animated"
+    },
+	{
+      "predicate": {
+		"perk_weapons:perk": 0,
+        "perk_weapons:switching": 1
+      },
+      "model": "perk_weapons:item/nether_guide_warped_animated"
+    },
+    {
+      "predicate": {
+        "perk_weapons:perk": 1
+      },
+      "model": "perk_weapons:item/nether_guide_crimson"
+    },
+	{
+      "predicate": {
+		"perk_weapons:perk": 1,
+        "perk_weapons:charging": 1
+      },
+      "model": "perk_weapons:item/nether_guide_crimson_animated"
+    },
+	{
+      "predicate": {
+		"perk_weapons:perk": 0,
+        "perk_weapons:switching": 1
+      },
+      "model": "perk_weapons:item/nether_guide_crimson_animated"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Spears;
 
-import net.akashi.perk_weapons.Config.ModCommonConfigs;
+import net.akashi.perk_weapons.Util.HomingHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -9,33 +9,33 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
-import net.minecraft.world.entity.animal.Wolf;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
 import static net.akashi.perk_weapons.Spears.ConduitGuardItem.*;
 
 public class ThrownConduitGuard extends ThrownSpear {
+	private static final String TAG_TARGET_ID = "target_id";
+	private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(ThrownConduitGuard.class,
+			EntityDataSerializers.INT);
+
 	private boolean velocityChanged = false;
 	private boolean reachedShore = false;
 	private int returnTime = 80;
 	private int noClipTime = 0;
-	private static final EntityDataAccessor<Integer> TARGET = SynchedEntityData.defineId(ThrownConduitGuard.class, EntityDataSerializers.INT);
 
 	public ThrownConduitGuard(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
 	}
 
-	public ThrownConduitGuard(Level pLevel, LivingEntity pShooter, ItemStack pStack, int returnTime,
-	                          EntityType<? extends ThrownSpear> spearType) {
-		super(pLevel, pShooter, pStack, spearType);
+	public ThrownConduitGuard(EntityType<? extends ThrownSpear> spearType, Level pLevel,
+	                          LivingEntity pShooter, ItemStack pStack, int returnTime) {
+		super(spearType, pLevel, pShooter, pStack);
 		this.returnTime = returnTime;
 	}
 
@@ -49,11 +49,8 @@ public class ThrownConduitGuard extends ThrownSpear {
 	@Override
 	public void tick() {
 		if (this.isInWater() && !this.dealtDamage) {
-			if (!this.level().isClientSide()) {
-				updateTarget();
-			}
 			if (!this.velocityChanged) {
-				this.setDeltaMovement(getMotionVec().scale(ModCommonConfigs.CONDUIT_GUARD_PROPERTIES.VELOCITY_MULTIPLIER.get()));
+				this.setDeltaMovement(getMotionVec().scale(VELOCITY_MULTIPLIER));
 				this.velocityChanged = true;
 			}
 			if (returnTime <= 0) {
@@ -62,32 +59,17 @@ public class ThrownConduitGuard extends ThrownSpear {
 				returnTime--;
 			}
 			this.setNoGravity(true);
-			// modified from twilight forest's tracking bow
-			Entity target = getTarget();
-			if (target != null) {
 
-				Vec3 targetVec = getVectorToTarget(target).scale(0.3);
-				Vec3 courseVec = getMotionVec();
-
-				// vector lengths
-				double courseLen = courseVec.length();
-				double targetLen = targetVec.length();
-				double totalLen = Math.sqrt(courseLen * courseLen + targetLen * targetLen);
-
-				double dotProduct = courseVec.dot(targetVec) / (courseLen * targetLen); // cosine similarity
-
-				if (dotProduct > TRACKING_THRESHOLD) {
-
-					// add vector to target, scale to match current velocity
-					Vec3 newMotion = courseVec.scale(courseLen / (totalLen * 2)).add(targetVec.scale(courseLen / totalLen));
-
-					this.setDeltaMovement(newMotion);
-
-				} else if (!this.level().isClientSide()) {
-					// too inaccurate for our intended target, give up on it
-					this.setTarget(null);
-				}
-			}
+			HomingHelper.applyHoming(
+					this,
+					this::getTarget,
+					this::setTarget,
+					HOMING_RANGE,
+					MAX_HOMING_ANGLE_COS,
+					MAX_TURN_ANGLE_COS,
+					MAX_TURN_ANGLE_SIN,
+					HOMING_ACCELERATION
+			);
 		} else {
 			this.setNoGravity(false);
 			if (dealtDamage) {
@@ -112,17 +94,19 @@ public class ThrownConduitGuard extends ThrownSpear {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
+	public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		this.velocityChanged = pCompound.getBoolean("velocityChanged");
 		this.noClipTime = pCompound.getInt("noclipTime");
+		this.getEntityData().set(TARGET, pCompound.getInt(TAG_TARGET_ID));
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
+	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.putBoolean("velocityChanged", this.velocityChanged);
 		pCompound.putInt("noclipTime", this.noClipTime);
+		pCompound.putInt(TAG_TARGET_ID, this.getEntityData().get(TARGET));
 	}
 
 	@Override
@@ -134,34 +118,16 @@ public class ThrownConduitGuard extends ThrownSpear {
 	}
 
 	@Override
-	protected void onHitBlock(BlockHitResult pResult) {
+	protected void onHitBlock(@NotNull BlockHitResult pResult) {
 		super.onHitBlock(pResult);
 		this.setSoundEvent(SoundEvents.TRIDENT_HIT_GROUND);
-		if(!this.isInWater()){
+		if (!this.isInWater()) {
 			this.reachedShore = true;
 		}
 	}
 
 
 	//New methods
-	private void updateTarget() {
-		Entity target = getTarget();
-		if (target != null && !target.isAlive()) {
-			target = null;
-			this.setTarget(null);
-		}
-		if (target == null) {
-			AABB positionBB = new AABB(getX() - TRACKING_RANGE, getY() - TRACKING_RANGE, getZ() - TRACKING_RANGE,
-					getX() + TRACKING_RANGE, getY() + TRACKING_RANGE, getZ() + TRACKING_RANGE);
-			Entity closestTarget = this.level().getNearestEntity(Monster.class, TargetingConditions.forCombat().range(TRACKING_RANGE),
-					null, this.getX(), this.getY(), this.getZ(), positionBB
-			);
-			if (closestTarget != null && closestTarget != this.getOwner()) {
-				setTarget(closestTarget);
-			}
-		}
-	}
-
 	@Nullable
 	private Entity getTarget() {
 		return this.level().getEntity(this.getEntityData().get(TARGET));
@@ -169,10 +135,6 @@ public class ThrownConduitGuard extends ThrownSpear {
 
 	private void setTarget(@Nullable Entity entity) {
 		this.getEntityData().set(TARGET, entity == null ? -1 : entity.getId());
-	}
-
-	private Vec3 getVectorToTarget(Entity target) {
-		return new Vec3(target.getX() - this.getX(), (target.getY() + target.getEyeHeight()) - this.getY(), target.getZ() - this.getZ());
 	}
 
 	private Vec3 getMotionVec() {

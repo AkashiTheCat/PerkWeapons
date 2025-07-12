@@ -30,27 +30,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, ICoolDownItem {
-	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(ModSoundEvents.PALADIN_FIRE.get(),
+	private static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(ModSoundEvents.PALADIN_FIRE.get(),
 			0.7F, 1.0F);
 
-	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("47e87eb7-7a3f-738c-13a9-7e6fdfa9b838");
-	public static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("936e61dd-10ea-7a2a-d612-44acf75457bd");
-	public static final UUID DAMAGE_RESISTANCE_UUID = UUID.fromString("0c513885-1e62-9178-31b0-716dcda83873");
-	private final List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
+	protected static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("47e87eb7-7a3f-738c-13a9-7e6fdfa9b838");
+	protected static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("936e61dd-10ea-7a2a-d612-44acf75457bd");
+	protected static final UUID DAMAGE_RESISTANCE_UUID = UUID.fromString("0c513885-1e62-9178-31b0-716dcda83873");
+	protected final List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
 
-	public static final String TAG_CUSTOM_CHARGED = "charged1";
-	public static final String TAG_LAST_HIT = "last_hit";
+	protected static final String TAG_CUSTOM_CHARGED = "charged1";
+	protected static final String TAG_LAST_HIT = "last_hit";
 
-	public static float KNOCKBACK_RESISTANCE = 1;
-	public static float MAGIC_RESISTANCE = 50;
-	public static float DAMAGE_RESISTANCE = -30;
-	public static byte MAX_PERK_LEVEL = 10;
-	public static float RELOAD_REDUCTION_PER_LEVEL = 0.07f;
-	public static float DAMAGE_RESISTANCE_PER_LEVEL = 10F;
-	public static int PERK_CLEAR_TIME_WITHOUT_HIT = 60;
+	protected static float KNOCKBACK_RESISTANCE = 1;
+	protected static float MAGIC_RESISTANCE = 50;
+	protected static float DAMAGE_RESISTANCE = -30;
+	protected static byte MAX_PERK_LEVEL = 10;
+	protected static float RELOAD_REDUCTION_PER_LEVEL = 0.07f;
+	protected static float DAMAGE_RESISTANCE_PER_LEVEL = 10F;
+	protected static int PERK_CLEAR_TIME_WITHOUT_HIT = 60;
 
 	public PaladinItem(Properties pProperties) {
 		super(pProperties);
@@ -96,10 +97,16 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 		PerkLevelAttributeModifiers.add(0, AttributeModifiers);
 		for (int i = 1; i <= MAX_PERK_LEVEL; i++) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			if (AttributeModifiers != null)
-				builder.putAll(AttributeModifiers);
+			if (AttributeModifiers != null) {
+				for (Map.Entry<Attribute, AttributeModifier> entry : AttributeModifiers.entries()) {
+					if (!entry.getKey().equals(ModAttributes.DAMAGE_RESISTANCE.get())) {
+						builder.put(entry.getKey(), entry.getValue());
+					}
+				}
+			}
 			builder.put(ModAttributes.DAMAGE_RESISTANCE.get(), new AttributeModifier(DAMAGE_RESISTANCE_UUID,
-					"Damage Resistance", DAMAGE_RESISTANCE_PER_LEVEL * i, AttributeModifier.Operation.ADDITION));
+					"Damage Resistance", DAMAGE_RESISTANCE_PER_LEVEL * i + DAMAGE_RESISTANCE,
+					AttributeModifier.Operation.ADDITION));
 			PerkLevelAttributeModifiers.add(i, builder.build());
 		}
 	}
@@ -147,9 +154,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	@Override
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
 		byte perkLevel = (byte) getPerkLevel(null, crossbowStack);
-		int reloadTicks = (int) Math.ceil(super.getMaxChargeTicks(crossbowStack) * (1 - (RELOAD_REDUCTION_PER_LEVEL * perkLevel)));
-		System.out.println(reloadTicks);
-		return reloadTicks;
+		return (int) Math.ceil(super.getMaxChargeTicks(crossbowStack) * (1 - (RELOAD_REDUCTION_PER_LEVEL * perkLevel)));
 	}
 
 	@Override

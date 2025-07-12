@@ -47,7 +47,7 @@ public class ThrownSpear extends AbstractArrow {
 		super(pEntityType, pLevel);
 	}
 
-	public ThrownSpear(Level pLevel, LivingEntity pShooter, ItemStack pStack, EntityType<? extends ThrownSpear> spearType) {
+	public ThrownSpear(EntityType<? extends ThrownSpear> spearType, Level pLevel, LivingEntity pShooter, ItemStack pStack) {
 		super(spearType, pShooter, pLevel);
 		this.entityData.set(ID_SPEAR_ITEM, pStack);
 		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(pStack));
@@ -72,13 +72,13 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	protected boolean canHitEntity(Entity entity) {
+	protected boolean canHitEntity(@NotNull Entity entity) {
 		return super.canHitEntity(entity) && (this.piercedEntities == null ||
 				!this.piercedEntities.contains(entity.getId()));
 	}
 
 	@Override
-	protected void onHitBlock(BlockHitResult pResult) {
+	protected void onHitBlock(@NotNull BlockHitResult pResult) {
 		super.onHitBlock(pResult);
 		if (this.piercedEntities != null)
 			this.piercedEntities.clear();
@@ -158,7 +158,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	protected boolean tryPickup(Player pPlayer) {
+	protected boolean tryPickup(@NotNull Player pPlayer) {
 		switch (this.pickup) {
 			case ALLOWED:
 				ItemStack stack = this.getPickupItem();
@@ -180,7 +180,7 @@ public class ThrownSpear extends AbstractArrow {
 
 	@Override
 	@Nullable
-	protected EntityHitResult findHitEntity(Vec3 pStartVec, Vec3 pEndVec) {
+	protected EntityHitResult findHitEntity(@NotNull Vec3 pStartVec, @NotNull Vec3 pEndVec) {
 		return this.dealtDamage ? null : super.findHitEntity(pStartVec, pEndVec);
 	}
 
@@ -234,7 +234,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag pCompound) {
+	public void readAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.readAdditionalSaveData(pCompound);
 		ItemStack spearItem = ModItems.IRON_SPEAR.get().getDefaultInstance();
 		if (pCompound.contains("spear", 10)) {
@@ -248,7 +248,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag pCompound) {
+	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
 		pCompound.put("spear", getSpearItem().save(new CompoundTag()));
 		pCompound.putBoolean("dealtdamage", this.dealtDamage);
@@ -265,7 +265,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	@Override
-	public void playerTouch(Player pEntity) {
+	public void playerTouch(@NotNull Player pEntity) {
 		if (this.ownedBy(pEntity) || this.getOwner() == null) {
 			super.playerTouch(pEntity);
 		}
@@ -291,6 +291,10 @@ public class ThrownSpear extends AbstractArrow {
 
 	public ItemStack getSpearItem() {
 		return getPickupItem();
+	}
+
+	public ItemStack getItemForRender() {
+		return getSpearItem();
 	}
 
 }

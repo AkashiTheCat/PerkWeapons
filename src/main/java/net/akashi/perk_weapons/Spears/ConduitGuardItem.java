@@ -17,9 +17,14 @@ import java.util.List;
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
 public class ConduitGuardItem extends BaseSpearItem {
-	public static double TRACKING_RANGE = 5.0;
-	public static double TRACKING_THRESHOLD = 0.5;
 	public static int RETURN_TIME = 80;
+	public static double VELOCITY_MULTIPLIER = 0.8;
+
+	public static float HOMING_RANGE = 5f;
+	public static float MAX_HOMING_ANGLE_COS = 0.707f;
+	public static float MAX_TURN_ANGLE_COS = 0.997f;
+	public static float MAX_TURN_ANGLE_SIN = 0.070f;
+	public static float HOMING_ACCELERATION = 0.005f;
 
 	public ConduitGuardItem(Properties pProperties) {
 		super(pProperties);
@@ -34,16 +39,21 @@ public class ConduitGuardItem extends BaseSpearItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownConduitGuard(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_CONDUIT_GUARD.get());
+		return new ThrownConduitGuard(ModEntities.THROWN_CONDUIT_GUARD.get(), pLevel, player, pStack, RETURN_TIME);
 	}
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
 		super.updateAttributesFromConfig(properties);
 		if (properties instanceof ConduitGuardProperties cProperties) {
-			TRACKING_RANGE = cProperties.TRACKING_RANGE.get();
-			TRACKING_THRESHOLD = cProperties.getMaxTrackingAngleInDotProductForm();
 			RETURN_TIME = cProperties.RETURN_TIME.get();
+			VELOCITY_MULTIPLIER = cProperties.VELOCITY_MULTIPLIER.get();
+			HOMING_RANGE = cProperties.HOMING_RANGE.get().floatValue();
+
+			MAX_HOMING_ANGLE_COS = (float) Math.cos(Math.toRadians(cProperties.MAX_HOMING_ANGLE.get()));
+			double radTurnRate = Math.toRadians(cProperties.MAX_TURN_RATE.get());
+			MAX_TURN_ANGLE_COS = (float) Math.cos(radTurnRate);
+			MAX_TURN_ANGLE_SIN = (float) Math.sin(radTurnRate);
 		}
 	}
 
@@ -52,7 +62,7 @@ public class ConduitGuardItem extends BaseSpearItem {
 		List<Component> list = new ArrayList<>();
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_1",
-				TooltipHelper.convertToEmbeddedElement(TRACKING_RANGE))));
+				TooltipHelper.convertToEmbeddedElement(HOMING_RANGE))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_2")));
 
 		return list;

@@ -82,7 +82,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	@Override
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {
-		return new ThrownDragonStrike(pLevel, player, pStack, RETURN_TIME, ModEntities.THROWN_DRAGON_STRIKE.get());
+		return new ThrownDragonStrike(ModEntities.THROWN_DRAGON_STRIKE.get(), pLevel, player, pStack, RETURN_TIME);
 	}
 
 	@Override

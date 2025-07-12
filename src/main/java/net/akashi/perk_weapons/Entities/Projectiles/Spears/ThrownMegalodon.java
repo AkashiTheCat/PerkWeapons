@@ -16,8 +16,8 @@ public class ThrownMegalodon extends ThrownSpear {
 		super(pEntityType, pLevel);
 	}
 
-	public ThrownMegalodon(Level pLevel, LivingEntity pShooter, ItemStack pStack, EntityType<? extends ThrownSpear> spearType) {
-		super(pLevel, pShooter, pStack, spearType);
+	public ThrownMegalodon(EntityType<? extends ThrownSpear> spearType, Level pLevel, LivingEntity pShooter, ItemStack pStack) {
+		super(spearType, pLevel, pShooter, pStack);
 	}
 
 	@Override

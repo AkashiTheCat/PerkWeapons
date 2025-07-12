@@ -72,29 +72,35 @@ public class ModItems {
 					() -> new BaseSpearItem(10, 1.1f,
 							9, 2.5F, false,
 							new Item.Properties().durability(1280).fireResistant())), SPEAR_TAB);
-	public static final RegistryObject<BaseSpearItem> SPEAR_MEGALODON = addToTab(
+	public static final RegistryObject<MegalodonItem> SPEAR_MEGALODON = addToTab(
 			ITEMS.register("megalodon",
 					() -> new MegalodonItem(9, 1.2f,
 							6, 2.5F, true,
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
-	public static final RegistryObject<BaseSpearItem> SPEAR_CONDUIT_GUARD = addToTab(
+	public static final RegistryObject<ConduitGuardItem> SPEAR_CONDUIT_GUARD = addToTab(
 			ITEMS.register("conduit_guard",
 					() -> new ConduitGuardItem(9, 1.1f,
 							9, 2.5F, true,
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
-	public static final RegistryObject<BaseSpearItem> PIGLINS_WARSPEAR = addToTab(
+	public static final RegistryObject<PiglinsWarSpearItem> PIGLINS_WARSPEAR = addToTab(
 			ITEMS.register("piglins_warspear",
 					() -> new PiglinsWarSpearItem(5, 1.2f,
 							8, 2.5F, false,
 							new Item.Properties().durability(640).rarity(Rarity.UNCOMMON))), SPEAR_TAB);
-	public static final RegistryObject<BaseSpearItem> DRAGON_STRIKE = addToTab(
+	public static final RegistryObject<DragonStrikeItem> DRAGON_STRIKE = addToTab(
 			ITEMS.register("dragon_strike", () -> new DragonStrikeItem(10, 1.2f,
 					10, 2.5F, false,
 					new Item.Properties().durability(1280)
 							.fireResistant().rarity(Rarity.UNCOMMON))), SPEAR_TAB);
-	public static final RegistryObject<BaseSpearItem> SCOURGE = addToTab(
+	public static final RegistryObject<ScourgeItem> SCOURGE = addToTab(
 			ITEMS.register("scourge", () -> new ScourgeItem(10, 1.2f,
 					10, 2.5F, false,
+					new Item.Properties().durability(1280)
+							.fireResistant().rarity(Rarity.UNCOMMON))),
+			SPEAR_TAB);
+	public static final RegistryObject<NetherGuideItem> NETHER_GUIDE = addToTab(
+			ITEMS.register("nether_guide", () -> new NetherGuideItem(10, 1.2f,
+					9, 2.5F, false,
 					new Item.Properties().durability(1280)
 							.fireResistant().rarity(Rarity.UNCOMMON))),
 			SPEAR_TAB);
@@ -143,7 +149,7 @@ public class ModItems {
 							new Item.Properties().durability(960).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<EndboreWandererItem> ENDBORE_WANDERER = addToTab(
 			ITEMS.register("endbore_wanderer",
-					()->new EndboreWandererItem(12, 9, 2.5F, 0.8F,
+					() -> new EndboreWandererItem(12, 9, 2.5F, 0.8F,
 							0.0F, 0.0F, false,
 							new Item.Properties().durability(1280).rarity(Rarity.UNCOMMON))), BOW_TAB);
 
@@ -182,4 +188,10 @@ public class ModItems {
 					.durability(1280)
 					.rarity(Rarity.UNCOMMON))),
 			BOW_TAB);
+
+	//Special Util
+	public static final RegistryObject<Item> SCOURGE_PERK_TEXTURE_HOLDER =
+			ITEMS.register("scourge_perk_texture_holder", () -> new Item(new Item.Properties()));
+	public static final RegistryObject<Item> NETHER_GUIDE_CRIMSON_TEXTURE_HOLDER =
+			ITEMS.register("nether_guide_crimson_texture_holder", () -> new Item(new Item.Properties()));
 }

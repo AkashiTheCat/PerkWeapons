@@ -30,6 +30,7 @@ public class ModCommonConfigs {
 	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
 	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
+	public static ForgeConfigSpec.BooleanValue HOMING_WEAPON_ONLY_TRACK_MONSTERS;
 	public static ForgeConfigSpec.IntValue PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW;
 	public static ForgeConfigSpec.DoubleValue SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE;
 	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
@@ -49,6 +50,7 @@ public class ModCommonConfigs {
 	public static PiglinsWarSpearProperties PIGLINS_WARSPEAR_PROPERTIES;
 	public static DragonStrikeProperties DRAGON_STRIKE_PROPERTIES;
 	public static ScourgeProperties SCOURGE_PROPERTIES;
+	public static NetherGuideProperties NETHER_GUIDE_PROPERTIES;
 
 	//Bow Configs
 	public static BowProperties SHORT_BOW_PROPERTIES;
@@ -88,6 +90,8 @@ public class ModCommonConfigs {
 				.define("CrossbowAcceptAllArrow", true);
 		CROSSBOW_ACCEPT_FIREWORK = BUILDER.comment("Set True To Allow Modded Crossbows Use Fireworks As Ammo")
 				.define("CrossbowAcceptFirework", true);
+		HOMING_WEAPON_ONLY_TRACK_MONSTERS = BUILDER.comment("Set True To Make Homing Weapons(eg.Conduit Guard) Only Tracks Monsters, Ignoring Passive Mobs")
+				.define("HomingOnlyTrackMonsters", false);
 		PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW = BUILDER.comment("Max Perk Level That Can Be Gained From One Perk Arrow Shot")
 				.comment("Has Effect When The Arrow Pierces Multiple Enemies")
 				.defineInRange("MaxPerkArrowLevelGain", 1, 0, 255);
@@ -128,7 +132,8 @@ public class ModCommonConfigs {
 		CONDUIT_GUARD_PROPERTIES = new ConduitGuardProperties(BUILDER, "Conduit Guard",
 				9, 1.2,
 				9, 2.5F,
-				5.0F, 45,
+				5.0, 45,
+				4, 0.005,
 				0.5, 80);
 		PIGLINS_WARSPEAR_PROPERTIES = new PiglinsWarSpearProperties(BUILDER, "Piglin's WarSpear",
 				5, 1.2,
@@ -149,6 +154,14 @@ public class ModCommonConfigs {
 				120, 0.3,
 				10, 3,
 				600, 127);
+		NETHER_GUIDE_PROPERTIES = new NetherGuideProperties(BUILDER, "Nether Guide",
+				10, 1.2,
+				9, 2,
+				0.3, 0.3,
+				-0.3, 0.15,
+				1, 60,
+				1, 60,
+				20);
 
 		//Bows
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
@@ -299,7 +312,7 @@ public class ModCommonConfigs {
 		ModItems.PIGLINS_WARSPEAR.get().updateAttributesFromConfig(PIGLINS_WARSPEAR_PROPERTIES);
 		ModItems.DRAGON_STRIKE.get().updateAttributesFromConfig(DRAGON_STRIKE_PROPERTIES);
 		ModItems.SCOURGE.get().updateAttributesFromConfig(SCOURGE_PROPERTIES);
-
+		ModItems.NETHER_GUIDE.get().updateAttributesFromConfig(NETHER_GUIDE_PROPERTIES);
 
 		ModItems.SHORT_BOW.get().updateAttributesFromConfig(SHORT_BOW_PROPERTIES);
 		ModItems.LONGBOW.get().updateAttributesFromConfig(LONGBOW_PROPERTIES);

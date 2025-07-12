@@ -1,0 +1,6 @@
+{
+  "parent": "perk_weapons:item/nether_guide",
+  "textures": {
+    "layer0": "perk_weapons:item/spear/nether_guide_warped_animated"
+  }
+}
