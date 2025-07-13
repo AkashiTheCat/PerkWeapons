@@ -44,7 +44,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	protected static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("47e87eb7-7a3f-738c-13a9-7e6fdfa9b838");
 	protected static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("936e61dd-10ea-7a2a-d612-44acf75457bd");
 	protected static final UUID DAMAGE_RESISTANCE_UUID = UUID.fromString("0c513885-1e62-9178-31b0-716dcda83873");
-	protected final List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
+	protected List<Multimap<Attribute, AttributeModifier>> PerkLevelAttributeModifiers = new ArrayList<>();
 
 	protected static final String TAG_CUSTOM_CHARGED = "charged1";
 	protected static final String TAG_LAST_HIT = "last_hit";
@@ -99,7 +99,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	}
 
 	private void buildPerkLevelAttributeModifierList() {
-		PerkLevelAttributeModifiers.clear();
+		PerkLevelAttributeModifiers = new ArrayList<>();
 		PerkLevelAttributeModifiers.add(0, AttributeModifiers);
 		for (int i = 1; i <= MAX_PERK_LEVEL; i++) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
