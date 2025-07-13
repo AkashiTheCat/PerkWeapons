@@ -60,7 +60,6 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 
 	public PaladinItem(Properties pProperties) {
 		super(pProperties);
-		buildAttributeModifierMap();
 		RemoveGeneralEnchant(Enchantments.MULTISHOT);
 	}
 
@@ -73,24 +72,26 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 		RemoveGeneralEnchant(Enchantments.MULTISHOT);
 	}
 
-	private void buildAttributeModifierMap() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		if (AttributeModifiers != null)
 			builder.putAll(AttributeModifiers);
 		if (KNOCKBACK_RESISTANCE != 0.0) {
 			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
 					"Knockback Resistance", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADDITION));
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		}
 		if (MAGIC_RESISTANCE != 0.0) {
 			builder.put(ModAttributes.MAGIC_RESISTANCE.get(), new AttributeModifier(MAGIC_RESISTANCE_UUID,
 					"Magic Resistance", MAGIC_RESISTANCE, AttributeModifier.Operation.ADDITION));
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		}
 		if (DAMAGE_RESISTANCE != 0.0 || DAMAGE_RESISTANCE_PER_LEVEL != 0.0) {
 			builder.put(ModAttributes.DAMAGE_RESISTANCE.get(), new AttributeModifier(DAMAGE_RESISTANCE_UUID,
 					"Damage Resistance", DAMAGE_RESISTANCE, AttributeModifier.Operation.ADDITION));
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		}
 		AttributeModifiers = builder.build();
 
@@ -218,7 +219,6 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof PaladinProperties pProperties) {
 			KNOCKBACK_RESISTANCE = pProperties.KNOCKBACK_RESISTANCE.get().floatValue();
 			MAGIC_RESISTANCE = pProperties.MAGIC_RESISTANCE.get().floatValue();
@@ -228,8 +228,8 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 			MAX_PERK_LEVEL = pProperties.MAX_PERK_LEVEL.get().byteValue();
 			PERK_CLEAR_TIME_WITHOUT_HIT = pProperties.PERK_CLEAR_TIME_WITHOUT_HIT.get();
 			PIERCE_LEVEL_BONUS = pProperties.PIERCE_LEVEL_BONUS.get();
-			buildAttributeModifierMap();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

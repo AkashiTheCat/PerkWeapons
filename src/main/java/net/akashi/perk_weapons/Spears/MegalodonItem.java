@@ -33,7 +33,6 @@ public class MegalodonItem extends BaseSpearItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof MegalodonProperties mProperties) {
 			DOLPHINS_GRACE_LEVEL = mProperties.DOLPHINS_GRACE_LEVEL.get();
 			DOLPHINS_GRACE_TICKS = mProperties.DOLPHINS_GRACE_TICKS.get();
@@ -42,6 +41,7 @@ public class MegalodonItem extends BaseSpearItem {
 			STRENGTH_LEVEL = mProperties.STRENGTH_LEVEL.get();
 			STRENGTH_TICKS = mProperties.STRENGTH_TICKS.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

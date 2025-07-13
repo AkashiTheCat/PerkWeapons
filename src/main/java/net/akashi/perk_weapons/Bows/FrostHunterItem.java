@@ -104,7 +104,6 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof FrostHunterProperties fProperties) {
 			FROZEN_TIME = fProperties.FROZEN_TIME.get();
 			ABILITY_COOLDOWN_TIME = fProperties.ABILITY_COOLDOWN_TIME.get();
@@ -112,6 +111,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 			HOUND_COUNT = fProperties.HOUND_COUNT.get().byteValue();
 			ENABLE_HOUND_EFFECT = fProperties.ENABLE_HOUND_EFFECT.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

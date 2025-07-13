@@ -45,13 +45,13 @@ public class IncineratorItem extends BaseCrossbowItem {
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
+		AddConflictEnchant(ModEnchantments.BLAZE.get());
 		if (properties instanceof IncineratorProperties IProperties) {
 			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
 			BLAZE_RELOAD_ADDITION = IProperties.BLAZE_RELOAD_INCREMENT.get();
 			FIRE_ARROW_KNOCKBACK_BONUS = IProperties.FIRE_ARROW_KNOCKBACK_BONUS.get();
 		}
-		AddConflictEnchant(ModEnchantments.BLAZE.get());
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

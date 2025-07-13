@@ -42,6 +42,9 @@ public class ScourgeItem extends BaseSpearItem {
 	public static final String TAG_LAST_USED = "lastUsed";
 	public static final String TAG_SHOTS_REMAIN = "shotsRemain";
 	public static final String TAG_BUFFED = "buffed";
+
+	protected Multimap<Attribute, AttributeModifier> AttributeModifiersBuffed;
+
 	private static int ABILITY_COOLDOWN = 600;
 	public static int WITHER_DURATION = 40;
 	public static int WITHER_LEVEL = 3;
@@ -78,8 +81,19 @@ public class ScourgeItem extends BaseSpearItem {
 	}
 
 	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
+		float speedMultiplier = 1.0F + ABILITY_ATTACK_SPEED_BONUS;
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				MELEE_SPEED * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
+		AttributeModifiersBuffed = builder.build();
+	}
+
+	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof ScourgeProperties sProperties) {
 			WITHER_DURATION = sProperties.HIT_WITHER_DURATION.get();
 			WITHER_LEVEL = sProperties.HIT_WITHER_LEVEL.get();
@@ -92,17 +106,13 @@ public class ScourgeItem extends BaseSpearItem {
 			ABILITY_SHOTS_COUNT = sProperties.ABILITY_SHOTS_COUNT.get();
 			PIERCE_LEVEL = sProperties.PIERCE_LEVEL.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		float speedMultiplier = 1.0F + (isBuffed(stack) ? ABILITY_ATTACK_SPEED_BONUS : 0);
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-				MELEE_SPEED * speedMultiplier - 4, AttributeModifier.Operation.ADDITION));
-		return slot == EquipmentSlot.MAINHAND ? builder.build() : super.getAttributeModifiers(slot, stack);
+		return slot == EquipmentSlot.MAINHAND && isBuffed(stack) ? AttributeModifiersBuffed :
+				super.getAttributeModifiers(slot, stack);
 	}
 
 	@Override

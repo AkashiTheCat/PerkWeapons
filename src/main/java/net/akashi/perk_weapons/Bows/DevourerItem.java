@@ -44,10 +44,10 @@ public class DevourerItem extends BaseBowItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof DevourerProperties dProperties) {
 			PIERCE_LEVEL = dProperties.PIERCE_LEVEL.get().byteValue();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

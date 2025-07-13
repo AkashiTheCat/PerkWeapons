@@ -45,13 +45,13 @@ public class LiberatorItem extends BaseCrossbowItem {
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		AddGeneralEnchant(ModEnchantments.REGICIDE.get());
 		if (properties instanceof LiberatorProperties lProperties) {
 			PIERCE_LEVEL = lProperties.PIERCE_LEVEL.get().byteValue();
 			AMMO_CAPACITY_REGICIDE = lProperties.CAPACITY_REGICIDE.get().byteValue();
 			MULTISHOT_BONUS = lProperties.MULTISHOT_BONUS.get().byteValue();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

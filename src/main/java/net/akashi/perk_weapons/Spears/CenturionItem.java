@@ -71,12 +71,12 @@ public class CenturionItem extends BaseSpearItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof CenturionProperties cProperties) {
 			EFFECT_APPLY_RANGE = cProperties.EFFECT_APPLY_RANGE.get();
 			PHALANX_EFFECT_LEVEL = cProperties.PHALANX_LEVEL.get();
 			PIERCE_LEVEL = cProperties.PIERCE_LEVEL.get().byteValue();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

@@ -68,12 +68,12 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof ElfsHarpProperties eProperties) {
 			MAX_PERK_LEVEL = eProperties.MAX_PERK_LEVEL.get().byteValue();
 			PERK_BUFF = eProperties.PERK_BUFF.get().floatValue();
 			GLOWING_TIME = eProperties.GLOWING_TIME.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

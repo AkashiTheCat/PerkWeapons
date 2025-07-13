@@ -23,7 +23,6 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 
 	public TaintedFortuneItem(Properties pProperties) {
 		super(pProperties);
-		buildAttributeModifierMap();
 	}
 
 	public TaintedFortuneItem(int maxChargeTicks, float damage, float velocity, float inaccuracy,
@@ -31,10 +30,11 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 	                          boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
 				speedModifier, onlyAllowMainHand, pProperties);
-		buildAttributeModifierMap();
 	}
 
-	private void buildAttributeModifierMap() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> offHandMapBuilder = ImmutableMultimap.builder();
 		if (KNOCKBACK_MODIFIER != 0.0F) {
 			offHandMapBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
@@ -56,11 +56,10 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof TaintedFortuneProperties tProperties) {
 			KNOCKBACK_MODIFIER = tProperties.KNOCKBACK_MODIFIER.get().floatValue();
-			buildAttributeModifierMap();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

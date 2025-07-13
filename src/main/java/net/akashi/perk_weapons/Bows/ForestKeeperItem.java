@@ -76,12 +76,12 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof ForestKeeperProperties fProperties) {
 			MAX_PERK_LEVEL = fProperties.MAX_PERK_LEVEL.get().byteValue();
 			PERK_DROP_INTERVAL = fProperties.PERK_DROP_INTERVAL.get();
 			PERK_BUFF = fProperties.PERK_DAMAGE_BUFF.get().floatValue();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

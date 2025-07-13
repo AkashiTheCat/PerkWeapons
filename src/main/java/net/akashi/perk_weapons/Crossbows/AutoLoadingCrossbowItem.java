@@ -33,7 +33,7 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 	@Override
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
-		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
+		if (ONLY_ALLOW_MAINHAND && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
 		}
 

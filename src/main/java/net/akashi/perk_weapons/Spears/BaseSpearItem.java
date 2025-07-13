@@ -66,13 +66,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 
 	public BaseSpearItem(Properties pProperties) {
 		super(pProperties);
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-				5 - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-				1.1 - 4, AttributeModifier.Operation.ADDITION));
-		this.AttributeModifiers = builder.build();
-
+		buildAttributeModifiers();
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerSpearPropertyOverrides(this);
 	}
@@ -89,19 +83,12 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 			GeneralEnchants.addAll(Arrays.asList(RIPTIDE, CHANNELING));
 			ConflictEnchants.add(IMPALING);
 		}
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-				attackDamage - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-				attackSpeed - 4, AttributeModifier.Operation.ADDITION));
-		this.AttributeModifiers = builder.build();
-
+		buildAttributeModifiers();
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerSpearPropertyOverrides(this);
 	}
 
 	//General Overrides
-
 	@Override
 	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
 		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : super.getAttributeModifiers(slot, stack);
@@ -233,19 +220,22 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 
 	//New methods
 
+	protected void buildAttributeModifiers() {
+		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				MELEE_SPEED - 4, AttributeModifier.Operation.ADDITION));
+		this.AttributeModifiers = builder.build();
+	}
+
 	public void updateAttributesFromConfig(SpearProperties properties) {
 		this.VELOCITY = properties.VELOCITY.get().floatValue();
 		this.MELEE_DAMAGE = properties.MELEE_DAMAGE.get().floatValue();
 		this.MELEE_SPEED = properties.ATTACK_SPEED.get().floatValue();
 		this.THROW_DAMAGE = properties.RANGED_DAMAGE.get().floatValue();
 		this.MAX_CHARGE_TICKS = properties.MAX_CHARGE_TICKS.get();
-
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-				this.MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-				this.MELEE_SPEED - 4, AttributeModifier.Operation.ADDITION));
-		AttributeModifiers = builder.build();
+		buildAttributeModifiers();
 	}
 
 	public ThrownSpear createThrownSpear(Level pLevel, Player player, ItemStack pStack) {

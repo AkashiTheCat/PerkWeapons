@@ -43,7 +43,6 @@ public class ConduitGuardItem extends BaseSpearItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof ConduitGuardProperties cProperties) {
 			RETURN_TIME = cProperties.RETURN_TIME.get();
 			VELOCITY_MULTIPLIER = cProperties.VELOCITY_MULTIPLIER.get();
@@ -54,6 +53,7 @@ public class ConduitGuardItem extends BaseSpearItem {
 			MAX_TURN_ANGLE_COS = (float) Math.cos(radTurnRate);
 			MAX_TURN_ANGLE_SIN = (float) Math.sin(radTurnRate);
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

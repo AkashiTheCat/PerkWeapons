@@ -179,12 +179,12 @@ public class BeholderItem extends BaseCrossbowItem {
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof BeholderProperties bProperties) {
 			AFFECT_RANGE = bProperties.AFFECT_RANGE.get();
 			SLOWNESS_LEVEL = bProperties.SLOWNESS_LEVEL.get();
 			WEAKNESS_LEVEL = bProperties.WEAKNESS_LEVEL.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	public static String TAG_ARMOR_COUNT = "armor_count";
 	public static float DAMAGE_RATIO_BONUS = 0.1f;
 	public static float SPEED_RATIO_BONUS = 0.1f;
-	private static List<Item> allowedArmor = new ArrayList<>(Arrays.asList(
+	private static List<Item> ALLOWED_ARMORS = new ArrayList<>(Arrays.asList(
 			Items.GOLDEN_HELMET,
 			Items.GOLDEN_CHESTPLATE,
 			Items.GOLDEN_LEGGINGS,
@@ -37,14 +37,12 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	public PiglinsWarSpearItem(Properties pProperties) {
 		super(pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
-		buildAttributeModifiers();
 	}
 
 	public PiglinsWarSpearItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
 	                           int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
 		AddGeneralEnchant(FIRE_ASPECT);
-		buildAttributeModifiers();
 	}
 
 	@Override
@@ -52,7 +50,9 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 		return THROW_DAMAGE * (1 + getArmorCount(stack) * DAMAGE_RATIO_BONUS);
 	}
 
-	private void buildAttributeModifiers() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		for (int i = 0; i < 5; i++) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
@@ -65,13 +65,12 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof PiglinsWarSpearProperties pProperties) {
 			DAMAGE_RATIO_BONUS = pProperties.DAMAGE_BONUS.get().floatValue();
 			SPEED_RATIO_BONUS = pProperties.SPEED_BONUS.get().floatValue();
-			allowedArmor = PiglinsWarSpearProperties.convertStringsToItems(pProperties.getArmorList());
+			ALLOWED_ARMORS = PiglinsWarSpearProperties.convertStringsToItems(pProperties.getArmorList());
 		}
-		buildAttributeModifiers();
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override
@@ -95,7 +94,7 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	public static int getPlayerArmorCount(Player player) {
 		int count = 0;
 		for (ItemStack armor : player.getArmorSlots()) {
-			if (allowedArmor.stream().anyMatch(pArmor -> pArmor.equals(armor.getItem()))) {
+			if (ALLOWED_ARMORS.stream().anyMatch(pArmor -> pArmor.equals(armor.getItem()))) {
 				count++;
 			}
 		}

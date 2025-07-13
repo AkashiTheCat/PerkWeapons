@@ -43,18 +43,18 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	public DragonStrikeItem(Properties pProperties) {
 		super(pProperties);
-		buildAttributeModifiers();
 		this.RemoveGeneralEnchant(LOYALTY);
 	}
 
 	public DragonStrikeItem(float attackDamage, float attackSpeed, float throwDamage, float projectileVelocity,
 	                        int maxChargeTicks, boolean isAdvanced, Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
-		buildAttributeModifiers();
 		this.RemoveGeneralEnchant(LOYALTY);
 	}
 
-	private void buildAttributeModifiers() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		if (AttributeModifiers != null)
 			builder.putAll(AttributeModifiers);
@@ -67,7 +67,6 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof DragonStrikeProperties dProperties) {
 			MAGIC_RESISTANCE = dProperties.MAGIC_RESISTANCE.get();
 			COOLDOWN_TICKS = dProperties.ABILITY_COOLDOWN_TIME.get();
@@ -76,8 +75,8 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 			AFFECT_CLOUD_DURATION = dProperties.AFFECT_DURATION.get();
 			EFFECT_DAMAGE = dProperties.EFFECT_DAMAGE.get();
 			RETURN_TIME = dProperties.RETURN_TIME.get();
-			buildAttributeModifiers();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

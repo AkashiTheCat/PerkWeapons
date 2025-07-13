@@ -116,7 +116,6 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof EndboreWandererProperties eProperties) {
 			MAX_PERK_LEVEL = eProperties.MAX_PERK_LEVEL.get().byteValue();
 			CROUCH_USE_COOLDOWN_TICKS = eProperties.CROUCH_USE_COOLDOWN.get();
@@ -130,6 +129,7 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 			MAX_PROJECTILE_TURN_ANGLE_PER_TICK_COS_VALUE = (float) Math.cos(radTurnRate);
 			MAX_PROJECTILE_TURN_ANGLE_PER_TICK_SIN_VALUE = (float) Math.sin(radTurnRate);
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
 	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
-	public boolean onlyAllowMainHand = false;
+	public boolean ONLY_ALLOW_MAINHAND = false;
 	private static final String TAG_CHARGED = "Charged";
 	private static final String TAG_CHARGED_PROJECTILES = "ChargedProjectiles";
 	protected int AMMO_CAPACITY = 1;
@@ -67,6 +67,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	protected float VELOCITY = 4.0F;
 	protected float INACCURACY = 1.0F;
 	protected float QUICK_CHARGE_RELOAD_TIME_REDUCTION = 5;
+	protected float SPEED_MODIFIER = 0.0F;
 
 	protected final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			QUICK_CHARGE,
@@ -85,6 +86,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		super(pProperties);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerCrossbowPropertyOverrides(this);
+		buildAttributeModifiers();
 	}
 
 	/**
@@ -101,16 +103,9 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		this.INACCURACY = inaccuracy;
 		this.AMMO_CAPACITY = ammoCapacity;
 		this.FIRE_INTERVAL = fireInterval;
-		this.onlyAllowMainHand = onlyAllowMainHand;
-		if (speedModifier != 0.0F) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.AttributeModifiers = builder.build();
-			this.onlyAllowMainHand = true;
-		} else {
-			this.AttributeModifiers = ImmutableMultimap.of();
-		}
+		this.ONLY_ALLOW_MAINHAND = onlyAllowMainHand;
+		this.SPEED_MODIFIER = speedModifier;
+		buildAttributeModifiers();
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerCrossbowPropertyOverrides(this);
 	}
@@ -122,7 +117,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			Player pPlayer,
 			@NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
-		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
+		if (ONLY_ALLOW_MAINHAND && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
 		}
 
@@ -516,14 +511,18 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		this.INACCURACY = properties.INACCURACY.get().floatValue();
 		this.AMMO_CAPACITY = properties.AMMO_CAPACITY.get();
 		this.FIRE_INTERVAL = properties.FIRE_INTERVAL.get();
-		this.onlyAllowMainHand = properties.ONLY_MAINHAND.get();
+		this.ONLY_ALLOW_MAINHAND = properties.ONLY_MAINHAND.get();
 		this.QUICK_CHARGE_RELOAD_TIME_REDUCTION = (float) (5 * properties.QUICK_CHARGE_MULTIPLIER.get());
-		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
-		if (speedModifier != 0.0F) {
+		this.SPEED_MODIFIER = properties.SPEED_MODIFIER.get().floatValue();
+		buildAttributeModifiers();
+	}
+
+	protected void buildAttributeModifiers() {
+		if (SPEED_MODIFIER != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.onlyAllowMainHand = true;
+					"Tool modifier", SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL));
+			this.ONLY_ALLOW_MAINHAND = true;
 			this.AttributeModifiers = builder.build();
 		} else {
 			this.AttributeModifiers = ImmutableMultimap.of();
@@ -571,7 +570,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 			return;
 		}
 
-		if (onlyAllowMainHand) {
+		if (ONLY_ALLOW_MAINHAND) {
 			tooltip.add(Component.translatable("tooltip.perk_weapons.only_mainhand")
 					.withStyle(ChatFormatting.RED));
 		}

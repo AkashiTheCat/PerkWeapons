@@ -110,7 +110,7 @@ public class PurgatoryItem extends BaseBowItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
+		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
 		if (properties instanceof PurgatoryProperties pProperties) {
 			KNOCKBACK_RESISTANCE = pProperties.KNOCKBACK_RESISTANCE.get();
 			FUSE_TIME = pProperties.FUSE_TIME.get();
@@ -125,7 +125,7 @@ public class PurgatoryItem extends BaseBowItem {
 			INTERNAL_EXP_LEVEL = pProperties.INTERNAL_EXP_EFFECT_LEVEL.get();
 			buildAttributeModifierMap();
 		}
-		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
+		super.updateAttributesFromConfig(properties);
 	}
 
 	public AbstractArrow setArrowAttributes(AbstractArrow arrow) {

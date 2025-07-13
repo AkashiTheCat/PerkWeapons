@@ -58,7 +58,6 @@ public class HouYiItem extends BaseBowItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		AddGeneralEnchant(ModEnchantments.STAR_SHOOTER.get());
 		if (properties instanceof HouYiProperties hProperties) {
 			DAMAGE_MODIFIER_STAR_SHOOTER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER.get().floatValue();
@@ -66,6 +65,7 @@ public class HouYiItem extends BaseBowItem {
 			StarShooterArrow.DAMAGE_MODIFIER_MAX = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_MAX.get().floatValue();
 			StarShooterArrow.DAMAGE_MODIFIER_MIN = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_MIN.get().floatValue();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

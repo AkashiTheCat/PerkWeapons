@@ -54,7 +54,6 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 
 	public NetherGuideItem(Properties pProperties) {
 		super(pProperties);
-		buildAttributeModifiers();
 		if (FMLEnvironment.dist.isClient()) {
 			ClientHelper.registerNetherGuidePropertyOverrides(this);
 			ClientHelper.registerPerkItemPropertyOverrides(this);
@@ -66,14 +65,15 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 	                       int maxChargeTicks, boolean isAdvanced,
 	                       Properties pProperties) {
 		super(attackDamage, attackSpeed, throwDamage, projectileVelocity, maxChargeTicks, isAdvanced, pProperties);
-		buildAttributeModifiers();
 		if (FMLEnvironment.dist.isClient()) {
 			ClientHelper.registerNetherGuidePropertyOverrides(this);
 			ClientHelper.registerPerkItemPropertyOverrides(this);
 		}
 	}
 
-	private void buildAttributeModifiers() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		if (AttributeModifiers != null) {
 			for (Map.Entry<Attribute, AttributeModifier> entry : AttributeModifiers.entries()) {
@@ -82,7 +82,6 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 				}
 			}
 		}
-		System.out.println(MELEE_DAMAGE);
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool Modifier",
 				MELEE_DAMAGE * (1 + WARPED_MELEE_DAMAGE_BONUS_RATIO) - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID, "Movement Speed",
@@ -152,7 +151,6 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 
 	@Override
 	public void updateAttributesFromConfig(SpearProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof NetherGuideProperties nProperties) {
 			WARPED_MELEE_DAMAGE_BONUS_RATIO = nProperties.WARPED_MELEE_DAMAGE_BONUS_RATIO.get().floatValue();
 			WARPED_THROW_DAMAGE_BONUS_RATIO = nProperties.WARPED_THROW_DAMAGE_BONUS_RATIO.get().floatValue();
@@ -165,8 +163,8 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 			CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT = nProperties.CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT.get();
 
 			MODE_SWITCH_COOLDOWN = nProperties.MODE_SWITCH_COOLDOWN.get();
-			buildAttributeModifiers();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

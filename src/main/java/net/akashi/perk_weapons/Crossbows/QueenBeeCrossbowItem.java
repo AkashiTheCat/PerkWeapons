@@ -125,7 +125,6 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		if (properties instanceof QueenBeeProperties qProperties) {
 			POISON_LEVEL = qProperties.POISON_LEVEL.get();
 			POISON_TICKS = qProperties.POISON_DURATION.get();
@@ -134,6 +133,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 			ROYAL_JELLY_TICKS = qProperties.ROYAL_JELLY_DURATION.get();
 			CROUCH_USE_COOLDOWN_TICKS = qProperties.COOLDOWN_CROUCH_USE.get();
 		}
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override

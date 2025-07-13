@@ -51,6 +51,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	protected int DRAW_TIME = 20;
 	protected float PROJECTILE_DAMAGE = 10;
 	protected float INACCURACY = 1.0f;
+	protected float SPEED_MODIFIER = 0.0f;
 
 	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			INFINITY_ARROWS,
@@ -72,6 +73,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		super(properties);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerBowPropertyOverrides(this);
+		buildAttributeModifiers();
 	}
 
 	/**
@@ -86,17 +88,10 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		this.ZOOM_FACTOR = zoomFactor;
 		this.INACCURACY = inaccuracy;
 		this.ONLY_ALLOW_MAINHAND = onlyAllowMainHand;
+		this.SPEED_MODIFIER = speedModifier;
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerBowPropertyOverrides(this);
-		if (speedModifier != 0.0F) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.AttributeModifiers = builder.build();
-			this.ONLY_ALLOW_MAINHAND = true;
-		} else {
-			this.AttributeModifiers = ImmutableMultimap.of();
-		}
+		buildAttributeModifiers();
 	}
 
 	//General overrides
@@ -275,11 +270,15 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		this.ZOOM_FACTOR = properties.ZOOM_FACTOR.get().floatValue();
 		this.INACCURACY = properties.INACCURACY.get().floatValue();
 		this.ONLY_ALLOW_MAINHAND = properties.ONLY_MAINHAND.get();
-		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
-		if (speedModifier != 0.0F) {
+		this.SPEED_MODIFIER = properties.SPEED_MODIFIER.get().floatValue();
+		buildAttributeModifiers();
+	}
+
+	public void buildAttributeModifiers() {
+		if (SPEED_MODIFIER != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
+					"Tool modifier", SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL));
 			this.AttributeModifiers = builder.build();
 			this.ONLY_ALLOW_MAINHAND = true;
 		} else {

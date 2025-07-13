@@ -47,7 +47,6 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 
 	public SonicBlasterItem(Properties pProperties) {
 		super(pProperties);
-		buildAttributeModifierMap();
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
 		RemoveGeneralEnchant(POWER_ARROWS);
@@ -62,7 +61,6 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	                        boolean onlyAllowMainHand, Properties pProperties) {
 		super(maxChargeTicks, damage, velocity, inaccuracy, ammoCapacity, fireInterval,
 				speedModifier, onlyAllowMainHand, pProperties);
-		buildAttributeModifierMap();
 		AMMO_CAPACITY = 0;
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
@@ -72,21 +70,22 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		}
 	}
 
-	private void buildAttributeModifierMap() {
+	@Override
+	protected void buildAttributeModifiers() {
+		super.buildAttributeModifiers();
 		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 		if (AttributeModifiers != null)
 			builder.putAll(AttributeModifiers);
 		if (KNOCKBACK_RESISTANCE != 0.0F) {
 			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
 					"Tool modifier", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADDITION));
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		}
 		this.AttributeModifiers = builder.build();
 	}
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		super.updateAttributesFromConfig(properties);
 		VELOCITY = -1;
 		if (properties instanceof SonicBlasterProperties sProperties) {
 			MAX_ATTACK_RANGE = sProperties.MAX_RANGE.get();
@@ -95,7 +94,6 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 			HAS_KNOCKBACK = sProperties.ENABLE_KNOCKBACK.get();
 			KNOCKBACK_FORCE = sProperties.KNOCKBACK_FORCE.get();
 			KNOCKBACK_RESISTANCE = sProperties.KNOCKBACK_RESISTANCE.get().floatValue();
-			buildAttributeModifierMap();
 
 			if (PIERCE_LEVEL == -1 && this.GeneralEnchants.contains(PIERCING)) {
 				RemoveGeneralEnchant(PIERCING);
@@ -104,7 +102,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 				AddGeneralEnchant(PIERCING);
 			}
 		}
-
+		super.updateAttributesFromConfig(properties);
 	}
 
 	@Override
