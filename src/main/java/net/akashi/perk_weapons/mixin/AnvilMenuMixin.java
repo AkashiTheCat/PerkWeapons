@@ -7,6 +7,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,19 +27,19 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
 
 
 	@Shadow
-	protected abstract boolean mayPickup(Player pPlayer, boolean pHasStack);
+	protected abstract boolean mayPickup(@NotNull Player pPlayer, boolean pHasStack);
 
 	@Shadow
-	protected abstract void onTake(Player pPlayer, ItemStack pStack);
+	protected abstract void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack);
 
 	@Shadow
-	protected abstract boolean isValidBlock(BlockState pState);
+	protected abstract boolean isValidBlock(@NotNull BlockState pState);
 
 	@Shadow
 	public abstract void createResult();
 
 	@Shadow
-	protected abstract ItemCombinerMenuSlotDefinition createInputSlotDefinitions();
+	protected abstract @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions();
 
 	public AnvilMenuMixin(@Nullable MenuType<?> pType, int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
 		super(pType, pContainerId, pPlayerInventory, pAccess);
