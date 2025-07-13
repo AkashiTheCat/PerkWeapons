@@ -15,12 +15,12 @@ public class ModAttributesEventHandler {
 		LivingEntity entity = event.getEntity();
 		if (entity.getAttribute(ModAttributes.DAMAGE_RESISTANCE.get()) != null) {
 			double resistance = entity.getAttributeValue(ModAttributes.DAMAGE_RESISTANCE.get());
-			event.setAmount((float) (event.getAmount() / (1 - resistance / 100)));
+			event.setAmount((float) (event.getAmount() / (1 + resistance / 100)));
 		}
 
 		if (event.getSource().is(DamageTypes.MAGIC) && entity.getAttribute(ModAttributes.MAGIC_RESISTANCE.get()) != null) {
 			double resistance = entity.getAttributeValue(ModAttributes.MAGIC_RESISTANCE.get());
-			event.setAmount((float) (event.getAmount() * (1 - (resistance / 100))));
+			event.setAmount((float) (event.getAmount() * (1 + (resistance / 100))));
 		}
 	}
 }
