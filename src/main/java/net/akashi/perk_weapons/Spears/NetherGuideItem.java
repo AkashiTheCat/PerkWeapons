@@ -82,6 +82,7 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 				}
 			}
 		}
+		System.out.println(MELEE_DAMAGE);
 		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool Modifier",
 				MELEE_DAMAGE * (1 + WARPED_MELEE_DAMAGE_BONUS_RATIO) - 1, AttributeModifier.Operation.ADDITION));
 		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID, "Movement Speed",
@@ -164,6 +165,7 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 			CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT = nProperties.CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT.get();
 
 			MODE_SWITCH_COOLDOWN = nProperties.MODE_SWITCH_COOLDOWN.get();
+			buildAttributeModifiers();
 		}
 	}
 
