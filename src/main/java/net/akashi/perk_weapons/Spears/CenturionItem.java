@@ -6,6 +6,9 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownCenturion;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -74,5 +77,31 @@ public class CenturionItem extends BaseSpearItem {
 			PHALANX_EFFECT_LEVEL = cProperties.PHALANX_LEVEL.get();
 			PIERCE_LEVEL = cProperties.PIERCE_LEVEL.get().byteValue();
 		}
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		var list = super.getPerkDescriptions(stack, level);
+		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.centurion_perk_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.centurion_perk_2",
+				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
+
+		list.add(Component.empty());
+
+		list.add(Component.translatable("tooltip.perk_weapons.centurion_perk_3").withStyle(ChatFormatting.GRAY));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.centurion_perk_4",
+				TooltipHelper.convertToEmbeddedElement(EFFECT_APPLY_RANGE),
+				TooltipHelper.convertToEmbeddedElement(3))));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				ModEffects.PHALANX.get().getDisplayName(),
+				TooltipHelper.getRomanNumeral(PHALANX_EFFECT_LEVEL),
+				4)));
+
+		return list;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.centurion"));
 	}
 }

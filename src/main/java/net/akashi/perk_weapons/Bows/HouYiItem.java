@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HouYiItem extends BaseBowItem {
@@ -76,7 +75,7 @@ public class HouYiItem extends BaseBowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.hou_yi_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",

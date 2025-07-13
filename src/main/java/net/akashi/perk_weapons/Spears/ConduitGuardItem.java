@@ -11,7 +11,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
@@ -59,7 +58,7 @@ public class ConduitGuardItem extends BaseSpearItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.conduit_guard_perk_1",
 				TooltipHelper.convertToEmbeddedElement(HOMING_RANGE))));

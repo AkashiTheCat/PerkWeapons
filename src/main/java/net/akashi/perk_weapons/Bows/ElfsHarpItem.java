@@ -83,7 +83,7 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_2",
@@ -92,15 +92,17 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 						TooltipHelper.getRomanNumeral(1),
 						TooltipHelper.convertTicksToSeconds(GLOWING_TIME))))));
 
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_3",
+		list.add(Component.empty());
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.gain_perk_level_on_hit",
 				TooltipHelper.convertToEmbeddedElement(1))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_4",
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.max_perk_level",
 				TooltipHelper.convertToEmbeddedElement(MAX_PERK_LEVEL))));
 
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_5")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_reach_max_perk_level")));
 		list.add(TooltipHelper.getArrowDamageModifier(PERK_BUFF));
 
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_6")));
+		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_3")));
 
 		return list;
 	}

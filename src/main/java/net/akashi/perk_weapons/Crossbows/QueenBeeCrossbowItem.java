@@ -9,6 +9,9 @@ import net.akashi.perk_weapons.Registry.ModEffects;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +26,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem {
 	protected static final SoundEventHolder LOADING_START_SOUND = new SoundEventHolder(SoundEvents.BEE_POLLINATE,
@@ -129,5 +134,40 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 			ROYAL_JELLY_TICKS = qProperties.ROYAL_JELLY_DURATION.get();
 			CROUCH_USE_COOLDOWN_TICKS = qProperties.COOLDOWN_CROUCH_USE.get();
 		}
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		var list = super.getPerkDescriptions(stack, level);
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_perk_1")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.POISON.getDisplayName(),
+				TooltipHelper.getRomanNumeral(POISON_LEVEL),
+				TooltipHelper.convertTicksToSeconds(POISON_TICKS))));
+
+		list.add(Component.empty());
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.gain_perk_level_on_hit",
+				TooltipHelper.convertToEmbeddedElement(1))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.max_perk_level",
+				TooltipHelper.convertToEmbeddedElement(getMaxPerkLevel()))));
+
+		list.add(Component.empty());
+
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		list.add(Component.translatable("tooltip.perk_weapons.when_reach_max_perk_level").withStyle(ChatFormatting.GRAY));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_ability_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_ability_2")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				ModEffects.ROYAL_JELLY.get().getDisplayName(),
+				TooltipHelper.getRomanNumeral(ROYAL_JELLY_LEVEL),
+				TooltipHelper.convertTicksToSeconds(ROYAL_JELLY_TICKS))));
+
+		return list;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow"));
 	}
 }

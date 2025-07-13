@@ -2,7 +2,6 @@ package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.DevourerProperties;
-import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.DevourerArrow;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -15,7 +14,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DevourerItem extends BaseBowItem {
@@ -60,7 +58,7 @@ public class DevourerItem extends BaseBowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.devourer_perk_1",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));

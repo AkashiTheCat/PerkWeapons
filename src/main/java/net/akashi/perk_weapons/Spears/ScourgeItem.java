@@ -211,7 +211,7 @@ public class ScourgeItem extends BaseSpearItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.scourge_perk_1",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));

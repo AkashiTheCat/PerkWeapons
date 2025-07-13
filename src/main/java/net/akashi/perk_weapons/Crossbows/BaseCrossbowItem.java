@@ -9,6 +9,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
+import net.akashi.perk_weapons.Registry.ModTags;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
@@ -627,7 +628,10 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		return new ArrayList<>();
+		List<Component> list = new ArrayList<>();
+		if (stack.is(ModTags.NO_USING_SLOWDOWN_TAG))
+			list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.no_using_slowdown_perk")));
+		return list;
 	}
 
 	public Component getWeaponDescription(ItemStack stack, Level level) {

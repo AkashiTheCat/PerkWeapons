@@ -7,6 +7,7 @@ import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
+import net.akashi.perk_weapons.Registry.ModTags;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
@@ -291,7 +292,10 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		return List.of();
+		List<Component> list = new ArrayList<>();
+		if (stack.is(ModTags.NO_USING_SLOWDOWN_TAG))
+			list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.no_using_slowdown_perk")));
+		return list;
 	}
 
 	public Component getWeaponDescription(ItemStack stack, Level level) {

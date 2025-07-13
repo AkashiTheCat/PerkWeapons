@@ -109,7 +109,7 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.piglins_warspear_perk_1")));
 		list.add(TooltipHelper.getAttackSpeedModifier(SPEED_RATIO_BONUS));

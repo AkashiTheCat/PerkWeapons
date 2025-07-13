@@ -2,7 +2,6 @@ package net.akashi.perk_weapons.Bows;
 
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.FrostHunterProperties;
-import net.akashi.perk_weapons.Entities.Hound;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.FrostHunterArrow;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
@@ -17,6 +16,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -64,19 +64,25 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 		if (pPlayer.isCrouching() && (flag || CD_MAP.get(pPlayer.getUUID()) == 0)) {
 			if (!pLevel.isClientSide()) {
 				for (int i = 0; i < HOUND_COUNT; i++) {
-					Hound hound = new Hound(EntityType.WOLF, pLevel, HOUND_LIFETIME);
-					hound.setTame(true);
-					hound.setOwnerUUID(pPlayer.getUUID());
-					hound.setCustomName(Component.translatable(PerkWeapons.MODID + ".entity.hound"));
-					if (ENABLE_HOUND_EFFECT) {
-						hound.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, HOUND_LIFETIME, 0));
-						hound.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, HOUND_LIFETIME, 0));
-						hound.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, HOUND_LIFETIME, 1));
-						hound.addEffect(new MobEffectInstance(MobEffects.REGENERATION, HOUND_LIFETIME, 1));
+					Wolf hound = EntityType.WOLF.create(pLevel);
+					if (hound != null) {
+						hound.setTame(true);
+						hound.setOwnerUUID(pPlayer.getUUID());
+						hound.setCustomName(Component.translatable("entity." + PerkWeapons.MODID + ".hound"));
+
+						if (ENABLE_HOUND_EFFECT) {
+							hound.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, HOUND_LIFETIME, 0));
+							hound.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, HOUND_LIFETIME, 0));
+							hound.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, HOUND_LIFETIME, 1));
+							hound.addEffect(new MobEffectInstance(MobEffects.REGENERATION, HOUND_LIFETIME, 1));
+						}
+
+						hound.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
+						pLevel.addFreshEntity(hound);
+
+						hound.getPersistentData().putInt("DespawnTick", HOUND_LIFETIME);
+						CD_MAP.put(pPlayer.getUUID(), ABILITY_COOLDOWN_TIME);
 					}
-					hound.setPos(pPlayer.getX(), pPlayer.getY(), pPlayer.getZ());
-					pLevel.addFreshEntity(hound);
-					CD_MAP.put(pPlayer.getUUID(), ABILITY_COOLDOWN_TIME);
 				}
 			}
 		}
@@ -129,11 +135,11 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.frost_hunter_perk_1",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FROZEN_TIME)))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));
 
 		list.add(Component.empty());
 

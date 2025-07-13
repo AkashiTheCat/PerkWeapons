@@ -36,11 +36,11 @@ public class PlayerTickEventHandler {
 		if (player.hasEffect(ModEffects.PHALANX.get())) {
 			FoodData foodData = player.getFoodData();
 			int tickTimer = getTickTimer(foodData);
-			if (foodData.getFoodLevel() == 20 && tickTimer == 10) {
+			if (foodData.getFoodLevel() == 20 && tickTimer == 9) {
 				player.heal(Math.min(1.0F, foodData.getSaturationLevel() / 6));
 				return;
 			}
-			if (foodData.getFoodLevel() >= 18 && tickTimer == 80) {
+			if (foodData.getFoodLevel() >= 18 && tickTimer == 79) {
 				player.heal(1.0F);
 			}
 		}

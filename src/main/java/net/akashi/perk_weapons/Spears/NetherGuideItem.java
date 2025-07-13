@@ -10,6 +10,10 @@ import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModAttributes;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -160,5 +165,50 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 
 			MODE_SWITCH_COOLDOWN = nProperties.MODE_SWITCH_COOLDOWN.get();
 		}
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		var list = super.getPerkDescriptions(stack, level);
+
+		if (!list.isEmpty())
+			list.add(Component.empty());
+
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		int mode = (int) this.getPerkLevel(null, stack);
+		MutableComponent modeSwitchTarget = mode == WARPED_MODE_PERK_LEVEL ?
+				Component.translatable("tooltip.perk_weapons.nether_guide_crimson_mode") :
+				Component.translatable("tooltip.perk_weapons.nether_guide_warped_mode");
+
+		list.add(Component.translatable("tooltip.perk_weapons.nether_guide_ability_1",
+				TooltipHelper.setEmbeddedElementStyle(modeSwitchTarget)).withStyle(ChatFormatting.WHITE));
+		if (mode == WARPED_MODE_PERK_LEVEL) {
+			list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.nether_guide_crimson_mode_perk_1")));
+			list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+					MobEffects.WEAKNESS.getDisplayName(),
+					TooltipHelper.getRomanNumeral(CRIMSON_WEAKNESS_LEVEL_ON_TARGET_WHEN_HIT),
+					TooltipHelper.convertTicksToSeconds(CRIMSON_WEAKNESS_DURATION_ON_TARGET_WHEN_HIT))));
+			list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.nether_guide_crimson_mode_perk_2")));
+			list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+					MobEffects.REGENERATION.getDisplayName(),
+					TooltipHelper.getRomanNumeral(CRIMSON_REGENERATION_LEVEL_ON_SELF_WHEN_HIT),
+					TooltipHelper.convertTicksToSeconds(CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT))));
+		} else {
+			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_1",
+					WARPED_MOVEMENT_SPEED_BONUS_RATIO));
+			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_2",
+					WARPED_MELEE_DAMAGE_BONUS_RATIO));
+			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_3",
+					WARPED_THROW_DAMAGE_BONUS_RATIO));
+			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_4",
+					WARPED_DAMAGE_RESISTANCE));
+		}
+
+		return list;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.nether_guide"));
 	}
 }

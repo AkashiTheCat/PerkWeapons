@@ -102,7 +102,7 @@ public class ModCommonConfigs {
 				.defineInRange("RepairRatio", 0.2, 0, 1);
 		BUILDER.pop();
 
-		//Enchantments
+		BUILDER.push("Enchantments");
 		BLAZE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Blaze",
 				true, true,
 				true, false,
@@ -119,19 +119,22 @@ public class ModCommonConfigs {
 				true, true,
 				true, false,
 				true, true);
+		BUILDER.pop();
 
-		//Effects
-		BUILDER.push("Effect: Internal Explosion");
+		BUILDER.push("Effects");
+		BUILDER.push("Internal Explosion");
 		INTERNAL_EXP_PROPERTIES = new ModExplosionProperties(BUILDER,
 				5, 5, 20, 20,
 				1.0, false);
 		BUILDER.pop();
-		BUILDER.push("Effect: Phalanx");
+		BUILDER.push("Phalanx");
 		PHALANX_EFFECT_PROPERTIES = new PhalanxEffectProperties(BUILDER, "Phalanx",
 				2, 0.04);
 		BUILDER.pop();
+		BUILDER.pop();
 
 		//Spears
+		BUILDER.push("Spears");
 		IRON_SPEAR_PROPERTIES = new SpearProperties(BUILDER, "Iron Spear",
 				8, 1.1,
 				7, 2.5F,
@@ -196,8 +199,10 @@ public class ModCommonConfigs {
 				15, 3.2f,
 				40, 16,
 				5, 6);
+		BUILDER.pop();
 
 		//Bows
+		BUILDER.push("Bows");
 		SHORT_BOW_PROPERTIES = new BowProperties(BUILDER, "Short Bow",
 				12, 8,
 				2.25, 1.0,
@@ -257,8 +262,10 @@ public class ModCommonConfigs {
 				8, 70,
 				7, 0.025,
 				0.0, 0.0, false);
+		BUILDER.pop();
 
 		//Crossbows
+		BUILDER.push("Crossbows");
 		BEHOLDER_PROPERTIES = new BeholderProperties(BUILDER, "Beholder",
 				37, 12.0,
 				4.4, 0.5,
@@ -310,9 +317,11 @@ public class ModCommonConfigs {
 				1, 0,
 				0.5, 1.0,
 				50, -30,
-				10, 0.07,
-				10, 100,
-				-0.3, true);
+				1, 10,
+				0.07, 10,
+				100, -0.3,
+				true);
+		BUILDER.pop();
 
 		SPEC = BUILDER.build();
 	}

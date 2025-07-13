@@ -12,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MegalodonItem extends BaseSpearItem {
@@ -57,7 +56,7 @@ public class MegalodonItem extends BaseSpearItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.megalodon_perk_1")));
 
 		Component dolphin_grace = TooltipHelper.setSubPerkStyle(

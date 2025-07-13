@@ -9,10 +9,14 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.EndboreWandererPerkPr
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
+import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -23,6 +27,8 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 	protected SoundEventHolder SHOOTING_SOUND_PERK = new SoundEventHolder(SoundEvents.SHULKER_SHOOT);
@@ -124,5 +130,45 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 			MAX_PROJECTILE_TURN_ANGLE_PER_TICK_COS_VALUE = (float) Math.cos(radTurnRate);
 			MAX_PROJECTILE_TURN_ANGLE_PER_TICK_SIN_VALUE = (float) Math.sin(radTurnRate);
 		}
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer"));
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		var list = super.getPerkDescriptions(stack, level);
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_1",
+				TooltipHelper.convertToEmbeddedPercentage(1 + DAMAGE_BONUS_LEVITATION),
+				TooltipHelper.setEmbeddedElementStyle(MobEffects.LEVITATION.getDisplayName().copy()))));
+
+		list.add(Component.empty());
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.gain_perk_level_on_hit",
+				TooltipHelper.convertToEmbeddedElement(1))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.max_perk_level",
+				TooltipHelper.convertToEmbeddedElement(MAX_PERK_LEVEL))));
+
+		list.add(Component.translatable("tooltip.perk_weapons.when_reach_max_perk_level").withStyle(ChatFormatting.GRAY));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_2")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_3")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_4",
+				TooltipHelper.convertToEmbeddedElement(PERK_PROJECTILE_HOMING_RANGE))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_5")));
+		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
+				MobEffects.LEVITATION.getDisplayName(),
+				TooltipHelper.getRomanNumeral(1),
+				TooltipHelper.convertTicksToSeconds(PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT))));
+		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_6")));
+
+		list.add(Component.empty());
+		list.add(TooltipHelper.getCrouchUseAbilityHint());
+		list.add(Component.translatable("tooltip.perk_weapons.when_reach_max_perk_level").withStyle(ChatFormatting.GRAY));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_ability_1")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_ability_2")));
+
+		return list;
 	}
 }

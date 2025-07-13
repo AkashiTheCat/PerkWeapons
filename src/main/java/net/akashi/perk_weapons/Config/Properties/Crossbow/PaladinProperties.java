@@ -6,6 +6,7 @@ public class PaladinProperties extends CrossbowProperties {
 	public ForgeConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
 	public ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE;
 	public ForgeConfigSpec.DoubleValue DAMAGE_RESISTANCE;
+	public ForgeConfigSpec.IntValue PIERCE_LEVEL_BONUS;
 	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
 	public ForgeConfigSpec.DoubleValue RELOAD_REDUCTION_PER_LEVEL;
 	public ForgeConfigSpec.DoubleValue DAMAGE_RESISTANCE_PER_LEVEL;
@@ -17,9 +18,10 @@ public class PaladinProperties extends CrossbowProperties {
 	                         int defaultAmmoCapacity, int defaultFireInterval,
 	                         double defaultQuickChargeMultiplier, double defaultKnockbackResistance,
 	                         double defaultMagicResistance, double defaultDamageResistance,
-	                         int defaultMaxPerkLevel, double defaultReloadReductionPerLevel,
-	                         double defaultDamageResistancePerLevel, int defaultPerkClearTimeWithoutHit,
-	                         double defaultSpeedModifier, boolean onlyAllowMainHand) {
+	                         int defaultPierceLevelBonus, int defaultMaxPerkLevel,
+	                         double defaultReloadReductionPerLevel, double defaultDamageResistancePerLevel,
+	                         int defaultPerkClearTimeWithoutHit, double defaultSpeedModifier,
+	                         boolean onlyAllowMainHand) {
 		super(builder, name, defaultChargeTime, defaultDamage, defaultVelocity, defaultInaccuracy, defaultAmmoCapacity,
 				defaultFireInterval, defaultQuickChargeMultiplier, defaultSpeedModifier, onlyAllowMainHand, false);
 		KNOCKBACK_RESISTANCE = builder.comment("Knockback Resistance Value For " + name + " When In Hand")
@@ -31,6 +33,8 @@ public class PaladinProperties extends CrossbowProperties {
 		DAMAGE_RESISTANCE = builder.comment("Damage Resistance Value For " + name + " When In Hand")
 				.comment("Percentage Value")
 				.defineInRange("DamageResistance", defaultDamageResistance, -1000.0, 100.0);
+		PIERCE_LEVEL_BONUS = builder.comment("Bonus Level For Piercing Enchantment")
+				.defineInRange("PierceLevelBonus", defaultPierceLevelBonus, 0, 255);
 		MAX_PERK_LEVEL = builder.comment("Max Perk Level Of " + name)
 				.defineInRange("MaxPerkLevel", defaultMaxPerkLevel, 0, 255);
 		RELOAD_REDUCTION_PER_LEVEL = builder.comment("Reload Time Reduction Ratio Per Perk Level")

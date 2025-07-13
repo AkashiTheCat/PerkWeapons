@@ -106,18 +106,21 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_1")));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_2",
+		if (!list.isEmpty())
+			list.add(Component.empty());
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.gain_perk_level_on_hit",
 				TooltipHelper.convertToEmbeddedElement(1))));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_3",
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.max_perk_level",
 				TooltipHelper.convertToEmbeddedElement(getMaxPerkLevel()))));
-		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_4",
-				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(PERK_DROP_INTERVAL)))));
-		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_5")));
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_6")));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_1")));
 		list.add(TooltipHelper.getArrowDamageModifier(PERK_BUFF));
+
+		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_2",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(PERK_DROP_INTERVAL)))));
+		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.forest_keeper_perk_3")));
 
 		return list;
 	}

@@ -88,8 +88,10 @@ public class LiberatorItem extends BaseCrossbowItem {
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
 		List<Component> list = super.getPerkDescriptions(stack, level);
 
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));
 		list.add(TooltipHelper.setBuffStyle(Component.translatable("tooltip.perk_weapons.liberator_perk_1",
-				MULTISHOT_BONUS, TooltipHelper.convertToEmbeddedElement(MULTISHOT, 1))));
+				TooltipHelper.getDeltaModifierWithStyle(MULTISHOT_BONUS),
+				TooltipHelper.convertToEmbeddedElement(MULTISHOT, 1))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.liberator_perk_2",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));

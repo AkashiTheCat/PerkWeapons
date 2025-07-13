@@ -60,7 +60,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 			builder.putAll(AttributeModifiers);
 		builder.put(ModAttributes.MAGIC_RESISTANCE.get(), new AttributeModifier(
 				MAGIC_RESISTANCE_UUID, "Magic Resistance", MAGIC_RESISTANCE,
-				AttributeModifier.Operation.MULTIPLY_BASE
+				AttributeModifier.Operation.ADDITION
 		));
 		AttributeModifiers = builder.build();
 	}
@@ -139,7 +139,7 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.dragon_strike_perk_2")));
 

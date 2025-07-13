@@ -26,7 +26,6 @@ import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -142,7 +141,7 @@ public class PurgatoryItem extends BaseBowItem {
 
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		List<Component> list = new ArrayList<>();
+		List<Component> list = super.getPerkDescriptions(stack, level);
 		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_2")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3",

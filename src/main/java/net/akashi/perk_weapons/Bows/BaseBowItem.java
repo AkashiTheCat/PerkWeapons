@@ -8,6 +8,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModPackets;
+import net.akashi.perk_weapons.Registry.ModTags;
 import net.akashi.perk_weapons.Util.EnchantmentValidator;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
@@ -41,15 +42,15 @@ import static net.minecraft.world.item.enchantment.Enchantments.*;
 
 public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCrosshairItem {
 	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.ARROW_SHOOT, 1.0F, 1.2F);
-	public static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
+	protected static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
-	public Multimap<Attribute, AttributeModifier> AttributeModifiers;
-	public boolean onlyAllowMainHand = false;
-	public float VELOCITY = 3.0F;
-	public int DRAW_TIME = 20;
-	public float PROJECTILE_DAMAGE = 10;
+	protected Multimap<Attribute, AttributeModifier> AttributeModifiers;
 	public float ZOOM_FACTOR = 0.1f;
-	public float INACCURACY = 1.0f;
+	protected boolean ONLY_ALLOW_MAINHAND = false;
+	protected float VELOCITY = 3.0F;
+	protected int DRAW_TIME = 20;
+	protected float PROJECTILE_DAMAGE = 10;
+	protected float INACCURACY = 1.0f;
 
 	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
 			INFINITY_ARROWS,
@@ -84,7 +85,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		this.PROJECTILE_DAMAGE = projectileDamage;
 		this.ZOOM_FACTOR = zoomFactor;
 		this.INACCURACY = inaccuracy;
-		this.onlyAllowMainHand = onlyAllowMainHand;
+		this.ONLY_ALLOW_MAINHAND = onlyAllowMainHand;
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerBowPropertyOverrides(this);
 		if (speedModifier != 0.0F) {
@@ -92,7 +93,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
 					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
 			this.AttributeModifiers = builder.build();
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		} else {
 			this.AttributeModifiers = ImmutableMultimap.of();
 		}
@@ -203,7 +204,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	@Override
 	public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pHand) {
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
-		if (onlyAllowMainHand && pHand != InteractionHand.MAIN_HAND) {
+		if (ONLY_ALLOW_MAINHAND && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
 		}
 
@@ -273,14 +274,14 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 		this.VELOCITY = properties.VELOCITY.get().floatValue();
 		this.ZOOM_FACTOR = properties.ZOOM_FACTOR.get().floatValue();
 		this.INACCURACY = properties.INACCURACY.get().floatValue();
-		this.onlyAllowMainHand = properties.ONLY_MAINHAND.get();
+		this.ONLY_ALLOW_MAINHAND = properties.ONLY_MAINHAND.get();
 		float speedModifier = properties.SPEED_MODIFIER.get().floatValue();
 		if (speedModifier != 0.0F) {
 			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
 					"Tool modifier", speedModifier, AttributeModifier.Operation.MULTIPLY_TOTAL));
 			this.AttributeModifiers = builder.build();
-			this.onlyAllowMainHand = true;
+			this.ONLY_ALLOW_MAINHAND = true;
 		} else {
 			this.AttributeModifiers = ImmutableMultimap.of();
 		}
@@ -305,7 +306,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 			return;
 		}
 
-		if (onlyAllowMainHand) {
+		if (ONLY_ALLOW_MAINHAND) {
 			tooltip.add(Component.translatable("tooltip.perk_weapons.only_mainhand")
 					.withStyle(ChatFormatting.RED));
 		}
@@ -327,7 +328,10 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
-		return List.of();
+		List<Component> list = new ArrayList<>();
+		if (stack.is(ModTags.NO_USING_SLOWDOWN_TAG))
+			list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.no_using_slowdown_perk")));
+		return list;
 	}
 
 	public Component getWeaponDescription(ItemStack stack, Level level) {

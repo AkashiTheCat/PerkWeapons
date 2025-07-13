@@ -12,7 +12,9 @@ import net.akashi.perk_weapons.Registry.ModSoundEvents;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
+import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +35,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static net.minecraft.world.item.enchantment.Enchantments.MULTISHOT;
+
 public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, ICoolDownItem {
 	private static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(ModSoundEvents.PALADIN_FIRE.get(),
 			0.7F, 1.0F);
@@ -48,6 +52,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	protected static float KNOCKBACK_RESISTANCE = 1;
 	protected static float MAGIC_RESISTANCE = 50;
 	protected static float DAMAGE_RESISTANCE = -30;
+	protected static int PIERCE_LEVEL_BONUS = 1;
 	protected static byte MAX_PERK_LEVEL = 10;
 	protected static float RELOAD_REDUCTION_PER_LEVEL = 0.07f;
 	protected static float DAMAGE_RESISTANCE_PER_LEVEL = 10F;
@@ -222,7 +227,39 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 			DAMAGE_RESISTANCE_PER_LEVEL = pProperties.DAMAGE_RESISTANCE_PER_LEVEL.get().floatValue();
 			MAX_PERK_LEVEL = pProperties.MAX_PERK_LEVEL.get().byteValue();
 			PERK_CLEAR_TIME_WITHOUT_HIT = pProperties.PERK_CLEAR_TIME_WITHOUT_HIT.get();
+			PIERCE_LEVEL_BONUS = pProperties.PIERCE_LEVEL_BONUS.get();
 			buildAttributeModifierMap();
 		}
+	}
+
+	@Override
+	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
+		var list = super.getPerkDescriptions(stack, level);
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.arrow_ignore_invulnerable_time_hint")));
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.paladin_perk_1",
+				TooltipHelper.getDeltaModifierWithStyle(PIERCE_LEVEL_BONUS),
+				TooltipHelper.convertToEmbeddedElement(MULTISHOT, 1))));
+
+		list.add(Component.empty());
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.gain_perk_level_on_hit",
+				TooltipHelper.convertToEmbeddedElement(1))));
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.max_perk_level",
+				TooltipHelper.convertToEmbeddedElement(getMaxPerkLevel()))));
+
+		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.paladin_perk_3")));
+		list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.paladin_perk_4",
+				-RELOAD_REDUCTION_PER_LEVEL, false));
+		list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.paladin_perk_5",
+				DAMAGE_RESISTANCE_PER_LEVEL / 100, true));
+		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.paladin_perk_2",
+				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(PERK_CLEAR_TIME_WITHOUT_HIT)))));
+
+		return list;
+	}
+
+	@Override
+	public Component getWeaponDescription(ItemStack stack, Level level) {
+		return TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.paladin"));
 	}
 }

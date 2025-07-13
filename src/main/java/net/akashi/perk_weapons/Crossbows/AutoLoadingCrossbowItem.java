@@ -92,7 +92,7 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 	@Override
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {
 		var list = super.getPerkDescriptions(stack, level);
-		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.auto_loading_crossbow_perk")));
+		list.add(TooltipHelper.setEmbeddedElementStyle(Component.translatable("tooltip.perk_weapons.auto_loading_crossbow_perk")));
 		return list;
 	}
 }
