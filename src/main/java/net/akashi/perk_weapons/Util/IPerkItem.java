@@ -17,12 +17,12 @@ public interface IPerkItem {
 	 */
 	default void gainPerkLevel(LivingEntity entity, ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
-		tag.putByte(TAG_PERK_LEVEL, (byte) Math.min((getPerkLevel(entity, stack) + 1), getMaxPerkLevel()));
+		tag.putFloat(TAG_PERK_LEVEL, (float) Math.min(Math.ceil(getPerkLevel(entity, stack) + 1), getMaxPerkLevel()));
 	}
 
-	default void setPerkLevel(ItemStack stack, byte level) {
+	default void setPerkLevel(ItemStack stack, float level) {
 		CompoundTag tag = stack.getOrCreateTag();
-		tag.putByte(TAG_PERK_LEVEL, level);
+		tag.putFloat(TAG_PERK_LEVEL, level);
 	}
 
 	/**
@@ -30,7 +30,7 @@ public interface IPerkItem {
 	 */
 	default float getPerkLevel(LivingEntity entity, ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
-		return tag.contains(TAG_PERK_LEVEL) ? tag.getByte(TAG_PERK_LEVEL) : 0;
+		return tag.contains(TAG_PERK_LEVEL) ? tag.getFloat(TAG_PERK_LEVEL) : 0;
 	}
 
 	/**

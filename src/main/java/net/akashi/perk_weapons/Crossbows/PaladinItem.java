@@ -127,11 +127,11 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
 		super.inventoryTick(stack, level, entity, slotId, isSelected);
 		if (!isSelected) {
-			setPerkLevel(stack, (byte) 0);
+			setPerkLevel(stack, 0);
 			return;
 		}
 		if (level.getGameTime() - getLastHitTime(stack) >= PERK_CLEAR_TIME_WITHOUT_HIT) {
-			setPerkLevel(stack, (byte) 0);
+			setPerkLevel(stack, 0);
 		}
 	}
 

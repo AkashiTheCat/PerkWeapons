@@ -9,7 +9,6 @@ import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -18,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -47,20 +45,6 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	}
 
 	@Override
-	public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity,
-	                          int slotId, boolean isSelected) {
-		super.inventoryTick(stack, level, entity, slotId, isSelected);
-		int perkLevel = (int) getPerkLevel(null, stack);
-		if (perkLevel == 0)
-			return;
-
-		if (Math.ceil(getPerkLevel((LivingEntity) entity, stack)) < perkLevel) {
-			setPerkLevel(stack, (byte) (perkLevel - 1));
-			setLastPerkChangeTime(stack, level.getGameTime());
-		}
-	}
-
-	@Override
 	public AbstractArrow createArrow(Level level, ArrowItem arrowItem, ItemStack bowStack, ItemStack arrowStack,
 	                                 Player player) {
 		PerkGainingArrow arrow = new PerkGainingArrow(ModEntities.PERK_GAINING_ARROW.get(), level, player);
@@ -70,7 +54,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 			arrow.setEffectsFromItem(arrowStack);
 		}
 
-		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * getPerkLevel(player, bowStack)) / VELOCITY);
+		arrow.setBaseDamage(PROJECTILE_DAMAGE * (1 + PERK_BUFF * Math.ceil(getPerkLevel(player, bowStack))) / VELOCITY);
 		return arrow;
 	}
 
@@ -97,6 +81,18 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public long getLastPerkChangeTime(ItemStack stack) {
 		CompoundTag tag = stack.getOrCreateTag();
 		return tag.contains(TAG_LAST_PERK_LEVEL_CHANGE_TIME) ? tag.getLong(TAG_LAST_PERK_LEVEL_CHANGE_TIME) : 0;
+	}
+
+	@Override
+	public float getPerkLevel(LivingEntity entity, ItemStack stack) {
+		long timeDelta = entity.level().getGameTime() - getLastPerkChangeTime(stack);
+		return Math.max(IPerkItem.super.getPerkLevel(entity, stack) - ((float) timeDelta / PERK_DROP_INTERVAL), 0);
+	}
+
+	@Override
+	public void gainPerkLevel(LivingEntity entity, ItemStack stack) {
+		IPerkItem.super.gainPerkLevel(entity, stack);
+		setLastPerkChangeTime(stack, entity.level().getGameTime());
 	}
 
 	@Override

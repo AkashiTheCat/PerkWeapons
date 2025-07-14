@@ -24,7 +24,7 @@ public class LivingHurtEventHandler {
 
 			if (!stack.isEmpty()) {
 				ForestKeeperItem item = (ForestKeeperItem) stack.getItem();
-				item.setPerkLevel(stack, (byte) 0);
+				item.setPerkLevel(stack, 0);
 			}
 		}
 	}

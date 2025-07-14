@@ -65,7 +65,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 			pPlayer.addEffect(new MobEffectInstance(
 					ModEffects.ROYAL_JELLY.get(), ROYAL_JELLY_TICKS, ROYAL_JELLY_LEVEL - 1
 			));
-			setPerkLevel(stack, (byte) 0);
+			setPerkLevel(stack, 0);
 			pPlayer.getCooldowns().addCooldown(stack.getItem(), CROUCH_USE_COOLDOWN_TICKS);
 			pLevel.playSound(null, pPlayer, SoundEvents.HONEY_DRINK, SoundSource.PLAYERS,
 					1F, 1F);
