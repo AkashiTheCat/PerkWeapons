@@ -20,7 +20,7 @@ public class ModAttributesEventHandler {
 
 		if (event.getSource().is(DamageTypes.MAGIC) && entity.getAttribute(ModAttributes.MAGIC_RESISTANCE.get()) != null) {
 			double resistance = entity.getAttributeValue(ModAttributes.MAGIC_RESISTANCE.get());
-			event.setAmount((float) (event.getAmount() * (1 + (resistance / 100))));
+			event.setAmount((float) (event.getAmount() / (1 + (resistance / 100))));
 		}
 	}
 }
