@@ -14,6 +14,7 @@ public class ModClientConfigs {
 	public static ForgeConfigSpec.BooleanValue ENABLE_CUSTOM_CROSSHAIR;
 	public static ForgeConfigSpec.BooleanValue ENABLE_PERK_INDICATOR;
 	public static ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN_INDICATOR;
+	public static ForgeConfigSpec.BooleanValue ENABLE_MODE_INDICATOR_ON_NETHER_GUIDE;
 
 	static {
 		BUILDER.push("Client");
@@ -25,6 +26,8 @@ public class ModClientConfigs {
 				.define("EnablePerkIndicators", true);
 		ENABLE_COOLDOWN_INDICATOR = BUILDER.comment("Enable Ability CoolDown Indicators")
 				.define("EnableCoolDownIndicators", true);
+		ENABLE_MODE_INDICATOR_ON_NETHER_GUIDE = BUILDER.comment("Enable Nether Guide Mode Indicator Below Crosshair")
+				.define("EnableNetherGuideIndicator", false);
 		SPEC = BUILDER.build();
 	}
 

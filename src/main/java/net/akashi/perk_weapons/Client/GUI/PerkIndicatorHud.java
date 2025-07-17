@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.akashi.perk_weapons.Config.ModClientConfigs;
 import net.akashi.perk_weapons.PerkWeapons;
+import net.akashi.perk_weapons.Registry.ModItems;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -35,6 +36,9 @@ public class PerkIndicatorHud {
 		} else if (player.getOffhandItem().getItem() instanceof IPerkItem) {
 			stack = player.getOffhandItem();
 		}
+
+		if (stack.is(ModItems.NETHER_GUIDE.get()) && !ModClientConfigs.ENABLE_MODE_INDICATOR_ON_NETHER_GUIDE.get())
+			return;
 
 		if (stack != ItemStack.EMPTY) {
 			PoseStack poseStack = RenderSystem.getModelViewStack();
