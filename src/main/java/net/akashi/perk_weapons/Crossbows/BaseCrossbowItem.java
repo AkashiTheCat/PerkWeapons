@@ -222,7 +222,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-		return slotChanged || newStack.getItem() != oldStack.getItem();
+		return slotChanged || !newStack.is(oldStack.getItem());
 	}
 
 	@Override

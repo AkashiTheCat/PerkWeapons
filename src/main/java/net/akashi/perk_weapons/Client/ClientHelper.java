@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Client;
 
 import net.akashi.perk_weapons.Bows.BaseBowItem;
+import net.akashi.perk_weapons.Bows.EndboreWandererItem;
 import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
 import net.akashi.perk_weapons.Crossbows.BeholderItem;
 import net.akashi.perk_weapons.Crossbows.LiberatorItem;
@@ -9,7 +10,6 @@ import net.akashi.perk_weapons.Spears.BaseSpearItem;
 import net.akashi.perk_weapons.Spears.NetherGuideItem;
 import net.akashi.perk_weapons.Spears.ScourgeItem;
 import net.akashi.perk_weapons.Util.IPerkItem;
-import net.akashi.perk_weapons.Util.ModelOverrides;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -70,6 +70,11 @@ public class ClientHelper {
 			}
 			return 0.0f;
 		});
+	}
+
+	public static void registerEndboreWandererPropertyOverrides(EndboreWandererItem Item) {
+		ItemProperties.register(Item, ModelOverrides.PEARL, (stack, world, entity, value) ->
+				entity != null && entity.isCrouching() ? 1.0f : 0.0f);
 	}
 }
 

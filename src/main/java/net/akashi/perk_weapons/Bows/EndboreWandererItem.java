@@ -48,6 +48,7 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 		super(properties);
 		if (FMLEnvironment.dist.isClient()) {
 			ClientHelper.registerPerkItemPropertyOverrides(this);
+			ClientHelper.registerEndboreWandererPropertyOverrides(this);
 		}
 	}
 
@@ -58,6 +59,7 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 				onlyAllowMainHand, properties);
 		if (FMLEnvironment.dist.isClient()) {
 			ClientHelper.registerPerkItemPropertyOverrides(this);
+			ClientHelper.registerEndboreWandererPropertyOverrides(this);
 		}
 	}
 

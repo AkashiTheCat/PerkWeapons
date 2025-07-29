@@ -1,4 +1,4 @@
-package net.akashi.perk_weapons.Util;
+package net.akashi.perk_weapons.Client;
 
 import net.akashi.perk_weapons.PerkWeapons;
 import net.minecraft.resources.ResourceLocation;
@@ -13,4 +13,5 @@ public class ModelOverrides {
 	public static final ResourceLocation FIREWORK = new ResourceLocation(PerkWeapons.MODID, "firework");
 	public static final ResourceLocation REGICIDE = new ResourceLocation(PerkWeapons.MODID, "regicide");
 	public static final ResourceLocation SWITCHING = new ResourceLocation(PerkWeapons.MODID, "switching");
+	public static final ResourceLocation PEARL = new ResourceLocation(PerkWeapons.MODID, "pearl");
 }

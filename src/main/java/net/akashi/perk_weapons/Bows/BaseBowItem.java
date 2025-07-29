@@ -108,7 +108,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 	@Override
 	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
-		return slotChanged || newStack.getItem() != oldStack.getItem();
+		return slotChanged || !newStack.is(oldStack.getItem());
 	}
 
 	@Override
@@ -159,9 +159,8 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 						abstractarrow.setSecondsOnFire(100);
 					}
 
-					pStack.hurtAndBreak(1, player, (player1) -> {
-						player1.broadcastBreakEvent(player.getUsedItemHand());
-					});
+					pStack.hurtAndBreak(1, player, (player1) ->
+							player1.broadcastBreakEvent(player.getUsedItemHand()));
 					if (flag1 || player.getAbilities().instabuild
 							&& (itemstack.is(Items.SPECTRAL_ARROW)
 							|| itemstack.is(Items.TIPPED_ARROW))) {

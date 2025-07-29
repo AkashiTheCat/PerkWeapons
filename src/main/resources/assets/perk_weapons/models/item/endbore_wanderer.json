@@ -32,6 +32,13 @@
         },
         {
             "predicate": {
+                "perk_weapons:perk_max": 1,
+                "perk_weapons:pearl": 1
+            },
+            "model": "perk_weapons:item/endbore_wanderer_pearl"
+        },
+        {
+            "predicate": {
                 "perk_weapons:pulling": 1,
                 "perk_weapons:perk_max": 1
             },
