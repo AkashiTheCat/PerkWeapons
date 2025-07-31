@@ -14,6 +14,7 @@ import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkGainingArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
@@ -106,19 +107,23 @@ public class ModCommonConfigs {
 		BLAZE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Blaze",
 				true, true,
 				true, false,
-				true, true);
+				true, Enchantment.Rarity.RARE,
+				true);
 		MELT_DOWN_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Melt Down",
 				true, true,
 				true, false,
-				true, true);
+				true, Enchantment.Rarity.RARE,
+				true);
 		REGICIDE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Regicide",
 				true, true,
 				true, false,
-				true, true);
+				true, Enchantment.Rarity.RARE,
+				true);
 		STAR_SHOOTER_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Star Shooter",
 				true, true,
 				true, false,
-				true, true);
+				true, Enchantment.Rarity.RARE,
+				true);
 		BUILDER.pop();
 
 		BUILDER.push("Effects");

@@ -14,6 +14,8 @@ public class BaseEnchantment extends Enchantment {
 	protected boolean IS_TREASURE_ONLY = false;
 	protected boolean IS_TRADEABLE = true;
 
+	protected Rarity RARITY = Rarity.UNCOMMON;
+
 	public BaseEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots) {
 		super(pRarity, pCategory, pApplicableSlots);
 	}
@@ -24,6 +26,12 @@ public class BaseEnchantment extends Enchantment {
 		IS_DISCOVERABLE = properties.IS_DISCOVERABLE.get();
 		IS_TREASURE_ONLY = properties.IS_TREASURE_ONLY.get();
 		IS_TRADEABLE = properties.IS_TRADEABLE.get();
+		RARITY = properties.RARITY.get();
+	}
+
+	@Override
+	public @NotNull Rarity getRarity() {
+		return RARITY;
 	}
 
 	@Override

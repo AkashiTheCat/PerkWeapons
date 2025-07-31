@@ -112,7 +112,7 @@ public class ModItems {
 			ITEMS.register("purgatory",
 					() -> new PurgatoryItem(50, 25, 4.5F, 0.2F,
 							-1.0F, 1.0F, 0.15F, true,
-							new Item.Properties().rarity(Rarity.UNCOMMON))), BOW_TAB);
+							new Item.Properties().durability(320).rarity(Rarity.UNCOMMON))), BOW_TAB);
 	public static final RegistryObject<ForestKeeperItem> FOREST_KEEPER = addToTab(
 			ITEMS.register("forest_keeper",
 					() -> new ForestKeeperItem(12, 8, 2.25F, 1.0F,
@@ -167,6 +167,7 @@ public class ModItems {
 			CROSSBOW_TAB);
 	public static final RegistryObject<IncineratorItem> INCINERATOR = addToTab(
 			ITEMS.register("incinerator", () -> new IncineratorItem(new Item.Properties()
+					.durability(640)
 					.rarity(Rarity.UNCOMMON))),
 			CROSSBOW_TAB);
 	public static final RegistryObject<QueenBeeCrossbowItem> QUEEN_BEE_CROSSBOW = addToTab(

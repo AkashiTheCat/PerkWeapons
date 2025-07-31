@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Config.Properties.Enchantment;
 
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class EnchantmentProperties {
@@ -8,11 +9,13 @@ public class EnchantmentProperties {
 	public ForgeConfigSpec.BooleanValue IS_DISCOVERABLE;
 	public ForgeConfigSpec.BooleanValue IS_TREASURE_ONLY;
 	public ForgeConfigSpec.BooleanValue IS_TRADEABLE;
+	public ForgeConfigSpec.EnumValue<Enchantment.Rarity> RARITY;
 
 	public EnchantmentProperties(ForgeConfigSpec.Builder builder, String name,
 	                             boolean defaultAllowOnTable, boolean defaultAllowOnBook,
 	                             boolean defaultIsDiscoverable, boolean defaultIsTreasureOnly,
-	                             boolean defaultIsTradeable, boolean shouldPop) {
+	                             boolean defaultIsTradeable, Enchantment.Rarity defaultRarity,
+	                             boolean shouldPop) {
 		builder.push(name);
 		ALLOW_ON_TABLE = builder.comment("Allow " + name + " To Appear On Enchantment Table")
 				.define("allowOnTable", defaultAllowOnTable);
@@ -24,6 +27,8 @@ public class EnchantmentProperties {
 				.define("isTreasureOnly", defaultIsTreasureOnly);
 		IS_TRADEABLE = builder.comment("Whether " + name + " Can Appear In Villager Trades")
 				.define("isTradeable", defaultIsTradeable);
+		RARITY = builder.comment("Rarity of " + name)
+				.defineEnum("rarity", defaultRarity);
 		if (shouldPop)
 			builder.pop();
 	}

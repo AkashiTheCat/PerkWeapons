@@ -220,12 +220,12 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 	@Override
 	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return EnchantmentValidator.canApplyAtTable(stack, enchantment, GeneralEnchants, ConflictEnchants);
+		return EnchantmentValidator.canApplyAtTable(enchantment, GeneralEnchants, ConflictEnchants);
 	}
 
 	@Override
 	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return EnchantmentValidator.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
+		return EnchantmentValidator.canBookEnchant(stack, book, ConflictEnchants);
 	}
 
 	public boolean AddGeneralEnchant(Enchantment enchantment) {

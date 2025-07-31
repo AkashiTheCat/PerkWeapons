@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -57,6 +58,11 @@ public class IncineratorItem extends BaseCrossbowItem {
 	@Override
 	protected @NotNull SoundEventHolder getShootSound(LivingEntity shooter, ItemStack crossbowStack) {
 		return SHOOTING_SOUND;
+	}
+
+	@Override
+	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+		return 0;
 	}
 
 	@Override

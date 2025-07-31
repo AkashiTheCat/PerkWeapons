@@ -1,10 +1,7 @@
 package net.akashi.perk_weapons.Enchantments;
 
-import net.akashi.perk_weapons.Registry.ModItems;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentCategory;
-import org.jetbrains.annotations.NotNull;
 
 public class MeltDownEnchantment extends BaseEnchantment {
 	public MeltDownEnchantment(Rarity pRarity, EnchantmentCategory pCategory, EquipmentSlot[] pApplicableSlots) {
@@ -12,7 +9,12 @@ public class MeltDownEnchantment extends BaseEnchantment {
 	}
 
 	@Override
-	public boolean canApplyAtEnchantingTable(@NotNull ItemStack stack) {
-		return super.canApplyAtEnchantingTable(stack) && stack.is(ModItems.PURGATORY.get());
+	public int getMinCost(int pLevel) {
+		return 20;
+	}
+
+	@Override
+	public int getMaxCost(int pLevel) {
+		return 50;
 	}
 }

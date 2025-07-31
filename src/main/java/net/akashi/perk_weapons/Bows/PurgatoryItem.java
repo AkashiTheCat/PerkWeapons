@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
 import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
@@ -73,6 +74,11 @@ public class PurgatoryItem extends BaseBowItem {
 				AttributeModifier.Operation.ADDITION
 		));
 		AttributeModifiers = builder.build();
+	}
+
+	@Override
+	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
+		return 0;
 	}
 
 	@Override
