@@ -166,7 +166,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	@Override
 	public int getCrossbowEnchantmentLevel(ItemStack stack, Enchantment enchantment) {
 		if (enchantment == Enchantments.PIERCING)
-			return stack.getEnchantmentLevel(enchantment) + 1;
+			return stack.getEnchantmentLevel(enchantment) + PIERCE_LEVEL_BONUS;
 		return super.getCrossbowEnchantmentLevel(stack, enchantment);
 	}
 

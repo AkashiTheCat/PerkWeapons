@@ -201,7 +201,7 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_3",
 					WARPED_THROW_DAMAGE_BONUS_RATIO));
 			list.add(TooltipHelper.getRatioModifierWithStyle("tooltip.perk_weapons.nether_guide_warped_mode_perk_4",
-					WARPED_DAMAGE_RESISTANCE));
+					WARPED_DAMAGE_RESISTANCE / 100));
 		}
 
 		return list;
