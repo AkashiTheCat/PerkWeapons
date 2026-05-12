@@ -13,6 +13,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +49,16 @@ public class CenturionItem extends BaseSpearItem {
 	public void inventoryTick(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull Entity pEntity,
 	                          int pSlotId, boolean pIsSelected) {
 		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
-		if (pIsSelected && !pLevel.isClientSide() && pLevel.getGameTime() % 60 == 0) {
+		if (pIsSelected && !pLevel.isClientSide()) {
+			boolean flag = pLevel.getGameTime() % 60 == 0;
+			if (!flag && pEntity.isAlive()) {
+				LivingEntity le = (LivingEntity) pEntity;
+				flag = !le.hasEffect(ModEffects.PHALANX.get());
+			}
+			if (!flag) {
+				return;
+			}
+
 			double rangeSqr = EFFECT_APPLY_RANGE * EFFECT_APPLY_RANGE;
 			AABB searchBB = pEntity.getBoundingBox().inflate(EFFECT_APPLY_RANGE);
 			List<Player> players = pLevel.getEntitiesOfClass(Player.class, searchBB,

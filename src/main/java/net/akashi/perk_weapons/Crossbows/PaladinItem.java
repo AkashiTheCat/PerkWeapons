@@ -155,7 +155,7 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 		arrow.setShotFromCrossbow(true);
 
 		return arrow;
-	}
+	}   
 
 	@Override
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
