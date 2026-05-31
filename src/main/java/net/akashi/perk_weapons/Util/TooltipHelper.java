@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Util;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -9,6 +10,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.resources.ResourceKey;
 
 public class TooltipHelper {
 	public static List<String> ROMAN_NUMERAL_LIST = new ArrayList<>();
@@ -240,8 +242,20 @@ public class TooltipHelper {
 		return convertToEmbeddedElement((float) d);
 	}
 
+	public static MutableComponent convertToEmbeddedElement(Enchantment enchantment, Holder<Enchantment> enchantmentHolder, int level) {
+		return setEmbeddedElementStyle(enchantment.getFullname(enchantmentHolder, level).copy());
+	}
+
+	public static MutableComponent convertToEmbeddedElement(Holder<Enchantment> enchantment, int level) {
+		return convertToEmbeddedElement(enchantment.value(), enchantment, level);
+	}
+
+	public static MutableComponent convertToEmbeddedElement(ResourceKey<Enchantment> enchantment, int level) {
+		return setEmbeddedElementStyle(Component.translatable(enchantment.location().toLanguageKey("enchantment")));
+	}
+
 	public static MutableComponent convertToEmbeddedElement(Enchantment enchantment, int level) {
-		return setEmbeddedElementStyle(enchantment.getFullname(level).copy());
+		return setEmbeddedElementStyle(Component.literal("enchantment"));
 	}
 
 	public static MutableComponent convertToEmbeddedPercentage(double d) {

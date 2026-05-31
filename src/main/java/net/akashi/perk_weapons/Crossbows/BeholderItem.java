@@ -6,6 +6,7 @@ import net.akashi.perk_weapons.Config.Properties.Crossbow.BeholderProperties;
 import net.akashi.perk_weapons.Entities.BeholderBeamEntity;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -18,10 +19,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -147,32 +149,29 @@ public class BeholderItem extends BaseCrossbowItem {
 	}
 
 	public void setPerkActivating(ItemStack stack, boolean isActivating) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putBoolean(TAG_PERK_ACTIVATING, isActivating);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putBoolean(TAG_PERK_ACTIVATING, isActivating));
 	}
 
 	public boolean isPerkActivating(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_PERK_ACTIVATING) && tag.getBoolean(TAG_PERK_ACTIVATING);
 	}
 
 	public void setBeamEntityId(ItemStack stack, int id) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putInt(TAG_BEAM_ENTITY_ID, id);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putInt(TAG_BEAM_ENTITY_ID, id));
 	}
 
 	public int getBeamEntityId(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_BEAM_ENTITY_ID) ? tag.getInt(TAG_BEAM_ENTITY_ID) : -1;
 	}
 
 	public void setLastSoundPlayedTime(ItemStack stack, long time) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putLong(TAG_LAST_SOUND_PLAYED, time);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putLong(TAG_LAST_SOUND_PLAYED, time));
 	}
 
 	public long getLastSoundPlayedTime(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_LAST_SOUND_PLAYED) ? tag.getLong(TAG_LAST_SOUND_PLAYED) : 0;
 	}
 
@@ -199,13 +198,13 @@ public class BeholderItem extends BaseCrossbowItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.beholder_perk_1")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.beholder_perk_2")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				MobEffects.MOVEMENT_SLOWDOWN.getDisplayName(),
+				MobEffects.MOVEMENT_SLOWDOWN.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(SLOWNESS_LEVEL), 2.0)));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				MobEffects.WEAKNESS.getDisplayName(),
+				MobEffects.WEAKNESS.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(WEAKNESS_LEVEL), 2.0)));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				MobEffects.GLOWING.getDisplayName(),
+				MobEffects.GLOWING.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(1), 2.0)));
 
 		return list;

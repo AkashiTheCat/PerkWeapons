@@ -61,19 +61,19 @@ public class MegalodonItem extends BaseSpearItem {
 
 		Component dolphin_grace = TooltipHelper.setSubPerkStyle(
 				Component.translatable("tooltip.perk_weapons.effect_format",
-						MobEffects.DOLPHINS_GRACE.getDisplayName(),
+						MobEffects.DOLPHINS_GRACE.value().getDisplayName(),
 						TooltipHelper.getRomanNumeral(DOLPHINS_GRACE_LEVEL),
 						TooltipHelper.convertTicksToSeconds(DOLPHINS_GRACE_TICKS)));
 
 		Component haste = TooltipHelper.setSubPerkStyle(
 				Component.translatable("tooltip.perk_weapons.effect_format",
-						MobEffects.DIG_SPEED.getDisplayName(),
+						MobEffects.DIG_SPEED.value().getDisplayName(),
 						TooltipHelper.getRomanNumeral(HASTE_LEVEL),
 						TooltipHelper.convertTicksToSeconds(HASTE_TICKS)));
 
 		Component strength = TooltipHelper.setSubPerkStyle(
 				Component.translatable("tooltip.perk_weapons.effect_format",
-						MobEffects.DAMAGE_BOOST.getDisplayName(),
+						MobEffects.DAMAGE_BOOST.value().getDisplayName(),
 						TooltipHelper.getRomanNumeral(STRENGTH_LEVEL),
 						TooltipHelper.convertTicksToSeconds(STRENGTH_TICKS)));
 

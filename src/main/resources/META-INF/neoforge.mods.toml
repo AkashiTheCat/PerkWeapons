@@ -1,4 +1,4 @@
-# This is an example mods.toml file. It contains the data relating to the loading mods.
+# This is an example neoforge.mods.toml file. It contains the data relating to the loading mods.
 # There are several mandatory fields (#mandatory), and many more that are optional (#optional).
 # The overall format is standard TOML format, v0.5.0.
 # Note that there are a couple of TOML lists in this file.
@@ -22,7 +22,7 @@ version="${mod_version}" #mandatory
 displayName="${mod_name}" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification https://docs.minecraftforge.net/en/latest/misc/updatechecker/
 #updateJSONURL="https://change.me.example.invalid/updates.json" #optional
-# A URL for the "homepage" for this mod, displayed in the mod UI
+# A URL for the "homepage" for the mod, displayed in the mod UI
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 #logoFile="examplemod.png" #optional
@@ -40,25 +40,17 @@ authors="${mod_authors}" #optional
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''${mod_description}'''
-# A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
+[[mixins]]
+    config="mixin.perk_weapons.json"
 [[dependencies.${mod_id}]] #optional
-    # the modid of the dependency
-    modId="forge" #mandatory
-    # Does this dependency have to exist - if not, ordering below must be specified
+    modId="neoforge" #mandatory
     mandatory=true #mandatory
-    # The version range of the dependency
-    versionRange="${forge_version_range}" #mandatory
-    # An ordering relationship for the dependency - BEFORE or AFTER required if the dependency is not mandatory
-    # BEFORE - This mod is loaded BEFORE the dependency
-    # AFTER - This mod is loaded AFTER the dependency
+    versionRange="${neo_version_range}" #mandatory
     ordering="NONE"
-    # Side this dependency is applied on - BOTH, CLIENT, or SERVER
     side="BOTH"
-# Here's another dependency
 [[dependencies.${mod_id}]]
     modId="minecraft"
     mandatory=true
-    # This version range declares a minimum of the current minecraft version up to but not including the next major version
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"

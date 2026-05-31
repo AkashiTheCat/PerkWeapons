@@ -49,9 +49,9 @@ public class PerkGainingArrow extends BaseArrow {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(ID_RENDER_TRAIL, false);
+	protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ID_RENDER_TRAIL, false);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class PerkGainingArrow extends BaseArrow {
 					perkItemStack = player.getOffhandItem();
 					item = pItem;
 				}
-				if (perkItemStack != ItemStack.EMPTY && MAX_GAINED_LEVEL_FROM_ONE_ARROW > this.gainedLevel) {
+				if (item != null && MAX_GAINED_LEVEL_FROM_ONE_ARROW > this.gainedLevel) {
 					item.gainPerkLevel(player, perkItemStack);
 					gainedLevel++;
 				}

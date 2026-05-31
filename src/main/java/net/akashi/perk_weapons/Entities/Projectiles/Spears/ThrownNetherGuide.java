@@ -24,7 +24,7 @@ public class ThrownNetherGuide extends ThrownSpear {
 	private static final byte WARPED_MODE = 0;
 	private static final byte CRIMSON_MODE = 1;
 	private static final String TAG_MODE = "mode";
-	private static final EntityDataAccessor<Byte> ID_MODE = SynchedEntityData.defineId(ThrownSpear.class,
+	private static final EntityDataAccessor<Byte> ID_MODE = SynchedEntityData.defineId(ThrownNetherGuide.class,
 			EntityDataSerializers.BYTE);
 
 	public ThrownNetherGuide(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
@@ -44,9 +44,9 @@ public class ThrownNetherGuide extends ThrownSpear {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(ID_MODE, (byte) 0);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ID_MODE, (byte) 0);
 	}
 
 	@Override

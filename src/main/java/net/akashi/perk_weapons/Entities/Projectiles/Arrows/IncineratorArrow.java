@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class IncineratorArrow extends BaseArrow {
 	public static final ResourceLocation FIRE_ARROW_LOCATION =
-			new ResourceLocation(PerkWeapons.MODID, "textures/entity/projectiles/fire_arrow.png");
+			ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "textures/entity/projectiles/fire_arrow.png");
 	public IncineratorArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
 	}
@@ -31,7 +31,7 @@ public class IncineratorArrow extends BaseArrow {
 
 	@Override
 	protected void onHitEntity(@NotNull EntityHitResult pResult) {
-		pResult.getEntity().setSecondsOnFire(5);
+		pResult.getEntity().setRemainingFireTicks(100);
 		if (pResult.getEntity().isOnFire()) {
 			this.setKnockback(this.getKnockback() + IncineratorItem.FIRE_ARROW_KNOCKBACK_BONUS);
 		}

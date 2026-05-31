@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Bows;
 
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.ElfsHarpProperties;
@@ -16,11 +17,11 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.*;
 
-import static net.minecraft.world.item.enchantment.Enchantments.POWER_ARROWS;
+import static net.minecraft.world.item.enchantment.Enchantments.POWER;
 
 public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 	public static byte MAX_PERK_LEVEL = 3;
@@ -54,7 +55,7 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		arrow.setBaseDamage(0.0F);
 		arrow.addEffect(new MobEffectInstance(MobEffects.GLOWING, GLOWING_TIME));
 
-		int powerLevel = bowStack.getEnchantmentLevel(POWER_ARROWS);
+		int powerLevel = EnchantmentUtil.getLevel(bowStack, POWER);
 		if (isPerkMax(player, bowStack)) {
 			arrow.setMagicDamage((float) (PROJECTILE_DAMAGE * (1 + PERK_BUFF) *
 					(powerLevel > 0 ? 1 + 0.25 * powerLevel : 1)));
@@ -88,7 +89,7 @@ public class ElfsHarpItem extends BaseBowItem implements IPerkItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.elfs_harp_perk_2",
 				TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-						MobEffects.GLOWING.getDisplayName(),
+						MobEffects.GLOWING.value().getDisplayName(),
 						TooltipHelper.getRomanNumeral(1),
 						TooltipHelper.convertTicksToSeconds(GLOWING_TIME))))));
 

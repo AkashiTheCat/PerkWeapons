@@ -49,9 +49,9 @@ public class EndboreWandererPerkProjectile extends EndboreWandererArrow {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.getEntityData().define(ID_TARGET, -1);
+	protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ID_TARGET, -1);
 	}
 
 	@Override
@@ -62,8 +62,9 @@ public class EndboreWandererPerkProjectile extends EndboreWandererArrow {
 
 	@Override
 	protected void onHitEntity(@NotNull EntityHitResult pResult) {
-		LivingEntity e = (LivingEntity) pResult.getEntity();
-		e.addEffect(new MobEffectInstance(MobEffects.LEVITATION, PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT, 0));
+		if (pResult.getEntity() instanceof LivingEntity entity) {
+			entity.addEffect(new MobEffectInstance(MobEffects.LEVITATION, PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT, 0));
+		}
 		super.onHitEntity(pResult);
 		this.discard();
 	}

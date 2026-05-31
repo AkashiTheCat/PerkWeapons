@@ -10,23 +10,20 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 @OnlyIn(Dist.CLIENT)
 public class BeholderBeamRenderer extends EntityRenderer<BeholderBeamEntity> {
-	private static final ResourceLocation BEAM_LOCATION = new ResourceLocation(
-			"textures/entity/guardian_beam.png");
+	private static final ResourceLocation BEAM_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/guardian_beam.png");
 	private static final RenderType BEAM_RENDER_TYPE = RenderType.entityCutoutNoCull(BEAM_LOCATION);
 
 	public BeholderBeamRenderer(EntityRendererProvider.Context pContext) {
@@ -113,24 +110,23 @@ public class BeholderBeamRenderer extends EntityRenderer<BeholderBeamEntity> {
 			VertexConsumer vertexconsumer = pBuffer.getBuffer(BEAM_RENDER_TYPE);
 			PoseStack.Pose posestack$pose = pPoseStack.last();
 			Matrix4f matrix4f = posestack$pose.pose();
-			Matrix3f matrix3f = posestack$pose.normal();
-			vertex(vertexconsumer, matrix4f, matrix3f, f19, f4, f20, j, k, l, 0.4999F, f30);
-			vertex(vertexconsumer, matrix4f, matrix3f, f19, 0.0F, f20, j, k, l, 0.4999F, f29);
-			vertex(vertexconsumer, matrix4f, matrix3f, f21, 0.0F, f22, j, k, l, 0.0F, f29);
-			vertex(vertexconsumer, matrix4f, matrix3f, f21, f4, f22, j, k, l, 0.0F, f30);
-			vertex(vertexconsumer, matrix4f, matrix3f, f23, f4, f24, j, k, l, 0.4999F, f30);
-			vertex(vertexconsumer, matrix4f, matrix3f, f23, 0.0F, f24, j, k, l, 0.4999F, f29);
-			vertex(vertexconsumer, matrix4f, matrix3f, f25, 0.0F, f26, j, k, l, 0.0F, f29);
-			vertex(vertexconsumer, matrix4f, matrix3f, f25, f4, f26, j, k, l, 0.0F, f30);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f19, f4, f20, j, k, l, 0.4999F, f30);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f19, 0.0F, f20, j, k, l, 0.4999F, f29);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f21, 0.0F, f22, j, k, l, 0.0F, f29);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f21, f4, f22, j, k, l, 0.0F, f30);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f23, f4, f24, j, k, l, 0.4999F, f30);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f23, 0.0F, f24, j, k, l, 0.4999F, f29);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f25, 0.0F, f26, j, k, l, 0.0F, f29);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f25, f4, f26, j, k, l, 0.0F, f30);
 			float f31 = 0.0F;
 			if (pEntity.tickCount % 2 == 0) {
 				f31 = 0.5F;
 			}
 
-			vertex(vertexconsumer, matrix4f, matrix3f, f11, f4, f12, j, k, l, 0.5F, f31 + 0.5F);
-			vertex(vertexconsumer, matrix4f, matrix3f, f13, f4, f14, j, k, l, 1.0F, f31 + 0.5F);
-			vertex(vertexconsumer, matrix4f, matrix3f, f17, f4, f18, j, k, l, 1.0F, f31);
-			vertex(vertexconsumer, matrix4f, matrix3f, f15, f4, f16, j, k, l, 0.5F, f31);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f11, f4, f12, j, k, l, 0.5F, f31 + 0.5F);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f13, f4, f14, j, k, l, 1.0F, f31 + 0.5F);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f17, f4, f18, j, k, l, 1.0F, f31);
+			vertex(vertexconsumer, posestack$pose, matrix4f, f15, f4, f16, j, k, l, 0.5F, f31);
 			pPoseStack.popPose();
 		}
 
@@ -143,7 +139,12 @@ public class BeholderBeamRenderer extends EntityRenderer<BeholderBeamEntity> {
 		return new Vec3(d0, d1, d2);
 	}
 
-	private static void vertex(VertexConsumer pConsumer, Matrix4f pPose, Matrix3f pNormal, float pX, float pY, float pZ, int pRed, int pGreen, int pBlue, float pU, float pV) {
-		pConsumer.vertex(pPose, pX, pY, pZ).color(pRed, pGreen, pBlue, 255).uv(pU, pV).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(15728880).normal(pNormal, 0.0F, 1.0F, 0.0F).endVertex();
+	private static void vertex(VertexConsumer pConsumer, PoseStack.Pose pPose, Matrix4f pMatrix, float pX, float pY, float pZ, int pRed, int pGreen, int pBlue, float pU, float pV) {
+		pConsumer.addVertex(pMatrix, pX, pY, pZ)
+				.setColor(pRed, pGreen, pBlue, 255)
+				.setUv(pU, pV)
+				.setOverlay(OverlayTexture.NO_OVERLAY)
+				.setLight(15728880)
+				.setNormal(pPose, 0.0F, 1.0F, 0.0F);
 	}
 }

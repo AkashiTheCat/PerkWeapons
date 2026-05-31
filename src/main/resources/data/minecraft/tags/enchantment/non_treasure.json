@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "perk_weapons:blaze",
+    "perk_weapons:melt_down",
+    "perk_weapons:regicide",
+    "perk_weapons:star_shooter"
+  ]
+}

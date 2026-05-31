@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -46,7 +45,7 @@ public class IncineratorItem extends BaseCrossbowItem {
 
 	@Override
 	public void updateAttributesFromConfig(CrossbowProperties properties) {
-		AddConflictEnchant(ModEnchantments.BLAZE.get());
+		AddConflictEnchant(ModEnchantments.BLAZE_KEY);
 		if (properties instanceof IncineratorProperties IProperties) {
 			BLAZE_AMMO_CAPACITY = IProperties.BLAZE_AMMO_CAPACITY.get();
 			BLAZE_RELOAD_ADDITION = IProperties.BLAZE_RELOAD_INCREMENT.get();
@@ -61,14 +60,9 @@ public class IncineratorItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-		return 0;
-	}
-
-	@Override
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
-		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
+		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(level, crossbowStack);
 
 		if (ammoStack.is(Items.FIREWORK_ROCKET)) {
 			return new FireworkRocketEntity(level, ammoStack, shooter, shooter.getX(),
@@ -88,14 +82,14 @@ public class IncineratorItem extends BaseCrossbowItem {
 
 	@Override
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
-		if (crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0) {
+		if (getCrossbowEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0) {
 			return super.getMaxChargeTicks(crossbowStack) + BLAZE_RELOAD_ADDITION;
 		}
 		return super.getMaxChargeTicks(crossbowStack);
 	}
 
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return crossbowStack.getEnchantmentLevel(ModEnchantments.BLAZE.get()) > 0 ?
+		return getCrossbowEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0 ?
 				BLAZE_AMMO_CAPACITY : super.getAmmoCapacity(crossbowStack);
 	}
 
@@ -113,7 +107,7 @@ public class IncineratorItem extends BaseCrossbowItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.incinerator_perk_3")));
 		list.add(Component.empty());
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
-				TooltipHelper.convertToEmbeddedElement(ModEnchantments.BLAZE.get(), 1))));
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.BLAZE_KEY, 1))));
 		list.add(TooltipHelper.getAmmoCapacityModifier(BLAZE_AMMO_CAPACITY - AMMO_CAPACITY));
 		list.add(TooltipHelper.getChargeTimeModifier(BLAZE_RELOAD_ADDITION));
 

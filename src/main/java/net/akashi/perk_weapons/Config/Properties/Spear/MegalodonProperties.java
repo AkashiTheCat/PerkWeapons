@@ -1,16 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class MegalodonProperties extends SpearProperties {
-	public ForgeConfigSpec.IntValue DOLPHINS_GRACE_LEVEL;
-	public ForgeConfigSpec.IntValue DOLPHINS_GRACE_TICKS;
-	public ForgeConfigSpec.IntValue HASTE_LEVEL;
-	public ForgeConfigSpec.IntValue HASTE_TICKS;
-	public ForgeConfigSpec.IntValue STRENGTH_LEVEL;
-	public ForgeConfigSpec.IntValue STRENGTH_TICKS;
+	public ModConfigSpec.IntValue DOLPHINS_GRACE_LEVEL;
+	public ModConfigSpec.IntValue DOLPHINS_GRACE_TICKS;
+	public ModConfigSpec.IntValue HASTE_LEVEL;
+	public ModConfigSpec.IntValue HASTE_TICKS;
+	public ModConfigSpec.IntValue STRENGTH_LEVEL;
+	public ModConfigSpec.IntValue STRENGTH_TICKS;
 
-	public MegalodonProperties(ForgeConfigSpec.Builder builder, String name,
+	public MegalodonProperties(ModConfigSpec.Builder builder, String name,
 	                           float defaultMeleeDamage, double defaultAttackSpeed,
 	                           float defaultRangedDamage, float defaultVelocity,
 	                           int defaultMaxChargeTime, int defaultDolphinsGraceLevel,

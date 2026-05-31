@@ -1,10 +1,8 @@
 package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 
-import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPacket;
+import net.akashi.perk_weapons.Network.OutOfSightExplosionSyncPayload;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEffects;
-import net.akashi.perk_weapons.Registry.ModEntities;
-import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Util.ModExplosion;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -19,14 +17,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.PlayMessages;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 
 public class ExplosiveArrow extends BaseArrow {
-	public static ResourceLocation EXPLOSIVE_ARROW_LOCATION = new ResourceLocation(PerkWeapons.MODID,
+	public static ResourceLocation EXPLOSIVE_ARROW_LOCATION = ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID,
 			"textures/entity/projectiles/explosive_arrow.png");
 	private int fuseTime = 30;
 	private float innerRadius = 2;
@@ -52,10 +49,6 @@ public class ExplosiveArrow extends BaseArrow {
 		super(pEntityType, pLevel, pShooter);
 		this.fuseTime = fuseTime;
 		this.pickup = Pickup.DISALLOWED;
-	}
-
-	public ExplosiveArrow(PlayMessages.SpawnEntity spawnEntity, Level level) {
-		this(ModEntities.EXPLOSIVE_ARROW.get(), level);
 	}
 
 	public void setExplosionAttributes(float innerRadius, float outerRadius, float innerDamage, float outerDamage,
@@ -106,8 +99,8 @@ public class ExplosiveArrow extends BaseArrow {
 		super.onHitEntity(pResult);
 		Entity entity = pResult.getEntity();
 		if (entity.isAlive() && entity instanceof LivingEntity livingEntity) {
-			livingEntity.addEffect(new MobEffectInstance(ModEffects.INTERNAL_EXPLOSION.get(),
-					internalExpDuration, internalExpAmplifier, false, false), this.getOwner());
+			    livingEntity.addEffect(new MobEffectInstance(ModEffects.INTERNAL_EXPLOSION,
+				    internalExpDuration, internalExpAmplifier, false, false), this.getOwner());
 			this.discard();
 		} else {
 			this.setDeltaMovement(this.getDeltaMovement().multiply(
@@ -144,12 +137,13 @@ public class ExplosiveArrow extends BaseArrow {
 
 	public void explode() {
 		Level level = this.level();
-		ModExplosion.createExplosion(level, (LivingEntity) this.getOwner(), this.getX(), this.getY(), this.getZ(),
+		LivingEntity owner = this.getOwner() instanceof LivingEntity livingOwner ? livingOwner : null;
+		ModExplosion.createExplosion(level, owner, this.getX(), this.getY(), this.getZ(),
 				innerRadius, outerRadius, innerDamage, outerDamage, expForce, expIgnoreWall);
 		if (!level.isClientSide() && this.getOwnerSqrDistance() > 64 * 64 &&
 				this.getOwner() instanceof Player player) {
-			ModPackets.NETWORK.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player),
-					new OutOfSightExplosionSyncPacket(this.getX(), this.getY(), this.getZ(), player.getId()));
+			PacketDistributor.sendToPlayer((ServerPlayer) player,
+					new OutOfSightExplosionSyncPayload(this.getX(), this.getY(), this.getZ(), player.getId()));
 		}
 		this.discard();
 	}

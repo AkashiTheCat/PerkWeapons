@@ -24,7 +24,7 @@ import net.minecraft.world.entity.projectile.FireworkRocketEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -63,7 +63,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 		ItemStack stack = pPlayer.getItemInHand(pHand);
 		if (pPlayer.isCrouching() && isPerkMax(pPlayer, stack)) {
 			pPlayer.addEffect(new MobEffectInstance(
-					ModEffects.ROYAL_JELLY.get(), ROYAL_JELLY_TICKS, ROYAL_JELLY_LEVEL - 1
+					ModEffects.ROYAL_JELLY, ROYAL_JELLY_TICKS, ROYAL_JELLY_LEVEL - 1
 			));
 			setPerkLevel(stack, 0);
 			pPlayer.getCooldowns().addCooldown(stack.getItem(), CROUCH_USE_COOLDOWN_TICKS);
@@ -77,7 +77,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 	@Override
 	protected Projectile getProjectile(Level level, LivingEntity shooter, ItemStack crossbowStack) {
 		BaseCrossbowItem crossbowItem = (BaseCrossbowItem) crossbowStack.getItem();
-		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(crossbowStack);
+		ItemStack ammoStack = crossbowItem.getLastChargedProjectile(level, crossbowStack);
 
 		if (ammoStack.is(Items.FIREWORK_ROCKET)) {
 			return new FireworkRocketEntity(level, ammoStack, shooter, shooter.getX(),
@@ -141,7 +141,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 		var list = super.getPerkDescriptions(stack, level);
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_perk_1")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				MobEffects.POISON.getDisplayName(),
+				MobEffects.POISON.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(POISON_LEVEL),
 				TooltipHelper.convertTicksToSeconds(POISON_TICKS))));
 
@@ -159,7 +159,7 @@ public class QueenBeeCrossbowItem extends BaseCrossbowItem implements IPerkItem 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_ability_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.queen_bee_crossbow_ability_2")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				ModEffects.ROYAL_JELLY.get().getDisplayName(),
+				ModEffects.ROYAL_JELLY.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(ROYAL_JELLY_LEVEL),
 				TooltipHelper.convertTicksToSeconds(ROYAL_JELLY_TICKS))));
 

@@ -1,0 +1,22 @@
+{
+  "anvil_cost": 4,
+  "description": {
+    "translate": "enchantment.perk_weapons.blaze"
+  },
+  "effects": {},
+  "exclusive_set": "#perk_weapons:exclusive_set/blaze",
+  "max_cost": {
+    "base": 50,
+    "per_level_above_first": 0
+  },
+  "max_level": 1,
+  "min_cost": {
+    "base": 20,
+    "per_level_above_first": 0
+  },
+  "slots": [
+    "mainhand"
+  ],
+  "supported_items": "#perk_weapons:enchantable/incinerator",
+  "weight": 2
+}

@@ -1,15 +1,15 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class FrostHunterProperties extends BowProperties {
-	public ForgeConfigSpec.IntValue FROZEN_TIME;
-	public ForgeConfigSpec.IntValue ABILITY_COOLDOWN_TIME;
-	public ForgeConfigSpec.IntValue HOUND_LIFETIME;
-	public ForgeConfigSpec.IntValue HOUND_COUNT;
-	public ForgeConfigSpec.BooleanValue ENABLE_HOUND_EFFECT;
+	public ModConfigSpec.IntValue FROZEN_TIME;
+	public ModConfigSpec.IntValue ABILITY_COOLDOWN_TIME;
+	public ModConfigSpec.IntValue HOUND_LIFETIME;
+	public ModConfigSpec.IntValue HOUND_COUNT;
+	public ModConfigSpec.BooleanValue ENABLE_HOUND_EFFECT;
 
-	public FrostHunterProperties(ForgeConfigSpec.Builder builder, String name,
+	public FrostHunterProperties(ModConfigSpec.Builder builder, String name,
 	                             int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                             double defaultInaccuracy, int defaultFrozenTime,
 	                             int defaultCoolDown, int defaultHoundLifeTime,

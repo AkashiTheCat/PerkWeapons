@@ -4,12 +4,11 @@
   "package": "net.akashi.perk_weapons.mixin",
   "refmap": "mixins.perk_weapons.refmap.json",
   "client": [
-    "LocalPlayerMixin"
   ],
   "server": [
   ],
   "mixins": [
     "AnvilMenuMixin",
-    "LivingEntityMixin"
+    "FoodDataAccessor"
   ]
 }

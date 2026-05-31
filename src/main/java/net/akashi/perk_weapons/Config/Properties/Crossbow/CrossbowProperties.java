@@ -1,19 +1,19 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CrossbowProperties {
-	public ForgeConfigSpec.IntValue CHARGE_TIME;
-	public ForgeConfigSpec.DoubleValue DAMAGE;
-	public ForgeConfigSpec.DoubleValue VELOCITY;
-	public ForgeConfigSpec.DoubleValue INACCURACY;
-	public ForgeConfigSpec.IntValue AMMO_CAPACITY;
-	public ForgeConfigSpec.IntValue FIRE_INTERVAL;
-	public ForgeConfigSpec.DoubleValue QUICK_CHARGE_MULTIPLIER;
-	public ForgeConfigSpec.DoubleValue SPEED_MODIFIER;
-	public ForgeConfigSpec.BooleanValue ONLY_MAINHAND;
+	public ModConfigSpec.IntValue CHARGE_TIME;
+	public ModConfigSpec.DoubleValue DAMAGE;
+	public ModConfigSpec.DoubleValue VELOCITY;
+	public ModConfigSpec.DoubleValue INACCURACY;
+	public ModConfigSpec.IntValue AMMO_CAPACITY;
+	public ModConfigSpec.IntValue FIRE_INTERVAL;
+	public ModConfigSpec.DoubleValue QUICK_CHARGE_MULTIPLIER;
+	public ModConfigSpec.DoubleValue SPEED_MODIFIER;
+	public ModConfigSpec.BooleanValue ONLY_MAINHAND;
 
-	public CrossbowProperties(ForgeConfigSpec.Builder builder, String name,
+	public CrossbowProperties(ModConfigSpec.Builder builder, String name,
 	                          int defaultChargeTime, double defaultDamage,
 	                          double defaultVelocity, double defaultInaccuracy,
 	                          int defaultAmmoCapacity, int defaultFireInterval,
@@ -47,7 +47,7 @@ public class CrossbowProperties {
 		}
 	}
 
-	public void topComment(ForgeConfigSpec.Builder builder, String name) {
+	public void topComment(ModConfigSpec.Builder builder, String name) {
 
 	}
 }

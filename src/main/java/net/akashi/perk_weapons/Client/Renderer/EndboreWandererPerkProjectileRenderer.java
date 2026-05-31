@@ -15,13 +15,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 @OnlyIn(Dist.CLIENT)
 public class EndboreWandererPerkProjectileRenderer extends EntityRenderer<EndboreWandererPerkProjectile> {
-	private static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation("textures/entity/shulker/spark.png");
+	private static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/entity/shulker/spark.png");
 	private static final RenderType RENDER_TYPE = RenderType.entityTranslucent(TEXTURE_LOCATION);
 	private final ShulkerBulletModel<EndboreWandererPerkProjectile> model;
 
@@ -48,10 +48,10 @@ public class EndboreWandererPerkProjectileRenderer extends EntityRenderer<Endbor
 		pPoseStack.scale(-0.5F, -0.5F, 0.5F);
 		this.model.setupAnim(pEntity, 0.0F, 0.0F, 0.0F, f, f1);
 		VertexConsumer vertexconsumer = pBuffer.getBuffer(this.model.renderType(TEXTURE_LOCATION));
-		this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 1.0F);
+		this.model.renderToBuffer(pPoseStack, vertexconsumer, pPackedLight, OverlayTexture.NO_OVERLAY);
 		pPoseStack.scale(1.5F, 1.5F, 1.5F);
 		VertexConsumer vertexconsumer1 = pBuffer.getBuffer(RENDER_TYPE);
-		this.model.renderToBuffer(pPoseStack, vertexconsumer1, pPackedLight, OverlayTexture.NO_OVERLAY, 1.0F, 1.0F, 1.0F, 0.15F);
+		this.model.renderToBuffer(pPoseStack, vertexconsumer1, pPackedLight, OverlayTexture.NO_OVERLAY);
 		pPoseStack.popPose();
 		super.render(pEntity, pEntityYaw, pPartialTicks, pPoseStack, pBuffer, pPackedLight);
 	}

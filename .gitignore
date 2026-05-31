@@ -33,3 +33,12 @@ settings.gradle
 
 # misc
 count_code.bat
+.vscode/
+/net/
+*.log
+compile*.txt
+build_output.txt
+abstractarrow_javap.txt
+enchantmenthelper.html
+enchantmenthelper_hits.txt
+runclient_log.txt

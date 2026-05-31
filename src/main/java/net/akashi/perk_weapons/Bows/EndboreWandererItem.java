@@ -25,7 +25,7 @@ import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -144,7 +144,7 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 		var list = super.getPerkDescriptions(stack, level);
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_1",
 				TooltipHelper.convertToEmbeddedPercentage(1 + DAMAGE_BONUS_LEVITATION),
-				TooltipHelper.setEmbeddedElementStyle(MobEffects.LEVITATION.getDisplayName().copy()))));
+				TooltipHelper.setEmbeddedElementStyle(MobEffects.LEVITATION.value().getDisplayName().copy()))));
 
 		list.add(Component.empty());
 
@@ -160,7 +160,7 @@ public class EndboreWandererItem extends BaseBowItem implements IPerkItem {
 				TooltipHelper.convertToEmbeddedElement(PERK_PROJECTILE_HOMING_RANGE))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_5")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-				MobEffects.LEVITATION.getDisplayName(),
+				MobEffects.LEVITATION.value().getDisplayName(),
 				TooltipHelper.getRomanNumeral(1),
 				TooltipHelper.convertTicksToSeconds(PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT))));
 		list.add(TooltipHelper.setCommentStyle(Component.translatable("tooltip.perk_weapons.endbore_wanderer_perk_6")));

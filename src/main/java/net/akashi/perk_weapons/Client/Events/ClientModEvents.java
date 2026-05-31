@@ -9,14 +9,15 @@ import net.akashi.perk_weapons.Client.Renderer.EndboreWandererPerkProjectileRend
 import net.akashi.perk_weapons.Client.Renderer.ThrownSpearRenderer;
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEntities;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.minecraft.resources.ResourceLocation;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientModEvents {
 	@SubscribeEvent
 	public static void registerRenders(EntityRenderersEvent.RegisterRenderers event) {
@@ -45,9 +46,9 @@ public class ClientModEvents {
 	}
 
 	@SubscribeEvent
-	public static void registerGuiOverlays(RegisterGuiOverlaysEvent event) {
-		event.registerAboveAll("perk_hud", PerkIndicatorHud.INDICATOR_BAR);
-		event.registerAboveAll("cooldown_hud", CoolDownIndicatorHud.INDICATOR_BAR);
-		event.registerAbove(VanillaGuiOverlay.CROSSHAIR.id(), "crosshair", DoubleLineCrossHair.CROSSHAIR);
+	public static void registerGuiLayers(RegisterGuiLayersEvent event) {
+		event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "perk_hud"), PerkIndicatorHud.INDICATOR_BAR);
+		event.registerAboveAll(ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "cooldown_hud"), CoolDownIndicatorHud.INDICATOR_BAR);
+		event.registerAbove(VanillaGuiLayers.CROSSHAIR, ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "crosshair"), DoubleLineCrossHair.CROSSHAIR);
 	}
 }

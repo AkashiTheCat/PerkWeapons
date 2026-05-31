@@ -7,8 +7,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 public class QueenBeeArrow extends PerkGainingArrow {
-	public static final ResourceLocation TEXTURE_LOCATION = new ResourceLocation(PerkWeapons.MODID,
-			"/textures/entity/projectiles/queen_bee_arrow.png");
+	    public static final ResourceLocation TEXTURE_LOCATION = ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID,
+		    "textures/entity/projectiles/queen_bee_arrow.png");
 
 	public QueenBeeArrow(EntityType<? extends BaseArrow> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);

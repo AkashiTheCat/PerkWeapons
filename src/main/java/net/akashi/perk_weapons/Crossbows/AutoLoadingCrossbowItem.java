@@ -9,6 +9,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,9 +39,12 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 			return InteractionResultHolder.pass(itemstack);
 		}
 
-		if (isCrossbowCharged(itemstack)) {
+		if (isCrossbowCharged(itemstack) && getChargeProgress(pPlayer, itemstack) >= 1.0f) {
 			shoot(pLevel, pPlayer, pHand, itemstack, DAMAGE, VELOCITY, INACCURACY);
 			consumeAndSetCharged(pPlayer, itemstack);
+			if (getChargedProjectileAmount(itemstack) > 0) {
+				pPlayer.getCooldowns().addCooldown(itemstack.getItem(), FIRE_INTERVAL);
+			}
 			return InteractionResultHolder.consume(itemstack);
 		} else {
 			return InteractionResultHolder.fail(itemstack);
@@ -59,7 +64,7 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 			return;
 		}
 
-		if (!isCrossbowCharged(stack) && isAmmoLoaded(stack)) {
+		if (!isCrossbowCharged(stack) && isAmmoLoaded(level, stack)) {
 			if (isSelected || e.getOffhandItem().is(this)) {
 				this.onUseTick(level, e, stack, 0);
 			}
@@ -72,21 +77,20 @@ public class AutoLoadingCrossbowItem extends BaseCrossbowItem {
 	@Override
 	public float getChargeProgress(LivingEntity shooter, ItemStack crossbowStack) {
 		long passedTime = shooter.level().getGameTime() - getReloadBeginTime(crossbowStack);
-		return isAmmoLoaded(crossbowStack) ? Math.min((float) passedTime / getMaxChargeTicks(crossbowStack), 1.0f) : 0;
+		return isAmmoLoaded(shooter.level(), crossbowStack) ? Math.min((float) passedTime / getMaxChargeTicks(crossbowStack), 1.0f) : 0;
 	}
 
-	public boolean isAmmoLoaded(ItemStack crossbowStack) {
-		return getLastChargedProjectile(crossbowStack) != ItemStack.EMPTY;
+	public boolean isAmmoLoaded(Level level, ItemStack crossbowStack) {
+		return !getLastChargedProjectile(level, crossbowStack).isEmpty();
 	}
 
 	public long getReloadBeginTime(ItemStack crossbowStack) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
+		CompoundTag tag = crossbowStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_RELOAD_BEGIN) ? tag.getLong(TAG_RELOAD_BEGIN) : 0;
 	}
 
 	public void setReloadBeginTime(ItemStack crossbowStack, long reloadBeginTime) {
-		CompoundTag tag = crossbowStack.getOrCreateTag();
-		tag.putLong(TAG_RELOAD_BEGIN, reloadBeginTime);
+		CustomData.update(DataComponents.CUSTOM_DATA, crossbowStack, tag -> tag.putLong(TAG_RELOAD_BEGIN, reloadBeginTime));
 	}
 
 	@Override

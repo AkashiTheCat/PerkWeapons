@@ -3,7 +3,6 @@ package net.akashi.perk_weapons.Entities.Projectiles.Arrows;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.EvokerFangs;
@@ -44,10 +43,12 @@ public class DevourerArrow extends BaseArrow {
 	protected void onHitEntity(@NotNull EntityHitResult pResult) {
 		super.onHitEntity(pResult);
 		Level level = this.level();
-		if (!level.isClientSide() && pResult.getEntity() instanceof LivingEntity livingEntity) {
+		if (!level.isClientSide()
+				&& pResult.getEntity() instanceof LivingEntity livingEntity
+				&& this.getOwner() instanceof LivingEntity owner) {
 			EvokerFangs evokerFang = new EvokerFangs(level, livingEntity.getX(),
 					livingEntity.getY(), livingEntity.getZ(), 0F, 5,
-					(LivingEntity) this.getOwner());
+					owner);
 			livingEntity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 255));
 			level.addFreshEntity(evokerFang);
 		}

@@ -32,9 +32,9 @@ public class ThrownScourge extends ThrownSpear {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(ID_IS_ABILITY_SHOT, false);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ID_IS_ABILITY_SHOT, false);
 	}
 
 	@Override

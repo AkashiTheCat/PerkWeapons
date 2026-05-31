@@ -1,20 +1,22 @@
 package net.akashi.perk_weapons.Config;
 
+import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Client.Events.BowZoomHandler;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ModClientConfigs {
-	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-	public static final ForgeConfigSpec SPEC;
-	public static ForgeConfigSpec.BooleanValue ENABLE_ZOOM;
-	public static ForgeConfigSpec.BooleanValue ENABLE_CUSTOM_CROSSHAIR;
-	public static ForgeConfigSpec.BooleanValue ENABLE_PERK_INDICATOR;
-	public static ForgeConfigSpec.BooleanValue ENABLE_COOLDOWN_INDICATOR;
-	public static ForgeConfigSpec.BooleanValue ENABLE_MODE_INDICATOR_ON_NETHER_GUIDE;
+	public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+	public static final ModConfigSpec SPEC;
+	public static ModConfigSpec.BooleanValue ENABLE_ZOOM;
+	public static ModConfigSpec.BooleanValue ENABLE_CUSTOM_CROSSHAIR;
+	public static ModConfigSpec.BooleanValue ENABLE_PERK_INDICATOR;
+	public static ModConfigSpec.BooleanValue ENABLE_COOLDOWN_INDICATOR;
+	public static ModConfigSpec.BooleanValue ENABLE_MODE_INDICATOR_ON_NETHER_GUIDE;
 
 	static {
 		BUILDER.push("Client");
@@ -35,6 +37,7 @@ public class ModClientConfigs {
 	public static void onConfigLoad(ModConfigEvent event) {
 		if (event.getConfig().getSpec() != SPEC)
 			return;
+
 		BowZoomHandler.setZoom(ENABLE_ZOOM.get());
 	}
 }

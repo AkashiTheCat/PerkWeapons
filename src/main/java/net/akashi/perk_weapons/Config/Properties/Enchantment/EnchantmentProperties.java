@@ -1,20 +1,19 @@
 package net.akashi.perk_weapons.Config.Properties.Enchantment;
 
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EnchantmentProperties {
-	public ForgeConfigSpec.BooleanValue ALLOW_ON_TABLE;
-	public ForgeConfigSpec.BooleanValue ALLOW_ON_BOOK;
-	public ForgeConfigSpec.BooleanValue IS_DISCOVERABLE;
-	public ForgeConfigSpec.BooleanValue IS_TREASURE_ONLY;
-	public ForgeConfigSpec.BooleanValue IS_TRADEABLE;
-	public ForgeConfigSpec.EnumValue<Enchantment.Rarity> RARITY;
+	public ModConfigSpec.BooleanValue ALLOW_ON_TABLE;
+	public ModConfigSpec.BooleanValue ALLOW_ON_BOOK;
+	public ModConfigSpec.BooleanValue IS_DISCOVERABLE;
+	public ModConfigSpec.BooleanValue IS_TREASURE_ONLY;
+	public ModConfigSpec.BooleanValue IS_TRADEABLE;
+	public ModConfigSpec.ConfigValue<String> RARITY;
 
-	public EnchantmentProperties(ForgeConfigSpec.Builder builder, String name,
+	public EnchantmentProperties(ModConfigSpec.Builder builder, String name,
 	                             boolean defaultAllowOnTable, boolean defaultAllowOnBook,
 	                             boolean defaultIsDiscoverable, boolean defaultIsTreasureOnly,
-	                             boolean defaultIsTradeable, Enchantment.Rarity defaultRarity,
+	                             boolean defaultIsTradeable, String defaultRarity,
 	                             boolean shouldPop) {
 		builder.push(name);
 		ALLOW_ON_TABLE = builder.comment("Allow " + name + " To Appear On Enchantment Table")
@@ -28,7 +27,7 @@ public class EnchantmentProperties {
 		IS_TRADEABLE = builder.comment("Whether " + name + " Can Appear In Villager Trades")
 				.define("isTradeable", defaultIsTradeable);
 		RARITY = builder.comment("Rarity of " + name)
-				.defineEnum("rarity", defaultRarity);
+				.define("rarity", defaultRarity);
 		if (shouldPop)
 			builder.pop();
 	}

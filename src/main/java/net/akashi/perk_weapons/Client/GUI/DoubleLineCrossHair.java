@@ -9,25 +9,25 @@ import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
-import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RenderGuiLayerEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class DoubleLineCrossHair {
 	private static final Minecraft minecraft = Minecraft.getInstance();
 	public static boolean isVanillaCrosshairDisabled = false;
-	protected static final ResourceLocation GUI_ICONS_LOCATION = new ResourceLocation("textures/gui/icons.png");
-	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
-	public static final IGuiOverlay CROSSHAIR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+	protected static final ResourceLocation GUI_ICONS_LOCATION = ResourceLocation.fromNamespaceAndPath("minecraft", "textures/gui/icons.png");
+	public static final ResourceLocation HUD_TEXTURE = ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "textures/gui/hud.png");
+	public static final LayeredDraw.Layer CROSSHAIR = (guiGraphics, partialTick) -> {
 		//Check CrossHairs Enabled
 		if (!ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get()) {
 			return;
@@ -37,6 +37,8 @@ public class DoubleLineCrossHair {
 		Player player = mc.player;
 		if (player == null)
 			return;
+		int screenWidth = mc.getWindow().getGuiScaledWidth();
+		int screenHeight = mc.getWindow().getGuiScaledHeight();
 
 		boolean isItemMatched = false;
 		ItemStack stack = ItemStack.EMPTY;
@@ -53,7 +55,7 @@ public class DoubleLineCrossHair {
 		} else if (isVanillaCrosshairDisabled) {
 			isVanillaCrosshairDisabled = false;
 		}
-	});
+	};
 
 	private static void RenderCrossHair(Player player, ItemStack stack, GuiGraphics guiGraphics,
 	                                    int screenWidth, int screenHeight) {
@@ -63,7 +65,7 @@ public class DoubleLineCrossHair {
 
 		float progress = ((IDoubleLineCrosshairItem) stack.getItem()).getChokeProgress(player, stack);
 
-		PoseStack poseStack = RenderSystem.getModelViewStack();
+		PoseStack poseStack = guiGraphics.pose();
 		poseStack.pushPose();
 
 		RenderSystem.assertOnRenderThread();
@@ -112,13 +114,17 @@ public class DoubleLineCrossHair {
 			}
 		}
 
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.disableBlend();
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
 		poseStack.popPose();
 	}
 
 	@SubscribeEvent
-	public static void onRenderVanillaCrosshair(RenderGuiOverlayEvent event) {
+	public static void onRenderVanillaCrosshair(RenderGuiLayerEvent.Pre event) {
 		if (ModClientConfigs.ENABLE_CUSTOM_CROSSHAIR.get() && isVanillaCrosshairDisabled
-				&& event.getOverlay().id() == VanillaGuiOverlay.CROSSHAIR.id()) {
+				&& event.getName().equals(VanillaGuiLayers.CROSSHAIR)) {
 			event.setCanceled(true);
 		}
 	}

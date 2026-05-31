@@ -1,23 +1,26 @@
 package net.akashi.perk_weapons.Crossbows;
 
-import com.google.common.collect.ImmutableMultimap;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.SonicBlasterProperties;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,7 +29,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.UUID;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -36,7 +38,6 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	protected static final SoundEventHolder LOADING_END_SOUND = new SoundEventHolder(SoundEvents.WARDEN_HEARTBEAT,
 			0.5F, 1F);
 
-	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("add5510b-4b2c-773b-3211-3e42a2331a49");
 	public static final String TAG_AMMO_LOADED = "ammo_loaded";
 	public static float KNOCKBACK_RESISTANCE = 10;
 	public static int MAX_ATTACK_RANGE = 24;
@@ -49,7 +50,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		super(pProperties);
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
-		RemoveGeneralEnchant(POWER_ARROWS);
+		RemoveGeneralEnchant(POWER);
 		if (PIERCE_LEVEL == -1) {
 			RemoveGeneralEnchant(PIERCING);
 		}
@@ -64,7 +65,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 		AMMO_CAPACITY = 0;
 		RemoveGeneralEnchant(QUICK_CHARGE);
 		RemoveGeneralEnchant(MULTISHOT);
-		RemoveGeneralEnchant(POWER_ARROWS);
+		RemoveGeneralEnchant(POWER);
 		if (PIERCE_LEVEL == -1) {
 			RemoveGeneralEnchant(PIERCING);
 		}
@@ -73,15 +74,15 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	@Override
 	protected void buildAttributeModifiers() {
 		super.buildAttributeModifiers();
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		if (AttributeModifiers != null)
-			builder.putAll(AttributeModifiers);
 		if (KNOCKBACK_RESISTANCE != 0.0F) {
-			builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(KNOCKBACK_RESISTANCE_UUID,
-					"Tool modifier", KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADDITION));
+			ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+			for (ItemAttributeModifiers.Entry entry : this.DefaultAttributeModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
+		}
+			builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "sonic_blaster_knockback"), KNOCKBACK_RESISTANCE, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+			this.DefaultAttributeModifiers = builder.build();
 			this.ONLY_ALLOW_MAINHAND = true;
 		}
-		this.AttributeModifiers = builder.build();
 	}
 
 	@Override
@@ -209,17 +210,16 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	private int getPierceLevel(ItemStack crossbowStack) {
-		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + crossbowStack.getEnchantmentLevel(PIERCING);
+		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + getCrossbowEnchantmentLevel(crossbowStack, PIERCING);
 	}
 
 	private int getAmmoLoaded(ItemStack crossbowStack) {
-		CompoundTag nbt = crossbowStack.getOrCreateTag();
+		CompoundTag nbt = crossbowStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return nbt.contains(TAG_AMMO_LOADED) ? nbt.getInt(TAG_AMMO_LOADED) : 0;
 	}
 
 	private void setAmmoLoaded(ItemStack crossbowStack, int amount) {
-		CompoundTag nbt = crossbowStack.getOrCreateTag();
-		nbt.putInt(TAG_AMMO_LOADED, amount);
+		CustomData.update(DataComponents.CUSTOM_DATA, crossbowStack, tag -> tag.putInt(TAG_AMMO_LOADED, amount));
 	}
 
 	@Override

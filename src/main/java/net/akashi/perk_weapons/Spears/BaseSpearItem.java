@@ -1,14 +1,12 @@
 package net.akashi.perk_weapons.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.ModCommonConfigs;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Registry.ModTags;
-import net.akashi.perk_weapons.Util.EnchantmentValidator;
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
@@ -21,44 +19,45 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLineCrosshairItem {
-	protected Multimap<Attribute, AttributeModifier> AttributeModifiers;
+public class BaseSpearItem extends TridentItem implements IDoubleLineCrosshairItem {
+	protected ItemAttributeModifiers DefaultAttributeModifiers = ItemAttributeModifiers.EMPTY;
 	protected float VELOCITY = 2.5F;
 	protected float MELEE_DAMAGE = 5F;
 	protected float MELEE_SPEED = 1.1F;
 	protected float THROW_DAMAGE = 5F;
 	protected int MAX_CHARGE_TICKS = 10;
 
-	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
-			POWER_ARROWS,
+	private final Set<ResourceKey<Enchantment>> GeneralEnchants = new HashSet<>(Set.of(
+			POWER,
 			KNOCKBACK,
-			MOB_LOOTING,
+			LOOTING,
 			LOYALTY,
 			MENDING,
 			UNBREAKING
 	));
-	private final Set<Enchantment> ConflictEnchants = new HashSet<>(Set.of(
+	private final Set<ResourceKey<Enchantment>> ConflictEnchants = new HashSet<>(Set.of(
 			SMITE,
 			BANE_OF_ARTHROPODS,
 			SHARPNESS
@@ -90,8 +89,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 
 	//General Overrides
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : super.getAttributeModifiers(slot, stack);
+	public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+		return this.DefaultAttributeModifiers;
 	}
 
 	@Override
@@ -102,13 +101,13 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 	@Override
 	public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel, @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
-			int usedTicks = this.getUseDuration(pStack) - pTimeLeft;
+			int usedTicks = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft;
 			if (usedTicks >= getMaxChargeTicks(player, pStack)) {
-				int riptideLevel = EnchantmentHelper.getRiptide(pStack);
+				int riptideLevel = getEnchantmentLevel(pStack, RIPTIDE);
 				if (riptideLevel <= 0 || player.isInWaterOrRain()) {
 					ThrownSpear thrownspear = createThrownSpear(pLevel, player, pStack);
 					double multiplier = 1 + ModCommonConfigs.SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE.get() *
-							pStack.getEnchantmentLevel(POWER_ARROWS);
+							getEnchantmentLevel(pStack, POWER);
 					thrownspear.setBaseDamage(getProjectileBaseDamage(pStack) * multiplier);
 
 					int slot = player.getMainHandItem().getItem() instanceof BaseSpearItem ?
@@ -120,9 +119,8 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 							VELOCITY + (float) riptideLevel * 0.5F, 1.0F);
 
 					if (!pLevel.isClientSide) {
-						pStack.hurtAndBreak(1, player, (pOnBroken) -> {
-							pOnBroken.broadcastBreakEvent(pEntityLiving.getUsedItemHand());
-						});
+						pStack.hurtAndBreak(1, player,
+							player.getUsedItemHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 						if (riptideLevel == 0 && !player.getAbilities().instabuild) {
 							player.getInventory().removeItem(pStack);
 						}
@@ -132,7 +130,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 					}
 
 					pLevel.addFreshEntity(thrownspear);
-					pLevel.playSound(null, thrownspear, SoundEvents.TRIDENT_THROW, SoundSource.PLAYERS,
+					pLevel.playSound(null, thrownspear, SoundEvents.TRIDENT_THROW.value(), SoundSource.PLAYERS,
 							1.0F, 1.0F);
 					player.awardStat(Stats.ITEM_USED.get(this));
 
@@ -148,12 +146,12 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 						f2 *= f5 / f4;
 						f3 *= f5 / f4;
 						player.push(f1, f2, f3);
-						player.startAutoSpinAttack(20);
+						player.startAutoSpinAttack(20, 1.0F, pStack);
 						if (player.onGround()) {
 							player.move(MoverType.SELF, new Vec3(0.0D, 1.1999999F, 0.0D));
 						}
 
-						SoundEvent soundevent;
+						Holder<SoundEvent> soundevent;
 						if (riptideLevel >= 3) {
 							soundevent = SoundEvents.TRIDENT_RIPTIDE_3;
 						} else if (riptideLevel == 2) {
@@ -162,7 +160,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 							soundevent = SoundEvents.TRIDENT_RIPTIDE_1;
 						}
 
-						pLevel.playSound(null, player, soundevent, SoundSource.PLAYERS,
+						pLevel.playSound(null, player, soundevent.value(), SoundSource.PLAYERS,
 								1.0F, 1.0F);
 					}
 
@@ -177,7 +175,7 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 		ItemStack itemstack = pPlayer.getItemInHand(pHand);
 		if (itemstack.getDamageValue() >= itemstack.getMaxDamage() - 1) {
 			return InteractionResultHolder.fail(itemstack);
-		} else if (EnchantmentHelper.getRiptide(itemstack) > 0 && !pPlayer.isInWaterOrRain()) {
+		} else if (getEnchantmentLevel(itemstack, RIPTIDE) > 0 && !pPlayer.isInWaterOrRain()) {
 			return InteractionResultHolder.fail(itemstack);
 		} else {
 			pPlayer.startUsingItem(pHand);
@@ -193,40 +191,59 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 	//Enchantments
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return EnchantmentValidator.canApplyAtTable(enchantment, GeneralEnchants, ConflictEnchants);
+	public boolean supportsEnchantment(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
+		return EnchantmentUtil.supportsEnchantment(stack, enchantment, GeneralEnchants, ConflictEnchants);
 	}
 
-	@Override
-	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return EnchantmentValidator.canBookEnchant(stack, book, ConflictEnchants);
+	public boolean isBookEnchantable(@NotNull ItemStack stack, @NotNull ItemStack book) {
+		return EnchantmentUtil.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
 	}
 
-	public boolean AddGeneralEnchant(Enchantment enchantment) {
+	public boolean AddGeneralEnchant(Holder<Enchantment> enchantment) {
+		return enchantment.unwrapKey().map(GeneralEnchants::add).orElse(false);
+	}
+
+	public boolean AddGeneralEnchant(ResourceKey<Enchantment> enchantment) {
 		return GeneralEnchants.add(enchantment);
 	}
 
-	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
+	public boolean RemoveGeneralEnchant(Holder<Enchantment> enchantment) {
+		return enchantment.unwrapKey().map(GeneralEnchants::remove).orElse(false);
+	}
+
+	public boolean RemoveGeneralEnchant(ResourceKey<Enchantment> enchantment) {
 		return GeneralEnchants.remove(enchantment);
 	}
 
-	public boolean AddConflictEnchant(Enchantment enchantment) {
+	public boolean AddConflictEnchant(Holder<Enchantment> enchantment) {
+		return enchantment.unwrapKey().map(ConflictEnchants::add).orElse(false);
+	}
+
+	public boolean AddConflictEnchant(ResourceKey<Enchantment> enchantment) {
 		return ConflictEnchants.add(enchantment);
 	}
 
-	public boolean RemoveConflictEnchant(Enchantment enchantment) {
+	public boolean RemoveConflictEnchant(Holder<Enchantment> enchantment) {
+		return enchantment.unwrapKey().map(ConflictEnchants::remove).orElse(false);
+	}
+
+	public boolean RemoveConflictEnchant(ResourceKey<Enchantment> enchantment) {
 		return ConflictEnchants.remove(enchantment);
+	}
+
+	private static int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
+		return EnchantmentUtil.getLevel(stack, enchantment);
 	}
 
 	//New methods
 
 	protected void buildAttributeModifiers() {
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-				MELEE_DAMAGE - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-				MELEE_SPEED - 4, AttributeModifier.Operation.ADDITION));
-		this.AttributeModifiers = builder.build();
+		ItemAttributeModifiers.Builder defaultBuilder = ItemAttributeModifiers.builder();
+		AttributeModifier attackDamage = new AttributeModifier(Item.BASE_ATTACK_DAMAGE_ID, MELEE_DAMAGE - 1, AttributeModifier.Operation.ADD_VALUE);
+		AttributeModifier attackSpeed = new AttributeModifier(Item.BASE_ATTACK_SPEED_ID, MELEE_SPEED - 4, AttributeModifier.Operation.ADD_VALUE);
+		defaultBuilder.add(Attributes.ATTACK_DAMAGE, attackDamage, EquipmentSlotGroup.MAINHAND);
+		defaultBuilder.add(Attributes.ATTACK_SPEED, attackSpeed, EquipmentSlotGroup.MAINHAND);
+		this.DefaultAttributeModifiers = defaultBuilder.build();
 	}
 
 	public void updateAttributesFromConfig(SpearProperties properties) {
@@ -253,20 +270,17 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 	//Tooltips
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level,
+	public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context,
 	                            @NotNull List<Component> tooltip,
 	                            @NotNull TooltipFlag isAdvanced) {
-		if (level == null || !level.isClientSide()) {
-			super.appendHoverText(stack, level, tooltip, isAdvanced);
-			return;
-		}
 
-		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
-		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
+		super.appendHoverText(stack, context, tooltip, isAdvanced);
+		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, null));
+		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, null));
 
-		int sharpnessLevel = stack.getEnchantmentLevel(SHARPNESS);
+		int sharpnessLevel = getEnchantmentLevel(stack, SHARPNESS);
 		double multiplier = 1 + ModCommonConfigs.SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE.get() *
-				stack.getEnchantmentLevel(POWER_ARROWS);
+				getEnchantmentLevel(stack, POWER);
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_ranged_damage",
 						TooltipHelper.convertToEmbeddedElement(getProjectileBaseDamage(stack) * multiplier +
 								(sharpnessLevel > 0 ? 0.5 * sharpnessLevel + 0.5 : 0)))
@@ -277,8 +291,6 @@ public class BaseSpearItem extends TridentItem implements Vanishable, IDoubleLin
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_spear_charge_time",
 						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(MAX_CHARGE_TICKS)))
 				.withStyle(ChatFormatting.DARK_AQUA));
-
-		super.appendHoverText(stack, level, tooltip, isAdvanced);
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {

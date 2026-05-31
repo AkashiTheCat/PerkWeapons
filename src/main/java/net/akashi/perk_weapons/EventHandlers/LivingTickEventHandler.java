@@ -5,15 +5,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Wolf;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class LivingTickEventHandler {
 	@SubscribeEvent
-	public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-		LivingEntity entity = event.getEntity();
+	public static void onLivingTick(EntityTickEvent.Post event) {
+		if (!(event.getEntity() instanceof LivingEntity entity)) {
+			return;
+		}
 
 		if (entity.getType() != EntityType.WOLF || entity.level().isClientSide)
 			return;

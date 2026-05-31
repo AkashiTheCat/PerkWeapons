@@ -1,14 +1,14 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class HouYiProperties extends BowProperties {
-	public ForgeConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER;
-	public ForgeConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_PER_METER;
-	public ForgeConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_MAX;
-	public ForgeConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_MIN;
+	public ModConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER;
+	public ModConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_PER_METER;
+	public ModConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_MAX;
+	public ModConfigSpec.DoubleValue STAR_SHOOTER_DAMAGE_MODIFIER_MIN;
 
-	public HouYiProperties(ForgeConfigSpec.Builder builder, String name,
+	public HouYiProperties(ModConfigSpec.Builder builder, String name,
 	                       int defaultDrawTime, double defaultDamage,
 	                       double defaultVelocity, double defaultInaccuracy,
 	                       double defaultSpeedModifier, double defaultZoomFactor,

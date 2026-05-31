@@ -9,18 +9,20 @@ import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpectralArrowItem;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.*;
 
-import static net.minecraft.world.item.enchantment.Enchantments.PUNCH_ARROWS;
+import static net.minecraft.world.item.enchantment.Enchantments.PUNCH;
 
 public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	public static final String TAG_LAST_PERK_LEVEL_CHANGE_TIME = "last_perk_change";
@@ -30,7 +32,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 
 	public ForestKeeperItem(Properties properties) {
 		super(properties);
-		RemoveGeneralEnchant(PUNCH_ARROWS);
+		RemoveGeneralEnchant(PUNCH);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
@@ -39,7 +41,7 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	                        float inaccuracy, float speedModifier, float zoomFactor,
 	                        boolean onlyMainHand, Properties properties) {
 		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
-		RemoveGeneralEnchant(PUNCH_ARROWS);
+		RemoveGeneralEnchant(PUNCH);
 		if (FMLEnvironment.dist.isClient())
 			ClientHelper.registerPerkItemPropertyOverrides(this);
 	}
@@ -74,12 +76,11 @@ public class ForestKeeperItem extends BaseBowItem implements IPerkItem {
 	}
 
 	public void setLastPerkChangeTime(ItemStack stack, long time) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putLong(TAG_LAST_PERK_LEVEL_CHANGE_TIME, time);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putLong(TAG_LAST_PERK_LEVEL_CHANGE_TIME, time));
 	}
 
 	public long getLastPerkChangeTime(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_LAST_PERK_LEVEL_CHANGE_TIME) ? tag.getLong(TAG_LAST_PERK_LEVEL_CHANGE_TIME) : 0;
 	}
 

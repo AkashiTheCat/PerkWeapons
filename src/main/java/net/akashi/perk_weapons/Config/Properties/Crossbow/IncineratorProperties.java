@@ -1,13 +1,13 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class IncineratorProperties extends CrossbowProperties {
-	public ForgeConfigSpec.IntValue BLAZE_AMMO_CAPACITY;
-	public ForgeConfigSpec.IntValue BLAZE_RELOAD_INCREMENT;
-	public ForgeConfigSpec.IntValue FIRE_ARROW_KNOCKBACK_BONUS;
+	public ModConfigSpec.IntValue BLAZE_AMMO_CAPACITY;
+	public ModConfigSpec.IntValue BLAZE_RELOAD_INCREMENT;
+	public ModConfigSpec.IntValue FIRE_ARROW_KNOCKBACK_BONUS;
 
-	public IncineratorProperties(ForgeConfigSpec.Builder builder, String name,
+	public IncineratorProperties(ModConfigSpec.Builder builder, String name,
 	                             int defaultChargeTime, double defaultDamage,
 	                             double defaultVelocity, double defaultInaccuracy,
 	                             int defaultAmmoCapacity, int defaultFireInterval,

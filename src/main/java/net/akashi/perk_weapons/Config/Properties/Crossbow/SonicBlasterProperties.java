@@ -1,16 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class SonicBlasterProperties extends CrossbowProperties {
-	public ForgeConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
-	public ForgeConfigSpec.IntValue MAX_RANGE;
-	public ForgeConfigSpec.DoubleValue DAMAGE_RADIUS;
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
-	public ForgeConfigSpec.BooleanValue ENABLE_KNOCKBACK;
-	public ForgeConfigSpec.DoubleValue KNOCKBACK_FORCE;
+	public ModConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
+	public ModConfigSpec.IntValue MAX_RANGE;
+	public ModConfigSpec.DoubleValue DAMAGE_RADIUS;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.BooleanValue ENABLE_KNOCKBACK;
+	public ModConfigSpec.DoubleValue KNOCKBACK_FORCE;
 
-	public SonicBlasterProperties(ForgeConfigSpec.Builder builder, String name,
+	public SonicBlasterProperties(ModConfigSpec.Builder builder, String name,
 	                              int defaultChargeTime, double defaultDamage,
 	                              double defaultVelocity, double defaultInaccuracy,
 	                              int defaultAmmoCapacity, int defaultFireInterval,
@@ -39,7 +39,7 @@ public class SonicBlasterProperties extends CrossbowProperties {
 	}
 
 	@Override
-	public void topComment(ForgeConfigSpec.Builder builder, String name) {
+	public void topComment(ModConfigSpec.Builder builder, String name) {
 		builder.comment("Velocity And Inaccuracy Has No Effect On " + name + " Since It Doesn't Fire Projectiles");
 	}
 }

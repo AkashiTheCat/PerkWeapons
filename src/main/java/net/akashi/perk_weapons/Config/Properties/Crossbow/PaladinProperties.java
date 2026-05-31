@@ -1,18 +1,18 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class PaladinProperties extends CrossbowProperties {
-	public ForgeConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
-	public ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE;
-	public ForgeConfigSpec.DoubleValue DAMAGE_RESISTANCE;
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL_BONUS;
-	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
-	public ForgeConfigSpec.DoubleValue RELOAD_REDUCTION_PER_LEVEL;
-	public ForgeConfigSpec.DoubleValue DAMAGE_RESISTANCE_PER_LEVEL;
-	public ForgeConfigSpec.IntValue PERK_CLEAR_TIME_WITHOUT_HIT;
+	public ModConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
+	public ModConfigSpec.DoubleValue MAGIC_RESISTANCE;
+	public ModConfigSpec.DoubleValue DAMAGE_RESISTANCE;
+	public ModConfigSpec.IntValue PIERCE_LEVEL_BONUS;
+	public ModConfigSpec.IntValue MAX_PERK_LEVEL;
+	public ModConfigSpec.DoubleValue RELOAD_REDUCTION_PER_LEVEL;
+	public ModConfigSpec.DoubleValue DAMAGE_RESISTANCE_PER_LEVEL;
+	public ModConfigSpec.IntValue PERK_CLEAR_TIME_WITHOUT_HIT;
 
-	public PaladinProperties(ForgeConfigSpec.Builder builder, String name,
+	public PaladinProperties(ModConfigSpec.Builder builder, String name,
 	                         int defaultChargeTime, double defaultDamage,
 	                         double defaultVelocity, double defaultInaccuracy,
 	                         int defaultAmmoCapacity, int defaultFireInterval,

@@ -66,7 +66,7 @@ public class FrostHunterItem extends BaseBowItem implements ICoolDownItem {
 				for (int i = 0; i < HOUND_COUNT; i++) {
 					Wolf hound = EntityType.WOLF.create(pLevel);
 					if (hound != null) {
-						hound.setTame(true);
+						hound.setTame(true, true);
 						hound.setOwnerUUID(pPlayer.getUUID());
 						hound.setCustomName(Component.translatable("entity." + PerkWeapons.MODID + ".hound"));
 

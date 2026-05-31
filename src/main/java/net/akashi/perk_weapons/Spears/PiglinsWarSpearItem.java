@@ -1,16 +1,18 @@
 package net.akashi.perk_weapons.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Spear.PiglinsWarSpearProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Util.TooltipHelper;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,7 +26,7 @@ import java.util.List;
 import static net.minecraft.world.item.enchantment.Enchantments.FIRE_ASPECT;
 
 public class PiglinsWarSpearItem extends BaseSpearItem {
-	public static List<ImmutableMultimap<Attribute, AttributeModifier>> MODIFIERS = new ArrayList<>();
+	public static List<ItemAttributeModifiers> MODIFIERS = new ArrayList<>();
 	public static String TAG_ARMOR_COUNT = "armor_count";
 	public static float DAMAGE_RATIO_BONUS = 0.1f;
 	public static float SPEED_RATIO_BONUS = 0.1f;
@@ -54,11 +56,11 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	protected void buildAttributeModifiers() {
 		super.buildAttributeModifiers();
 		for (int i = 0; i < 5; i++) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
-					MELEE_DAMAGE * (1 + i * DAMAGE_RATIO_BONUS) - 1, AttributeModifier.Operation.ADDITION));
-			builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
-					MELEE_SPEED * (1 + i * DAMAGE_RATIO_BONUS) - 4, AttributeModifier.Operation.ADDITION));
+			ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+			builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "piglins_war_spear_attack_damage_" + i),
+					MELEE_DAMAGE * (1 + i * DAMAGE_RATIO_BONUS) - 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+			builder.add(Attributes.ATTACK_SPEED, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "piglins_war_spear_attack_speed_" + i),
+					MELEE_SPEED * (1 + i * DAMAGE_RATIO_BONUS) - 4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
 			MODIFIERS.add(builder.build());
 		}
 	}
@@ -74,21 +76,17 @@ public class PiglinsWarSpearItem extends BaseSpearItem {
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		if (slot == EquipmentSlot.MAINHAND) {
-			return MODIFIERS.get(getArmorCount(stack));
-		}
-		return super.getAttributeModifiers(slot, stack);
+	public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+		return MODIFIERS.get(getArmorCount(stack));
 	}
 
 	public static int getArmorCount(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		return tag.contains(TAG_ARMOR_COUNT) ? tag.getInt(TAG_ARMOR_COUNT) : 0;
 	}
 
 	public static void setArmorCount(ItemStack stack, int count) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putInt(TAG_ARMOR_COUNT, count);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putInt(TAG_ARMOR_COUNT, count));
 	}
 
 	public static int getPlayerArmorCount(Player player) {

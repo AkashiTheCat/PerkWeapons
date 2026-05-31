@@ -1,11 +1,11 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class TaintedFortuneProperties extends CrossbowProperties {
-	public ForgeConfigSpec.DoubleValue KNOCKBACK_MODIFIER;
+	public ModConfigSpec.DoubleValue KNOCKBACK_MODIFIER;
 
-	public TaintedFortuneProperties(ForgeConfigSpec.Builder builder, String name,
+	public TaintedFortuneProperties(ModConfigSpec.Builder builder, String name,
 	                                int defaultChargeTime, double defaultDamage,
 	                                double defaultVelocity, double defaultInaccuracy,
 	                                int defaultAmmoCapacity, int defaultFireInterval,

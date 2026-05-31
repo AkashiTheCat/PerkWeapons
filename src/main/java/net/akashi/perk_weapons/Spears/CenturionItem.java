@@ -51,9 +51,8 @@ public class CenturionItem extends BaseSpearItem {
 		super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
 		if (pIsSelected && !pLevel.isClientSide()) {
 			boolean flag = pLevel.getGameTime() % 60 == 0;
-			if (!flag && pEntity.isAlive()) {
-				LivingEntity le = (LivingEntity) pEntity;
-				flag = !le.hasEffect(ModEffects.PHALANX.get());
+			if (!flag && pEntity instanceof LivingEntity le && pEntity.isAlive()) {
+				flag = !le.hasEffect(ModEffects.PHALANX);
 			}
 			if (!flag) {
 				return;
@@ -65,9 +64,9 @@ public class CenturionItem extends BaseSpearItem {
 					e -> e.distanceToSqr(pEntity) <= rangeSqr);
 			List<TamableAnimal> tamedAnimals = pLevel.getEntitiesOfClass(TamableAnimal.class, searchBB,
 					e -> e.isTame() && e.distanceToSqr(pEntity) <= rangeSqr);
-			players.forEach(player -> player.addEffect(new MobEffectInstance(ModEffects.PHALANX.get(),
+			players.forEach(player -> player.addEffect(new MobEffectInstance(ModEffects.PHALANX,
 					80, PHALANX_EFFECT_LEVEL - 1)));
-			tamedAnimals.forEach(animal -> animal.addEffect(new MobEffectInstance(ModEffects.PHALANX.get(),
+			tamedAnimals.forEach(animal -> animal.addEffect(new MobEffectInstance(ModEffects.PHALANX,
 					80, PHALANX_EFFECT_LEVEL - 1)));
 		}
 	}

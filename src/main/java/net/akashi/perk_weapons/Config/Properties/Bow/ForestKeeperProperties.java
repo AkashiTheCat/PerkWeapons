@@ -1,17 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ForestKeeperProperties extends BowProperties {
-	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
-	public ForgeConfigSpec.IntValue PERK_DROP_INTERVAL;
-	public ForgeConfigSpec.DoubleValue PERK_DAMAGE_BUFF;
+	public ModConfigSpec.IntValue MAX_PERK_LEVEL;
+	public ModConfigSpec.IntValue PERK_DROP_INTERVAL;
+	public ModConfigSpec.DoubleValue PERK_DAMAGE_BUFF;
 
-	public ForestKeeperProperties(ForgeConfigSpec.Builder builder, String name,
+	public ForestKeeperProperties(ModConfigSpec.Builder builder, String name,
 	                              int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                              double defaultInaccuracy, int defaultMaxPerkLevel,
-	                              int defaultPerkDropInterval, double defaultPerkDamageBuff,
-	                              boolean defaultSlowdownRemovalEnabled, double defaultSpeedModifier,
+	                              int defaultPerkDropInterval, double defaultPerkDamageBuff, double defaultSpeedModifier,
 	                              double defaultZoomFactor, boolean onlyMainHand) {
 		super(builder, name, defaultDrawTime, defaultDamage, defaultVelocity,
 				defaultInaccuracy, defaultSpeedModifier, defaultZoomFactor, onlyMainHand, false);

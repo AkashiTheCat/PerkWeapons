@@ -215,6 +215,8 @@
     "entity.perk_weapons.thrown_nether_guide": "Nether Guide",
     "entity.perk_weapons.thrown_centurion": "Centurion",
 
+    "tooltip.perk_weapons.repairer": "Use to repair any repairable item in anvil",
+
     "entity.perk_weapons.arrow": "Arrow",
     "entity.perk_weapons.purgatory_arrow": "Purgatory Arrow",
     "entity.perk_weapons.explosive_arrow": "Explosive Arrow",

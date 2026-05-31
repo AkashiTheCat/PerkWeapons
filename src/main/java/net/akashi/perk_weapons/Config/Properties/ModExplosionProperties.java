@@ -1,16 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ModExplosionProperties {
-	public ForgeConfigSpec.DoubleValue INNER_R;
-	public ForgeConfigSpec.DoubleValue OUTER_R;
-	public ForgeConfigSpec.DoubleValue INNER_DMG;
-	public ForgeConfigSpec.DoubleValue OUTER_DMG;
-	public ForgeConfigSpec.DoubleValue KNOCKBACK;
-	public ForgeConfigSpec.BooleanValue IGNORE_WALL;
+	public ModConfigSpec.DoubleValue INNER_R;
+	public ModConfigSpec.DoubleValue OUTER_R;
+	public ModConfigSpec.DoubleValue INNER_DMG;
+	public ModConfigSpec.DoubleValue OUTER_DMG;
+	public ModConfigSpec.DoubleValue KNOCKBACK;
+	public ModConfigSpec.BooleanValue IGNORE_WALL;
 
-	public ModExplosionProperties(ForgeConfigSpec.Builder builder, double innerR, double outerR,
+	public ModExplosionProperties(ModConfigSpec.Builder builder, double innerR, double outerR,
 	                              double innerDmg, double outerDmg, double knockback,
 	                              boolean ignoreWall) {
 		INNER_R = builder.comment("Full Damage Radius Of The Explosion")

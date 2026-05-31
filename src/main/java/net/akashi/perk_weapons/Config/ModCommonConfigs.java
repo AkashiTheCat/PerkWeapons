@@ -11,31 +11,29 @@ import net.akashi.perk_weapons.Crossbows.BaseCrossbowItem;
 import net.akashi.perk_weapons.Effects.InternalExplosionEffect;
 import net.akashi.perk_weapons.Effects.PhalanxEffect;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PerkGainingArrow;
-import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Registry.ModItems;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
-import net.minecraftforge.common.ForgeConfigSpec;
 
 import static net.minecraft.world.item.ProjectileWeaponItem.ARROW_ONLY;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
 public class ModCommonConfigs {
-	public static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
-	public static final ForgeConfigSpec SPEC;
+	public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+	public static final ModConfigSpec SPEC;
 
 	//General Configs
-	public static ForgeConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
-	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
-	public static ForgeConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
-	public static ForgeConfigSpec.BooleanValue HOMING_WEAPON_ONLY_TRACK_MONSTERS;
-	public static ForgeConfigSpec.IntValue PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW;
-	public static ForgeConfigSpec.DoubleValue SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE;
-	public static ForgeConfigSpec.IntValue REPAIRER_LEVEL_COST;
-	public static ForgeConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
+	public static ModConfigSpec.BooleanValue BOW_ACCEPT_ALL_ARROW;
+	public static ModConfigSpec.BooleanValue CROSSBOW_ACCEPT_ALL_ARROW;
+	public static ModConfigSpec.BooleanValue CROSSBOW_ACCEPT_FIREWORK;
+	public static ModConfigSpec.BooleanValue HOMING_WEAPON_ONLY_TRACK_MONSTERS;
+	public static ModConfigSpec.IntValue PERK_ARROW_MAX_LEVEL_GAIN_PER_ARROW;
+	public static ModConfigSpec.DoubleValue SPEAR_POWER_ENCHANT_BUFF_PERCENTAGE;
+	public static ModConfigSpec.IntValue REPAIRER_LEVEL_COST;
+	public static ModConfigSpec.DoubleValue REPAIRER_REPAIR_PERCENTAGE;
 
 	//Enchantment Configs
 	public static EnchantmentProperties BLAZE_ENCHANTMENT_PROPERTIES;
@@ -107,22 +105,22 @@ public class ModCommonConfigs {
 		BLAZE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Blaze",
 				true, true,
 				true, false,
-				true, Enchantment.Rarity.RARE,
+				true, "RARE",
 				true);
 		MELT_DOWN_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Melt Down",
 				true, true,
 				true, false,
-				true, Enchantment.Rarity.RARE,
+				true, "RARE",
 				true);
 		REGICIDE_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Regicide",
 				true, true,
 				true, false,
-				true, Enchantment.Rarity.RARE,
+				true, "RARE",
 				true);
 		STAR_SHOOTER_ENCHANTMENT_PROPERTIES = new EnchantmentProperties(BUILDER, "Star Shooter",
 				true, true,
 				true, false,
-				true, Enchantment.Rarity.RARE,
+				true, "RARE",
 				true);
 		BUILDER.pop();
 
@@ -232,8 +230,8 @@ public class ModCommonConfigs {
 				12, 8,
 				2.25, 1.0,
 				5, 40,
-				0.1, true,
-				0.0, 0.0, false);
+				0.1, 0.0,
+				0.0, false);
 		ELFS_HARP_PROPERTIES = new ElfsHarpProperties(BUILDER, "Elf's Harp",
 				20, 10.0,
 				3.0, 0.8,
@@ -351,10 +349,6 @@ public class ModCommonConfigs {
 		InternalExplosionEffect.updateParamsFromConfig(INTERNAL_EXP_PROPERTIES);
 		PhalanxEffect.updateParamsFromConfig(PHALANX_EFFECT_PROPERTIES);
 
-		ModEnchantments.BLAZE.get().updateFromConfig(BLAZE_ENCHANTMENT_PROPERTIES);
-		ModEnchantments.MELT_DOWN_ARROW.get().updateFromConfig(MELT_DOWN_ENCHANTMENT_PROPERTIES);
-		ModEnchantments.REGICIDE.get().updateFromConfig(REGICIDE_ENCHANTMENT_PROPERTIES);
-		ModEnchantments.STAR_SHOOTER.get().updateFromConfig(STAR_SHOOTER_ENCHANTMENT_PROPERTIES);
 
 		ModItems.IRON_SPEAR.get().updateAttributesFromConfig(IRON_SPEAR_PROPERTIES);
 		ModItems.GOLDEN_SPEAR.get().updateAttributesFromConfig(GOLDEN_SPEAR_PROPERTIES);

@@ -1,7 +1,5 @@
 package net.akashi.perk_weapons.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Spear.NetherGuideProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
@@ -12,31 +10,28 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.IPerkItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import org.jetbrains.annotations.NotNull;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
-	protected static final UUID DAMAGE_RESISTANCE_UUID = UUID.fromString("c9352abe-0478-3cdc-f44a-e5bba50e6ff5");
-	protected static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("46132106-5eea-5134-cecf-72294309fae9");
-	private Multimap<Attribute, AttributeModifier> WarpedModeAttributeModifiers;
+	private ItemAttributeModifiers WarpedModeAttributeModifiers = ItemAttributeModifiers.EMPTY;
 
 	private static final byte WARPED_MODE_PERK_LEVEL = 0;
 	private static float WARPED_MELEE_DAMAGE_BONUS_RATIO = 0.3F;
@@ -74,20 +69,16 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 	@Override
 	protected void buildAttributeModifiers() {
 		super.buildAttributeModifiers();
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		if (AttributeModifiers != null) {
-			for (Map.Entry<Attribute, AttributeModifier> entry : AttributeModifiers.entries()) {
-				if (!entry.getKey().equals(Attributes.ATTACK_DAMAGE)) {
-					builder.put(entry.getKey(), entry.getValue());
-				}
+		ItemAttributeModifiers baseAttrs = this.DefaultAttributeModifiers;
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+		for (ItemAttributeModifiers.Entry entry : baseAttrs.modifiers()) {
+			if (!entry.attribute().equals(Attributes.ATTACK_DAMAGE)) {
+				builder.add(entry.attribute(), entry.modifier(), entry.slot());
 			}
 		}
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool Modifier",
-				MELEE_DAMAGE * (1 + WARPED_MELEE_DAMAGE_BONUS_RATIO) - 1, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID, "Movement Speed",
-				WARPED_MOVEMENT_SPEED_BONUS_RATIO, AttributeModifier.Operation.MULTIPLY_BASE));
-		builder.put(ModAttributes.DAMAGE_RESISTANCE.get(), new AttributeModifier(DAMAGE_RESISTANCE_UUID, "Damage Resistance",
-				WARPED_DAMAGE_RESISTANCE, AttributeModifier.Operation.ADDITION));
+		builder.add(Attributes.ATTACK_DAMAGE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "nether_guide_attack_damage"), MELEE_DAMAGE * (1 + WARPED_MELEE_DAMAGE_BONUS_RATIO) - 1, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
+		builder.add(Attributes.MOVEMENT_SPEED, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "nether_guide_movement_speed"), WARPED_MOVEMENT_SPEED_BONUS_RATIO, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), EquipmentSlotGroup.MAINHAND);
+		builder.add(ModAttributes.DAMAGE_RESISTANCE, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "nether_guide_damage_resistance"), WARPED_DAMAGE_RESISTANCE, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND);
 		WarpedModeAttributeModifiers = builder.build();
 	}
 
@@ -139,9 +130,9 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		return slot == EquipmentSlot.MAINHAND && getPerkLevel(null, stack) == WARPED_MODE_PERK_LEVEL ?
-				WarpedModeAttributeModifiers : super.getAttributeModifiers(slot, stack);
+	public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+		return getPerkLevel(null, stack) == WARPED_MODE_PERK_LEVEL ?
+				WarpedModeAttributeModifiers : this.DefaultAttributeModifiers;
 	}
 
 	@Override
@@ -185,12 +176,12 @@ public class NetherGuideItem extends BaseSpearItem implements IPerkItem {
 		if (mode == WARPED_MODE_PERK_LEVEL) {
 			list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.nether_guide_crimson_mode_perk_1")));
 			list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-					MobEffects.WEAKNESS.getDisplayName(),
+					MobEffects.WEAKNESS.value().getDisplayName(),
 					TooltipHelper.getRomanNumeral(CRIMSON_WEAKNESS_LEVEL_ON_TARGET_WHEN_HIT),
 					TooltipHelper.convertTicksToSeconds(CRIMSON_WEAKNESS_DURATION_ON_TARGET_WHEN_HIT))));
 			list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.nether_guide_crimson_mode_perk_2")));
 			list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.effect_format",
-					MobEffects.REGENERATION.getDisplayName(),
+					MobEffects.REGENERATION.value().getDisplayName(),
 					TooltipHelper.getRomanNumeral(CRIMSON_REGENERATION_LEVEL_ON_SELF_WHEN_HIT),
 					TooltipHelper.convertTicksToSeconds(CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT))));
 		} else {

@@ -1,16 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class QueenBeeProperties extends CrossbowProperties {
-	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
-	public ForgeConfigSpec.IntValue POISON_LEVEL;
-	public ForgeConfigSpec.IntValue POISON_DURATION;
-	public ForgeConfigSpec.IntValue ROYAL_JELLY_LEVEL;
-	public ForgeConfigSpec.IntValue ROYAL_JELLY_DURATION;
-	public ForgeConfigSpec.IntValue COOLDOWN_CROUCH_USE;
+	public ModConfigSpec.IntValue MAX_PERK_LEVEL;
+	public ModConfigSpec.IntValue POISON_LEVEL;
+	public ModConfigSpec.IntValue POISON_DURATION;
+	public ModConfigSpec.IntValue ROYAL_JELLY_LEVEL;
+	public ModConfigSpec.IntValue ROYAL_JELLY_DURATION;
+	public ModConfigSpec.IntValue COOLDOWN_CROUCH_USE;
 
-	public QueenBeeProperties(ForgeConfigSpec.Builder builder, String name,
+	public QueenBeeProperties(ModConfigSpec.Builder builder, String name,
 	                          int defaultChargeTime, double defaultDamage,
 	                          double defaultVelocity, double defaultInaccuracy,
 	                          int defaultAmmoCapacity, int defaultFireInterval,

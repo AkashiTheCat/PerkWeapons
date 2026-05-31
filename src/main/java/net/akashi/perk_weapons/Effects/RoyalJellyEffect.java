@@ -12,29 +12,30 @@ public class RoyalJellyEffect extends MobEffect {
 		super(MobEffectCategory.HARMFUL, 0xf9c344);
 	}
 
-	@Override
 	public boolean isBeneficial() {
 		return true;
 	}
 
 	@Override
-	public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+	public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
 		return pDuration % 10 == 0;
 	}
 
 	@Override
-	public void applyEffectTick(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
+	public boolean applyEffectTick(@NotNull LivingEntity pLivingEntity, int pAmplifier) {
 		pLivingEntity.heal(1 + 0.5F * pAmplifier);
 
 		for (MobEffectInstance effectInstance : pLivingEntity.getActiveEffects()) {
-			MobEffect effect = effectInstance.getEffect();
+			var effectHolder = effectInstance.getEffect();
+			var effect = effectHolder.value();
 			if (!effect.getCategory().equals(MobEffectCategory.HARMFUL)) {
-				pLivingEntity.removeEffect(effect);
+				pLivingEntity.removeEffect(effectHolder);
 			}
 		}
 
 		if (pLivingEntity instanceof Player p) {
 			p.getFoodData().eat((1 + pAmplifier / 2), 1F);
 		}
+		return true;
 	}
 }

@@ -1,24 +1,21 @@
 package net.akashi.perk_weapons.Crossbows;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.CrossbowProperties;
 import net.akashi.perk_weapons.Config.Properties.Crossbow.TaintedFortuneProperties;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
-
-import java.util.UUID;
+import org.jetbrains.annotations.NotNull;
 
 
 public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
-	public static final UUID KNOCKBACK_UUID = UUID.fromString("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-	public Multimap<Attribute, AttributeModifier> OffhandAttributeModifiers;
+	public ItemAttributeModifiers OffhandAttributeModifiers = ItemAttributeModifiers.EMPTY;
 	public static float KNOCKBACK_MODIFIER = 1.0f;
 
 	public TaintedFortuneItem(Properties pProperties) {
@@ -35,23 +32,23 @@ public class TaintedFortuneItem extends AutoLoadingCrossbowItem {
 	@Override
 	protected void buildAttributeModifiers() {
 		super.buildAttributeModifiers();
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> offHandMapBuilder = ImmutableMultimap.builder();
+		ItemAttributeModifiers.Builder offHandBuilder = ItemAttributeModifiers.builder();
 		if (KNOCKBACK_MODIFIER != 0.0F) {
-			offHandMapBuilder.put(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(KNOCKBACK_UUID,
-					"Tool modifier", KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADDITION));
+			offHandBuilder.add(Attributes.ATTACK_KNOCKBACK, new AttributeModifier(ResourceLocation.fromNamespaceAndPath("perk_weapons", "tainted_fortune_knockback"), KNOCKBACK_MODIFIER, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.OFFHAND);
 		}
-		this.OffhandAttributeModifiers = offHandMapBuilder.build();
+		this.OffhandAttributeModifiers = offHandBuilder.build();
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		if (slot == EquipmentSlot.MAINHAND) {
-			return this.AttributeModifiers;
+	public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+		for (ItemAttributeModifiers.Entry entry : this.DefaultAttributeModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
 		}
-		if (slot == EquipmentSlot.OFFHAND) {
-			return this.OffhandAttributeModifiers;
+		for (ItemAttributeModifiers.Entry entry : this.OffhandAttributeModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
 		}
-		return ImmutableMultimap.of();
+		return builder.build();
 	}
 
 	@Override

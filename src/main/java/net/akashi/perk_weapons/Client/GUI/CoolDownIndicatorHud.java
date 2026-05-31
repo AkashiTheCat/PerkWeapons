@@ -11,14 +11,14 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.client.gui.LayeredDraw;
 
 @OnlyIn(Dist.CLIENT)
 public class CoolDownIndicatorHud {
-	public static final ResourceLocation HUD_TEXTURE = new ResourceLocation(PerkWeapons.MODID, "textures/gui/hud.png");
-	public static final IGuiOverlay INDICATOR_BAR = ((gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
+	public static final ResourceLocation HUD_TEXTURE = ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "textures/gui/hud.png");
+	public static final LayeredDraw.Layer INDICATOR_BAR = (guiGraphics, partialTick) -> {
 		//Check Indicators Enabled
 		if (!ModClientConfigs.ENABLE_COOLDOWN_INDICATOR.get()) {
 			return;
@@ -28,6 +28,8 @@ public class CoolDownIndicatorHud {
 		Player player = mc.player;
 		if (player == null)
 			return;
+		int screenWidth = mc.getWindow().getGuiScaledWidth();
+		int screenHeight = mc.getWindow().getGuiScaledHeight();
 
 		ItemStack stack = ItemStack.EMPTY;
 		if (player.getMainHandItem().getItem() instanceof ICoolDownItem) {
@@ -36,8 +38,8 @@ public class CoolDownIndicatorHud {
 			stack = player.getOffhandItem();
 		}
 
-		if (stack != ItemStack.EMPTY) {
-			PoseStack poseStack = RenderSystem.getModelViewStack();
+		if (!stack.isEmpty()) {
+			PoseStack poseStack = guiGraphics.pose();
 			poseStack.pushPose();
 
 			ICoolDownItem coolDownItem = (ICoolDownItem) stack.getItem();
@@ -58,7 +60,8 @@ public class CoolDownIndicatorHud {
 			guiGraphics.blit(HUD_TEXTURE, startX, startY, 0, 7, 2, 21);
 			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.8F);
 			guiGraphics.blit(HUD_TEXTURE, startX, startY + 21 - drawHeight, 3, 7, 2, drawHeight);
+			RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 			poseStack.popPose();
 		}
-	});
+	};
 }

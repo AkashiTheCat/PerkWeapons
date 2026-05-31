@@ -1,8 +1,9 @@
 package net.akashi.perk_weapons.Bows;
 
-import com.google.common.collect.ImmutableMultimap;
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.PurgatoryProperties;
+import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.ExplosiveArrow;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.PurgatoryArrow;
 import net.akashi.perk_weapons.Registry.ModEffects;
@@ -11,13 +12,15 @@ import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ArrowItem;
@@ -27,15 +30,12 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.UUID;
-import java.util.function.Consumer;
 
-import static net.minecraft.world.item.enchantment.Enchantments.FLAMING_ARROWS;
+import static net.minecraft.world.item.enchantment.Enchantments.FLAME;
 import static net.minecraft.world.item.enchantment.Enchantments.UNBREAKING;
 
 public class PurgatoryItem extends BaseBowItem {
 	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.BLAZE_SHOOT);
-	public static final UUID KNOCKBACK_RESISTANCE_UUID = UUID.fromString("8BF105EE-247E-40FD-ABDD-390525C7C7FF");
 	public static double KNOCKBACK_RESISTANCE = 10;
 	public static byte PIERCE_LEVEL = 5;
 	public static int FUSE_TIME = 30;
@@ -51,7 +51,7 @@ public class PurgatoryItem extends BaseBowItem {
 	public PurgatoryItem(Properties properties) {
 		super(properties);
 		buildAttributeModifierMap();
-		RemoveGeneralEnchant(FLAMING_ARROWS);
+		RemoveGeneralEnchant(FLAME);
 		RemoveGeneralEnchant(UNBREAKING);
 	}
 
@@ -61,24 +61,20 @@ public class PurgatoryItem extends BaseBowItem {
 		super(drawTime, projectileDamage, velocity, inaccuracy, speedModifier, zoomFactor, onlyMainHand, properties);
 		KNOCKBACK_RESISTANCE = knockBackResistance;
 		buildAttributeModifierMap();
-		RemoveGeneralEnchant(FLAMING_ARROWS);
+		RemoveGeneralEnchant(FLAME);
 		RemoveGeneralEnchant(UNBREAKING);
 	}
 
 	private void buildAttributeModifierMap() {
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		if (AttributeModifiers != null)
-			builder.putAll(AttributeModifiers);
-		builder.put(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(
-				KNOCKBACK_RESISTANCE_UUID, "Knockback Resistance", KNOCKBACK_RESISTANCE,
-				AttributeModifier.Operation.ADDITION
-		));
-		AttributeModifiers = builder.build();
-	}
-
-	@Override
-	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken) {
-		return 0;
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+		for (ItemAttributeModifiers.Entry entry : this.DefaultAttributeModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
+		}
+		builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(
+				ResourceLocation.fromNamespaceAndPath("perk_weapons", "purgatory_knockback_resistance"), KNOCKBACK_RESISTANCE,
+				AttributeModifier.Operation.ADD_VALUE
+		), EquipmentSlotGroup.MAINHAND);
+		this.DefaultAttributeModifiers = builder.build();
 	}
 
 	@Override
@@ -93,7 +89,7 @@ public class PurgatoryItem extends BaseBowItem {
 
 	@Override
 	public AbstractArrow createArrow(Level level, ArrowItem arrowItem, ItemStack bowStack, ItemStack arrowStack, Player player) {
-		if (bowStack.getEnchantmentLevel(ModEnchantments.MELT_DOWN_ARROW.get()) != 0) {
+		if (EnchantmentUtil.getLevel(bowStack, ModEnchantments.MELT_DOWN_ARROW_KEY) != 0) {
 			ExplosiveArrow arrow = new ExplosiveArrow(ModEntities.EXPLOSIVE_ARROW.get(), level, player, FUSE_TIME);
 			if (arrowItem instanceof SpectralArrowItem) {
 				arrow.setSpectralArrow(true);
@@ -116,7 +112,7 @@ public class PurgatoryItem extends BaseBowItem {
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW.get());
+		AddGeneralEnchant(ModEnchantments.MELT_DOWN_ARROW_KEY);
 		if (properties instanceof PurgatoryProperties pProperties) {
 			KNOCKBACK_RESISTANCE = pProperties.KNOCKBACK_RESISTANCE.get();
 			FUSE_TIME = pProperties.FUSE_TIME.get();
@@ -136,7 +132,9 @@ public class PurgatoryItem extends BaseBowItem {
 
 	public AbstractArrow setArrowAttributes(AbstractArrow arrow) {
 		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
-		arrow.setPierceLevel(PIERCE_LEVEL);
+		if (arrow instanceof BaseArrow baseArrow) {
+			baseArrow.setPierceLevel(PIERCE_LEVEL);
+		}
 		return arrow;
 	}
 
@@ -153,7 +151,7 @@ public class PurgatoryItem extends BaseBowItem {
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_3",
 				TooltipHelper.convertToEmbeddedElement(PIERCE_LEVEL))));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
-				TooltipHelper.convertToEmbeddedElement(ModEnchantments.MELT_DOWN_ARROW.get(), 1))));
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.MELT_DOWN_ARROW_KEY, 1))));
 		list.add(TooltipHelper.setDebuffStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_4")));
 		list.add(TooltipHelper.setSubPerkStyle(Component.translatable("tooltip.perk_weapons.purgatory_perk_5",
 				TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(FUSE_TIME)))));

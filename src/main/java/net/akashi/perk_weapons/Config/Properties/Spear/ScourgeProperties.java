@@ -1,20 +1,20 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ScourgeProperties extends SpearProperties {
-	public ForgeConfigSpec.IntValue HIT_WITHER_DURATION;
-	public ForgeConfigSpec.IntValue HIT_WITHER_LEVEL;
-	public ForgeConfigSpec.IntValue HIT_SLOWNESS_DURATION;
-	public ForgeConfigSpec.IntValue HIT_SLOWNESS_LEVEL;
-	public ForgeConfigSpec.IntValue ABILITY_BUFF_DURATION;
-	public ForgeConfigSpec.DoubleValue ABILITY_ATTACK_SPEED_BONUS;
-	public ForgeConfigSpec.IntValue ABILITY_SHOTS_INTERVAL;
-	public ForgeConfigSpec.IntValue ABILITY_SHOTS_COUNT;
-	public ForgeConfigSpec.IntValue ABILITY_COOLDOWN;
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.IntValue HIT_WITHER_DURATION;
+	public ModConfigSpec.IntValue HIT_WITHER_LEVEL;
+	public ModConfigSpec.IntValue HIT_SLOWNESS_DURATION;
+	public ModConfigSpec.IntValue HIT_SLOWNESS_LEVEL;
+	public ModConfigSpec.IntValue ABILITY_BUFF_DURATION;
+	public ModConfigSpec.DoubleValue ABILITY_ATTACK_SPEED_BONUS;
+	public ModConfigSpec.IntValue ABILITY_SHOTS_INTERVAL;
+	public ModConfigSpec.IntValue ABILITY_SHOTS_COUNT;
+	public ModConfigSpec.IntValue ABILITY_COOLDOWN;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
 
-	public ScourgeProperties(ForgeConfigSpec.Builder builder, String name,
+	public ScourgeProperties(ModConfigSpec.Builder builder, String name,
 	                         float defaultMeleeDamage, double defaultAttackSpeed,
 	                         float defaultRangedDamage, float defaultVelocity,
 	                         int defaultMaxChargeTime, int defaultHitWitherDuration,

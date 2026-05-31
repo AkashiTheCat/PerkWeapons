@@ -1,6 +1,5 @@
 package net.akashi.perk_weapons.Entities;
 
-import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -32,9 +31,9 @@ public class BeholderBeamEntity extends Entity {
 	}
 
 	@Override
-	protected void defineSynchedData() {
-		this.entityData.define(ID_SRC_ID, 0);
-		this.entityData.define(ID_TARGET_ID, 0);
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		builder.define(ID_SRC_ID, 0);
+		builder.define(ID_TARGET_ID, 0);
 	}
 
 	@Override

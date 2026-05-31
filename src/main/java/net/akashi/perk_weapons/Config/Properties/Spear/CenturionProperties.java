@@ -1,13 +1,13 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class CenturionProperties extends SpearProperties {
-	public ForgeConfigSpec.DoubleValue EFFECT_APPLY_RANGE;
-	public ForgeConfigSpec.IntValue PHALANX_LEVEL;
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.DoubleValue EFFECT_APPLY_RANGE;
+	public ModConfigSpec.IntValue PHALANX_LEVEL;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
 
-	public CenturionProperties(ForgeConfigSpec.Builder builder, String name,
+	public CenturionProperties(ModConfigSpec.Builder builder, String name,
 	                           float defaultMeleeDamage, double defaultAttackSpeed,
 	                           float defaultRangedDamage, float defaultVelocity,
 	                           int defaultMaxChargeTicks, double defaultEffectApplyRange,

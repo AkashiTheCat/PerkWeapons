@@ -19,22 +19,22 @@ public class InternalExplosionEffect extends MobEffect {
 		super(MobEffectCategory.HARMFUL, 0xb70000);
 	}
 
-	@Override
 	public boolean isBeneficial() {
 		return false;
 	}
 
 	@Override
-	public void applyEffectTick(@NotNull LivingEntity livingEntity, int amplifier) {
+	public boolean applyEffectTick(@NotNull LivingEntity livingEntity, int amplifier) {
 		ModExplosion.createExplosion(livingEntity.level(), null,
 				livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(),
 				EXP_INNER_R + 0.25F * amplifier, EXP_OUTER_R + 0.5F * amplifier,
 				EXP_INNER_DMG + 5 * amplifier, EXP_OUTER_DMG + 2 * amplifier,
 				EXP_KNOCKBACK + 0.2F * amplifier, EXP_IGNORE_WALL);
+		return true;
 	}
 
 	@Override
-	public boolean isDurationEffectTick(int pDuration, int pAmplifier) {
+	public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
 		return pDuration == 2;
 	}
 

@@ -22,7 +22,7 @@ public class ThrownCenturion extends ThrownSpear {
 	protected void onHitEntity(EntityHitResult pResult) {
 		Entity entity = pResult.getEntity();
 		if (entity.getType() == EntityType.PLAYER) {
-			((Player) entity).disableShield(false);
+						((Player) entity).disableShield();
 		}
 		super.onHitEntity(pResult);
 	}

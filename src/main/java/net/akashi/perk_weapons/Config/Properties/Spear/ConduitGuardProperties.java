@@ -1,16 +1,16 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ConduitGuardProperties extends SpearProperties {
-	public ForgeConfigSpec.DoubleValue HOMING_RANGE;
-	public ForgeConfigSpec.DoubleValue MAX_HOMING_ANGLE;
-	public ForgeConfigSpec.DoubleValue MAX_TURN_RATE;
-	public ForgeConfigSpec.DoubleValue HOMING_ACCELERATION;
-	public ForgeConfigSpec.DoubleValue VELOCITY_MULTIPLIER;
-	public ForgeConfigSpec.IntValue RETURN_TIME;
+	public ModConfigSpec.DoubleValue HOMING_RANGE;
+	public ModConfigSpec.DoubleValue MAX_HOMING_ANGLE;
+	public ModConfigSpec.DoubleValue MAX_TURN_RATE;
+	public ModConfigSpec.DoubleValue HOMING_ACCELERATION;
+	public ModConfigSpec.DoubleValue VELOCITY_MULTIPLIER;
+	public ModConfigSpec.IntValue RETURN_TIME;
 
-	public ConduitGuardProperties(ForgeConfigSpec.Builder builder, String name,
+	public ConduitGuardProperties(ModConfigSpec.Builder builder, String name,
 	                              float defaultMeleeDamage, double defaultAttackSpeed,
 	                              float defaultRangedDamage, float defaultVelocity,
 	                              int defaultMaxChargeTime, double defaultHomingRange,

@@ -1,13 +1,13 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class LiberatorProperties extends CrossbowProperties {
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
-	public ForgeConfigSpec.IntValue MULTISHOT_BONUS;
-	public ForgeConfigSpec.IntValue CAPACITY_REGICIDE;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.IntValue MULTISHOT_BONUS;
+	public ModConfigSpec.IntValue CAPACITY_REGICIDE;
 
-	public LiberatorProperties(ForgeConfigSpec.Builder builder, String name,
+	public LiberatorProperties(ModConfigSpec.Builder builder, String name,
 	                           int defaultChargeTime, double defaultDamage,
 	                           double defaultVelocity, double defaultInaccuracy,
 	                           int defaultAmmoCapacity, int defaultFireInterval,

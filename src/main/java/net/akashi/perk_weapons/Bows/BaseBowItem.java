@@ -1,50 +1,49 @@
 package net.akashi.perk_weapons.Bows;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.akashi.perk_weapons.Client.ClientHelper;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
-import net.akashi.perk_weapons.Network.ArrowVelocitySyncPacket;
+import net.akashi.perk_weapons.Network.ArrowVelocitySyncPayload;
 import net.akashi.perk_weapons.Registry.ModEntities;
-import net.akashi.perk_weapons.Registry.ModPackets;
 import net.akashi.perk_weapons.Registry.ModTags;
-import net.akashi.perk_weapons.Util.EnchantmentValidator;
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import net.akashi.perk_weapons.Util.IDoubleLineCrosshairItem;
 import net.akashi.perk_weapons.Util.SoundEventHolder;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.*;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.PacketDistributor;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Predicate;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
-public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCrosshairItem {
+public class BaseBowItem extends BowItem implements IDoubleLineCrosshairItem {
 	protected static final SoundEventHolder SHOOTING_SOUND = new SoundEventHolder(SoundEvents.ARROW_SHOOT, 1.0F, 1.2F);
-	protected static final UUID MOVEMENT_SPEED_UUID = UUID.fromString("DB3F25A3-255C-8F4A-B293-EA1BA59D27CE");
 	public static Predicate<ItemStack> SUPPORTED_PROJECTILE = (stack) -> stack.is(Items.ARROW);
-	protected Multimap<Attribute, AttributeModifier> AttributeModifiers;
+	protected ItemAttributeModifiers DefaultAttributeModifiers = ItemAttributeModifiers.EMPTY;
 	public float ZOOM_FACTOR = 0.1f;
 	protected boolean ONLY_ALLOW_MAINHAND = false;
 	protected float VELOCITY = 3.0F;
@@ -53,27 +52,20 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	protected float INACCURACY = 1.0f;
 	protected float SPEED_MODIFIER = 0.0f;
 
-	private final Set<Enchantment> GeneralEnchants = new HashSet<>(Set.of(
-			INFINITY_ARROWS,
-			FLAMING_ARROWS,
-			POWER_ARROWS,
-			PUNCH_ARROWS,
+	private final Set<ResourceKey<Enchantment>> GeneralEnchants = new HashSet<>(Set.of(
+			INFINITY,
+			FLAME,
+			POWER,
+			PUNCH,
 			MENDING,
 			UNBREAKING,
-			MOB_LOOTING
-	));
-	private final Set<Enchantment> ConflictEnchants = new HashSet<>();
-
-	@Override
-	public boolean isValidRepairItem(@NotNull ItemStack pStack, @NotNull ItemStack pRepairCandidate) {
-		return super.isValidRepairItem(pStack, pRepairCandidate);
-	}
+			LOOTING
+		));
+	private final Set<ResourceKey<Enchantment>> ConflictEnchants = new HashSet<>();
 
 	public BaseBowItem(Properties properties) {
 		super(properties);
-		if (FMLEnvironment.dist.isClient())
-			ClientHelper.registerBowPropertyOverrides(this);
-		buildAttributeModifiers();
+		initializeBowItem();
 	}
 
 	/**
@@ -82,15 +74,20 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	public BaseBowItem(int drawTime, float projectileDamage, float velocity, float inaccuracy, float speedModifier,
 	                   float zoomFactor, boolean onlyAllowMainHand, Properties properties) {
 		super(properties);
+		this.PROJECTILE_DAMAGE = projectileDamage;
 		this.VELOCITY = velocity;
 		this.DRAW_TIME = drawTime;
-		this.PROJECTILE_DAMAGE = projectileDamage;
 		this.ZOOM_FACTOR = zoomFactor;
 		this.INACCURACY = inaccuracy;
 		this.ONLY_ALLOW_MAINHAND = onlyAllowMainHand;
 		this.SPEED_MODIFIER = speedModifier;
-		if (FMLEnvironment.dist.isClient())
+		initializeBowItem();
+	}
+
+	private void initializeBowItem() {
+		if (FMLEnvironment.dist.isClient()) {
 			ClientHelper.registerBowPropertyOverrides(this);
+		}
 		buildAttributeModifiers();
 	}
 
@@ -102,29 +99,24 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	@Override
-	public @NotNull Predicate<ItemStack> getSupportedHeldProjectiles() {
-		return BaseBowItem.SUPPORTED_PROJECTILE;
-	}
-
-	@Override
-	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+	public boolean shouldCauseReequipAnimation(@NotNull ItemStack oldStack, @NotNull ItemStack newStack, boolean slotChanged) {
 		return slotChanged || !newStack.is(oldStack.getItem());
 	}
 
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack) {
-		return slot == EquipmentSlot.MAINHAND ? AttributeModifiers : ImmutableMultimap.of();
+	public @NotNull ItemAttributeModifiers getDefaultAttributeModifiers(@NotNull ItemStack stack) {
+		return this.DefaultAttributeModifiers;
 	}
 
 	@Override
 	public void releaseUsing(@NotNull ItemStack pStack, @NotNull Level pLevel,
 	                         @NotNull LivingEntity pEntityLiving, int pTimeLeft) {
 		if (pEntityLiving instanceof Player player) {
-			boolean flag = player.getAbilities().instabuild || pStack.getEnchantmentLevel(INFINITY_ARROWS) > 0;
+				boolean flag = player.getAbilities().instabuild || EnchantmentUtil.getLevel(pStack, INFINITY) > 0;
 			ItemStack itemstack = player.getProjectile(pStack);
 
-			int i = this.getUseDuration(pStack) - pTimeLeft;
-			i = net.minecraftforge.event.ForgeEventFactory.onArrowLoose(pStack, pLevel, player, i, !itemstack.isEmpty() || flag);
+			int i = this.getUseDuration(pStack, pEntityLiving) - pTimeLeft;
+			i = net.neoforged.neoforge.event.EventHooks.onArrowLoose(pStack, pLevel, player, i, !itemstack.isEmpty() || flag);
 			if (i < DRAW_TIME) return;
 
 			if (!itemstack.isEmpty() || flag) {
@@ -149,18 +141,12 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 					abstractarrow.setBaseDamage(abstractarrow.getBaseDamage() * getDamageMultiplier(pStack));
 
-					//Punch
-					int punchLevel = pStack.getEnchantmentLevel(PUNCH_ARROWS);
-					if (punchLevel > 0) {
-						abstractarrow.setKnockback(punchLevel);
-					}
-					//Flame
-					if (pStack.getEnchantmentLevel(FLAMING_ARROWS) > 0) {
-						abstractarrow.setSecondsOnFire(100);
+					if (EnchantmentUtil.getLevel(pStack, FLAME) > 0) {
+						abstractarrow.igniteForTicks(100);
 					}
 
-					pStack.hurtAndBreak(1, player, (player1) ->
-							player1.broadcastBreakEvent(player.getUsedItemHand()));
+					pStack.hurtAndBreak(1, player,
+							player.getUsedItemHand() == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND);
 					if (flag1 || player.getAbilities().instabuild
 							&& (itemstack.is(Items.SPECTRAL_ARROW)
 							|| itemstack.is(Items.TIPPED_ARROW))) {
@@ -169,8 +155,11 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 					pLevel.addFreshEntity(abstractarrow);
 
 					//Sync velocity to all clients
-					ModPackets.NETWORK.send(PacketDistributor.ALL.noArg(),
-							new ArrowVelocitySyncPacket(abstractarrow.getDeltaMovement(), abstractarrow.getId()));
+					PacketDistributor.sendToAllPlayers(new ArrowVelocitySyncPayload(
+							abstractarrow.getDeltaMovement().x,
+							abstractarrow.getDeltaMovement().y,
+							abstractarrow.getDeltaMovement().z,
+							abstractarrow.getId()));
 				}
 
 				if (!flag1 && !player.getAbilities().instabuild) {
@@ -204,44 +193,65 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 		boolean flag = !pPlayer.getProjectile(itemstack).isEmpty();
 
-		InteractionResultHolder<ItemStack> ret = net.minecraftforge.event.ForgeEventFactory.onArrowNock(
+		return net.neoforged.neoforge.event.EventHooks.onArrowNock(
 				itemstack, pLevel, pPlayer, pHand, flag);
-		if (ret != null) return ret;
 
-		if (!pPlayer.getAbilities().instabuild && !flag) {
-			return InteractionResultHolder.fail(itemstack);
-		} else {
-			pPlayer.startUsingItem(pHand);
-			return InteractionResultHolder.consume(itemstack);
-		}
 	}
 
 	//Enchantments
 
 	@Override
-	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
-		return EnchantmentValidator.canApplyAtTable(enchantment, GeneralEnchants, ConflictEnchants);
+	public boolean supportsEnchantment(@NotNull ItemStack stack, @NotNull Holder<Enchantment> enchantment) {
+		return EnchantmentUtil.supportsEnchantment(stack, enchantment, GeneralEnchants, ConflictEnchants);
 	}
 
 	@Override
-	public boolean isBookEnchantable(ItemStack stack, ItemStack book) {
-		return EnchantmentValidator.canBookEnchant(stack, book, ConflictEnchants);
+	public boolean isBookEnchantable(@NotNull ItemStack stack, @NotNull ItemStack book) {
+		return EnchantmentUtil.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
 	}
 
-	public boolean AddGeneralEnchant(Enchantment enchantment) {
+	public boolean AddGeneralEnchant(ResourceKey<Enchantment> enchantment) {
 		return GeneralEnchants.add(enchantment);
 	}
 
-	public boolean RemoveGeneralEnchant(Enchantment enchantment) {
+	public boolean AddGeneralEnchant(Holder<Enchantment> enchantment) {
+		if (enchantment == null) {
+			return false;
+		}
+		return enchantment.unwrapKey().map(this::AddGeneralEnchant).orElse(false);
+	}
+
+	public boolean RemoveGeneralEnchant(ResourceKey<Enchantment> enchantment) {
 		return GeneralEnchants.remove(enchantment);
 	}
 
-	public boolean AddConflictEnchant(Enchantment enchantment) {
+	public boolean RemoveGeneralEnchant(Holder<Enchantment> enchantment) {
+		if (enchantment == null) {
+			return false;
+		}
+		return enchantment.unwrapKey().map(this::RemoveGeneralEnchant).orElse(false);
+	}
+
+	public boolean AddConflictEnchant(ResourceKey<Enchantment> enchantment) {
 		return ConflictEnchants.add(enchantment);
 	}
 
-	public boolean RemoveConflictEnchant(Enchantment enchantment) {
+	public boolean AddConflictEnchant(Holder<Enchantment> enchantment) {
+		if (enchantment == null) {
+			return false;
+		}
+		return enchantment.unwrapKey().map(this::AddConflictEnchant).orElse(false);
+	}
+
+	public boolean RemoveConflictEnchant(ResourceKey<Enchantment> enchantment) {
 		return ConflictEnchants.remove(enchantment);
+	}
+
+	public boolean RemoveConflictEnchant(Holder<Enchantment> enchantment) {
+		if (enchantment == null) {
+			return false;
+		}
+		return enchantment.unwrapKey().map(this::RemoveConflictEnchant).orElse(false);
 	}
 
 	//New methods
@@ -258,7 +268,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	}
 
 	public double getDamageMultiplier(ItemStack stack) {
-		int powerLevel = stack.getEnchantmentLevel(POWER_ARROWS);
+		int powerLevel = EnchantmentUtil.getLevel(stack, POWER);
 		return 1F + 0.25F * powerLevel;
 	}
 
@@ -275,13 +285,15 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 
 	public void buildAttributeModifiers() {
 		if (SPEED_MODIFIER != 0.0F) {
-			ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-			builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOVEMENT_SPEED_UUID,
-					"Tool modifier", SPEED_MODIFIER, AttributeModifier.Operation.MULTIPLY_TOTAL));
-			this.AttributeModifiers = builder.build();
+			ItemAttributeModifiers.Builder defaultBuilder = ItemAttributeModifiers.builder();
+			AttributeModifier speedModifier = new AttributeModifier(
+					ResourceLocation.fromNamespaceAndPath("perk_weapons", "bow_speed_modifier"),
+					SPEED_MODIFIER, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+			defaultBuilder.add(Attributes.MOVEMENT_SPEED, speedModifier, EquipmentSlotGroup.MAINHAND);
+			this.DefaultAttributeModifiers = defaultBuilder.build();
 			this.ONLY_ALLOW_MAINHAND = true;
 		} else {
-			this.AttributeModifiers = ImmutableMultimap.of();
+			this.DefaultAttributeModifiers = ItemAttributeModifiers.EMPTY;
 		}
 	}
 
@@ -297,20 +309,14 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 	//Tooltips
 
 	@Override
-	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltip,
+	public void appendHoverText(@NotNull ItemStack stack, @NotNull Item.TooltipContext context, @NotNull List<Component> tooltip,
 	                            @NotNull TooltipFlag isAdvanced) {
-		if (level == null || !level.isClientSide()) {
-			super.appendHoverText(stack, level, tooltip, isAdvanced);
-			return;
-		}
-
 		if (ONLY_ALLOW_MAINHAND) {
 			tooltip.add(Component.translatable("tooltip.perk_weapons.only_mainhand")
 					.withStyle(ChatFormatting.RED));
 		}
-
-		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, level));
-		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, level));
+		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, null));
+		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, null));
 
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
 						TooltipHelper.convertToEmbeddedElement(PROJECTILE_DAMAGE * getDamageMultiplier(stack)))
@@ -322,7 +328,7 @@ public class BaseBowItem extends BowItem implements Vanishable, IDoubleLineCross
 						TooltipHelper.convertToEmbeddedElement(TooltipHelper.convertTicksToSeconds(DRAW_TIME)))
 				.withStyle(ChatFormatting.DARK_AQUA));
 
-		super.appendHoverText(stack, level, tooltip, isAdvanced);
+		super.appendHoverText(stack, context, tooltip, isAdvanced);
 	}
 
 	public List<Component> getPerkDescriptions(ItemStack stack, Level level) {

@@ -2,41 +2,23 @@ package net.akashi.perk_weapons.EventHandlers;
 
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Registry.ModEffects;
+import net.akashi.perk_weapons.mixin.FoodDataAccessor;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-import java.lang.reflect.Field;
-
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.DEDICATED_SERVER)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class PlayerTickEventHandler {
-	private static final Field foodDataTickTimerField;
-
-	static {
-		try {
-			foodDataTickTimerField = FoodData.class.getDeclaredField("tickTimer");
-			foodDataTickTimerField.setAccessible(true);
-		} catch (NoSuchFieldException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static int getTickTimer(FoodData foodData) throws IllegalAccessException {
-		return foodDataTickTimerField.getInt(foodData);
-	}
-
 	@SubscribeEvent
-	public static void onPlayerTick(TickEvent.PlayerTickEvent event) throws IllegalAccessException {
-		if (event.phase == TickEvent.Phase.END)
+	public static void onPlayerTick(PlayerTickEvent.Post event) {
+		Player player = event.getEntity();
+		if (player.level().isClientSide())
 			return;
-
-		Player player = event.player;
-		if (player.hasEffect(ModEffects.PHALANX.get())) {
+		if (player.hasEffect(ModEffects.PHALANX)) {
 			FoodData foodData = player.getFoodData();
-			int tickTimer = getTickTimer(foodData);
+			int tickTimer = ((FoodDataAccessor) foodData).perk_weapons$getTickTimer();
 			if (foodData.getFoodLevel() == 20 && tickTimer == 9) {
 				player.heal(Math.min(1.0F, foodData.getSaturationLevel() / 6));
 				return;

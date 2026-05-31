@@ -1,11 +1,11 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class DevourerProperties extends BowProperties {
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
 
-	public DevourerProperties(ForgeConfigSpec.Builder builder, String name,
+	public DevourerProperties(ModConfigSpec.Builder builder, String name,
 	                          int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                          double defaultInaccuracy, byte defaultPierceLevel,
 	                          double defaultSpeedModifier, double defaultZoomFactor,

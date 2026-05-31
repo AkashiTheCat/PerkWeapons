@@ -1,21 +1,21 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class NetherGuideProperties extends SpearProperties {
-	public ForgeConfigSpec.DoubleValue WARPED_MELEE_DAMAGE_BONUS_RATIO;
-	public ForgeConfigSpec.DoubleValue WARPED_THROW_DAMAGE_BONUS_RATIO;
-	public ForgeConfigSpec.DoubleValue WARPED_DAMAGE_RESISTANCE;
-	public ForgeConfigSpec.DoubleValue WARPED_MOVEMENT_SPEED_BONUS_RATIO;
+	public ModConfigSpec.DoubleValue WARPED_MELEE_DAMAGE_BONUS_RATIO;
+	public ModConfigSpec.DoubleValue WARPED_THROW_DAMAGE_BONUS_RATIO;
+	public ModConfigSpec.DoubleValue WARPED_DAMAGE_RESISTANCE;
+	public ModConfigSpec.DoubleValue WARPED_MOVEMENT_SPEED_BONUS_RATIO;
 
-	public ForgeConfigSpec.IntValue CRIMSON_WEAKNESS_LEVEL_ON_TARGET_WHEN_HIT;
-	public ForgeConfigSpec.IntValue CRIMSON_WEAKNESS_DURATION_ON_TARGET_WHEN_HIT;
-	public ForgeConfigSpec.IntValue CRIMSON_REGENERATION_LEVEL_ON_SELF_WHEN_HIT;
-	public ForgeConfigSpec.IntValue CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT;
+	public ModConfigSpec.IntValue CRIMSON_WEAKNESS_LEVEL_ON_TARGET_WHEN_HIT;
+	public ModConfigSpec.IntValue CRIMSON_WEAKNESS_DURATION_ON_TARGET_WHEN_HIT;
+	public ModConfigSpec.IntValue CRIMSON_REGENERATION_LEVEL_ON_SELF_WHEN_HIT;
+	public ModConfigSpec.IntValue CRIMSON_REGENERATION_DURATION_ON_SELF_WHEN_HIT;
 
-	public ForgeConfigSpec.IntValue MODE_SWITCH_COOLDOWN;
+	public ModConfigSpec.IntValue MODE_SWITCH_COOLDOWN;
 
-	public NetherGuideProperties(ForgeConfigSpec.Builder builder, String name,
+	public NetherGuideProperties(ModConfigSpec.Builder builder, String name,
 	                             float defaultMeleeDamage, double defaultAttackSpeed,
 	                             float defaultRangedDamage, float defaultVelocity,
 	                             int defaultMaxChargeTime, double defaultMeleeBonusWarped,

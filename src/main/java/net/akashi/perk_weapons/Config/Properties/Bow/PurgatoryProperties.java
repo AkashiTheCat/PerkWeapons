@@ -1,17 +1,17 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
 import net.akashi.perk_weapons.Config.Properties.ModExplosionProperties;
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class PurgatoryProperties extends BowProperties {
-	public ForgeConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
-	public ForgeConfigSpec.IntValue PIERCE_LEVEL;
-	public ForgeConfigSpec.IntValue FUSE_TIME;
-	public ForgeConfigSpec.IntValue INTERNAL_EXP_EFFECT_TIME;
-	public ForgeConfigSpec.IntValue INTERNAL_EXP_EFFECT_LEVEL;
+	public ModConfigSpec.DoubleValue KNOCKBACK_RESISTANCE;
+	public ModConfigSpec.IntValue PIERCE_LEVEL;
+	public ModConfigSpec.IntValue FUSE_TIME;
+	public ModConfigSpec.IntValue INTERNAL_EXP_EFFECT_TIME;
+	public ModConfigSpec.IntValue INTERNAL_EXP_EFFECT_LEVEL;
 	public ModExplosionProperties EXPLOSION_PROPERTIES;
 
-	public PurgatoryProperties(ForgeConfigSpec.Builder builder, String name,
+	public PurgatoryProperties(ModConfigSpec.Builder builder, String name,
 	                           int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                           double defaultInaccuracy, int defaultPierceLevel,
 	                           double defaultSpeedModifier, double defaultZoomFactor,

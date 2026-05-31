@@ -1,13 +1,13 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class ElfsHarpProperties extends BowProperties {
-	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
-	public ForgeConfigSpec.IntValue GLOWING_TIME;
-	public ForgeConfigSpec.DoubleValue PERK_BUFF;
+	public ModConfigSpec.IntValue MAX_PERK_LEVEL;
+	public ModConfigSpec.IntValue GLOWING_TIME;
+	public ModConfigSpec.DoubleValue PERK_BUFF;
 
-	public ElfsHarpProperties(ForgeConfigSpec.Builder builder, String name,
+	public ElfsHarpProperties(ModConfigSpec.Builder builder, String name,
 	                          int defaultDrawTime, double defaultDamage, double defaultVelocity,
 	                          double defaultInaccuracy, int defaultMaxPerkLevel,
 	                          int defaultGlowingTime, double defaultPerkBuff,

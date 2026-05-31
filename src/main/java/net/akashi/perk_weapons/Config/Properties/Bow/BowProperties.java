@@ -1,17 +1,17 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class BowProperties {
-	public ForgeConfigSpec.IntValue DRAW_TIME;
-	public ForgeConfigSpec.DoubleValue DAMAGE;
-	public ForgeConfigSpec.DoubleValue VELOCITY;
-	public ForgeConfigSpec.DoubleValue INACCURACY;
-	public ForgeConfigSpec.DoubleValue SPEED_MODIFIER;
-	public ForgeConfigSpec.DoubleValue ZOOM_FACTOR;
-	public ForgeConfigSpec.BooleanValue ONLY_MAINHAND;
+	public ModConfigSpec.IntValue DRAW_TIME;
+	public ModConfigSpec.DoubleValue DAMAGE;
+	public ModConfigSpec.DoubleValue VELOCITY;
+	public ModConfigSpec.DoubleValue INACCURACY;
+	public ModConfigSpec.DoubleValue SPEED_MODIFIER;
+	public ModConfigSpec.DoubleValue ZOOM_FACTOR;
+	public ModConfigSpec.BooleanValue ONLY_MAINHAND;
 
-	public BowProperties(ForgeConfigSpec.Builder builder, String name,
+	public BowProperties(ModConfigSpec.Builder builder, String name,
 	                     int defaultDrawTime, double defaultDamage,
 	                     double defaultVelocity, double defaultInaccuracy,
 	                     double defaultSpeedModifier, double defaultZoomFactor,

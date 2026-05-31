@@ -8,6 +8,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -69,7 +70,7 @@ public class ModExplosion {
 							new Vec3(x, y, z), p,
 							ClipContext.Block.COLLIDER,
 							ClipContext.Fluid.NONE,
-							null
+							CollisionContext.empty()
 					);
 					BlockHitResult result = level.clip(context);
 					return result.getType() != HitResult.Type.BLOCK;

@@ -207,6 +207,8 @@
     "tooltip.perk_weapons.paladin_perk_4": "%s 装弹时间",
     "tooltip.perk_weapons.paladin_perk_5": "%s 伤害抗性",
 
+    "tooltip.perk_weapons.repairer": "用于在铁砧中修复任何物品",
+
     "entity.perk_weapons.thrown_spear": "投矛",
     "entity.perk_weapons.thrown_megalodon": "巨齿鲨",
     "entity.perk_weapons.thrown_conduit_guard": "潮涌守卫",

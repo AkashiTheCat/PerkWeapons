@@ -68,7 +68,7 @@ public class ThrownDragonStrike extends ThrownSpear {
 			areaeffectcloud.setDuration(AFFECT_CLOUD_DURATION);
 			areaeffectcloud.setRadiusPerTick((MAX_AFFECT_CLOUD_RADIUS - areaeffectcloud.getRadius())
 					/ (float) areaeffectcloud.getDuration());
-			areaeffectcloud.addEffect(new MobEffectInstance(ModEffects.HARM_ALL.get(), 1, EFFECT_DAMAGE));
+			areaeffectcloud.addEffect(new MobEffectInstance(ModEffects.HARM_ALL, 1, EFFECT_DAMAGE));
 			this.level().addFreshEntity(areaeffectcloud);
 		}
 	}

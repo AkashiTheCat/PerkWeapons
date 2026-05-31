@@ -1,13 +1,13 @@
 package net.akashi.perk_weapons.Config.Properties.Crossbow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class BeholderProperties extends CrossbowProperties {
-	public ForgeConfigSpec.IntValue SLOWNESS_LEVEL;
-	public ForgeConfigSpec.IntValue WEAKNESS_LEVEL;
-	public ForgeConfigSpec.IntValue AFFECT_RANGE;
+	public ModConfigSpec.IntValue SLOWNESS_LEVEL;
+	public ModConfigSpec.IntValue WEAKNESS_LEVEL;
+	public ModConfigSpec.IntValue AFFECT_RANGE;
 
-	public BeholderProperties(ForgeConfigSpec.Builder builder, String name,
+	public BeholderProperties(ModConfigSpec.Builder builder, String name,
 	                          int defaultChargeTime, double defaultDamage,
 	                          double defaultVelocity, double defaultInaccuracy,
 	                          int defaultAmmoCapacity, int defaultFireInterval,

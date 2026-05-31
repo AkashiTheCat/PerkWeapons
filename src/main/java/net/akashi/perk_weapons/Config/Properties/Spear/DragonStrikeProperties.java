@@ -1,17 +1,17 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class DragonStrikeProperties extends SpearProperties {
-	public ForgeConfigSpec.DoubleValue INIT_AFFECT_RADIUS;
-	public ForgeConfigSpec.DoubleValue MAX_AFFECT_RADIUS;
-	public ForgeConfigSpec.IntValue AFFECT_DURATION;
-	public ForgeConfigSpec.IntValue EFFECT_DAMAGE;
-	public ForgeConfigSpec.DoubleValue MAGIC_RESISTANCE;
-	public ForgeConfigSpec.IntValue RETURN_TIME;
-	public ForgeConfigSpec.IntValue ABILITY_COOLDOWN_TIME;
+	public ModConfigSpec.DoubleValue INIT_AFFECT_RADIUS;
+	public ModConfigSpec.DoubleValue MAX_AFFECT_RADIUS;
+	public ModConfigSpec.IntValue AFFECT_DURATION;
+	public ModConfigSpec.IntValue EFFECT_DAMAGE;
+	public ModConfigSpec.DoubleValue MAGIC_RESISTANCE;
+	public ModConfigSpec.IntValue RETURN_TIME;
+	public ModConfigSpec.IntValue ABILITY_COOLDOWN_TIME;
 
-	public DragonStrikeProperties(ForgeConfigSpec.Builder builder, String name,
+	public DragonStrikeProperties(ModConfigSpec.Builder builder, String name,
 	                              float defaultMeleeDamage, double defaultAttackSpeed,
 	                              float defaultRangedDamage, float defaultVelocity,
 	                              int defaultMaxChargeTime, double defaultInitAffectCloudRadius,

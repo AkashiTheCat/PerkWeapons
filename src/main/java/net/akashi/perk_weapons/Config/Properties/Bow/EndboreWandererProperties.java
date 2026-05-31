@@ -1,19 +1,19 @@
 package net.akashi.perk_weapons.Config.Properties.Bow;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class EndboreWandererProperties extends BowProperties {
-	public ForgeConfigSpec.IntValue MAX_PERK_LEVEL;
-	public ForgeConfigSpec.IntValue CROUCH_USE_COOLDOWN;
-	public ForgeConfigSpec.DoubleValue DAMAGE_BONUS_LEVITATION;
+	public ModConfigSpec.IntValue MAX_PERK_LEVEL;
+	public ModConfigSpec.IntValue CROUCH_USE_COOLDOWN;
+	public ModConfigSpec.DoubleValue DAMAGE_BONUS_LEVITATION;
 
-	public ForgeConfigSpec.IntValue PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT;
-	public ForgeConfigSpec.DoubleValue PERK_PROJECTILE_HOMING_RANGE;
-	public ForgeConfigSpec.DoubleValue PERK_PROJECTILE_MAX_HOMING_ANGLE;
-	public ForgeConfigSpec.DoubleValue PERK_PROJECTILE_MAX_TURN_RATE;
-	public ForgeConfigSpec.DoubleValue PERK_PROJECTILE_HOMING_ACCELERATION;
+	public ModConfigSpec.IntValue PERK_PROJECTILE_LEVITATION_TICKS_ON_HIT;
+	public ModConfigSpec.DoubleValue PERK_PROJECTILE_HOMING_RANGE;
+	public ModConfigSpec.DoubleValue PERK_PROJECTILE_MAX_HOMING_ANGLE;
+	public ModConfigSpec.DoubleValue PERK_PROJECTILE_MAX_TURN_RATE;
+	public ModConfigSpec.DoubleValue PERK_PROJECTILE_HOMING_ACCELERATION;
 
-	public EndboreWandererProperties(ForgeConfigSpec.Builder builder, String name,
+	public EndboreWandererProperties(ModConfigSpec.Builder builder, String name,
 	                                 int defaultDrawTime, double defaultDamage,
 	                                 double defaultVelocity, double defaultInaccuracy,
 	                                 int defaultMaxPerkLevel, int defaultCrouchUseCoolDown,

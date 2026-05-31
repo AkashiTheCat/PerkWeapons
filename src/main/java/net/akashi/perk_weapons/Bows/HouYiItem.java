@@ -1,5 +1,6 @@
 package net.akashi.perk_weapons.Bows;
 
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import net.akashi.perk_weapons.Config.Properties.Bow.BowProperties;
 import net.akashi.perk_weapons.Config.Properties.Bow.HouYiProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
@@ -33,7 +34,7 @@ public class HouYiItem extends BaseBowItem {
 	@Override
 	public AbstractArrow createArrow(Level level, ArrowItem arrowItem, ItemStack bowStack, ItemStack arrowStack, Player player) {
 		BaseArrow arrow;
-		if (bowStack.getEnchantmentLevel(ModEnchantments.STAR_SHOOTER.get()) != 0) {
+		if (EnchantmentUtil.getLevel(bowStack, ModEnchantments.STAR_SHOOTER_KEY) != 0) {
 			arrow = new StarShooterArrow(ModEntities.STAR_SHOOTER_ARROW.get(), level, player);
 		} else {
 			arrow = new BaseArrow(ModEntities.BASE_ARROW.get(), level, player);
@@ -52,13 +53,13 @@ public class HouYiItem extends BaseBowItem {
 
 	@Override
 	public double getDamageMultiplier(ItemStack stack) {
-		return super.getDamageMultiplier(stack) * (1 + (stack.getEnchantmentLevel(ModEnchantments.STAR_SHOOTER.get()) > 0 ?
+		return super.getDamageMultiplier(stack) * (1 + (EnchantmentUtil.getLevel(stack, ModEnchantments.STAR_SHOOTER_KEY) > 0 ?
 				DAMAGE_MODIFIER_STAR_SHOOTER : 0));
 	}
 
 	@Override
 	public void updateAttributesFromConfig(BowProperties properties) {
-		AddGeneralEnchant(ModEnchantments.STAR_SHOOTER.get());
+		AddGeneralEnchant(ModEnchantments.STAR_SHOOTER_KEY);
 		if (properties instanceof HouYiProperties hProperties) {
 			DAMAGE_MODIFIER_STAR_SHOOTER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER.get().floatValue();
 			StarShooterArrow.DAMAGE_MODIFIER_PER_METER = hProperties.STAR_SHOOTER_DAMAGE_MODIFIER_PER_METER.get().floatValue();
@@ -79,7 +80,7 @@ public class HouYiItem extends BaseBowItem {
 
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.hou_yi_perk_1")));
 		list.add(TooltipHelper.setPerkStyle(Component.translatable("tooltip.perk_weapons.when_enchanted",
-				TooltipHelper.convertToEmbeddedElement(ModEnchantments.STAR_SHOOTER.get(), 1))));
+				TooltipHelper.convertToEmbeddedElement(ModEnchantments.STAR_SHOOTER_KEY, 1))));
 
 		list.add(TooltipHelper.getArrowDamageModifier(DAMAGE_MODIFIER_STAR_SHOOTER));
 

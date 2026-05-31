@@ -2,15 +2,16 @@ package net.akashi.perk_weapons.EventHandlers;
 
 import net.akashi.perk_weapons.PerkWeapons;
 import net.akashi.perk_weapons.Util.IAttributeModifierEffect;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraftforge.event.entity.living.MobEffectEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-@Mod.EventBusSubscriber(modid = PerkWeapons.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+@EventBusSubscriber(modid = PerkWeapons.MODID, bus = EventBusSubscriber.Bus.GAME)
 public class EffectEventHandler {
 	@SubscribeEvent
 	public static void onEffectAdded(MobEffectEvent.Added event) {
@@ -25,8 +26,9 @@ public class EffectEventHandler {
 				if (attributeInstance == null)
 					continue;
 				AttributeModifier modifier = entry.getValue();
-				if (attributeInstance.hasModifier(modifier)) {
-					attributeInstance.removeModifier(modifier.getId());
+				ResourceLocation modifierId = modifier.id();
+				if (attributeInstance.hasModifier(modifierId)) {
+					attributeInstance.removeModifier(modifierId);
 				}
 				attributeInstance.addTransientModifier(modifier);
 			}
@@ -56,7 +58,7 @@ public class EffectEventHandler {
 	}
 
 	private static void removeEffectModifiers(IAttributeModifierEffect effect, int amplifier, LivingEntity entity) {
-		var map = effect.getAttributeModifierUUIDs(amplifier);
+		var map = effect.getAttributeModifierIds(amplifier);
 
 		for (var entry : map.entrySet()) {
 			AttributeInstance attributeInstance = entity.getAttribute(entry.getKey());

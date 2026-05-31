@@ -1,6 +1,7 @@
 package net.akashi.perk_weapons.Util;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.Holder;
 
 public class SoundEventHolder {
 	private static final SoundEventHolder emptyHolder = new SoundEventHolder();
@@ -16,8 +17,18 @@ public class SoundEventHolder {
 		this.soundEvent = soundEvent;
 	}
 
+	public SoundEventHolder(Holder<SoundEvent> soundEventHolder) {
+		this.soundEvent = soundEventHolder.value();
+	}
+
 	public SoundEventHolder(SoundEvent soundEvent, float volume, float pitch) {
 		this.soundEvent = soundEvent;
+		this.volume = volume;
+		this.pitch = pitch;
+	}
+
+	public SoundEventHolder(Holder<SoundEvent> soundEventHolder, float volume, float pitch) {
+		this.soundEvent = soundEventHolder.value();
 		this.volume = volume;
 		this.pitch = pitch;
 	}

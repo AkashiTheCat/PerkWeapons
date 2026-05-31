@@ -1,15 +1,20 @@
 package net.akashi.perk_weapons.Spears;
 
-import com.google.common.collect.ImmutableMultimap;
+import net.akashi.perk_weapons.PerkWeapons;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
 import net.akashi.perk_weapons.Config.Properties.Spear.DragonStrikeProperties;
 import net.akashi.perk_weapons.Config.Properties.Spear.SpearProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownDragonStrike;
 import net.akashi.perk_weapons.Entities.Projectiles.Spears.ThrownSpear;
 import net.akashi.perk_weapons.Registry.ModAttributes;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.akashi.perk_weapons.Registry.ModEntities;
 import net.akashi.perk_weapons.Util.ICoolDownItem;
 import net.akashi.perk_weapons.Util.TooltipHelper;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -17,7 +22,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +35,6 @@ import java.util.*;
 import static net.minecraft.world.item.enchantment.Enchantments.LOYALTY;
 
 public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
-	public static final UUID MAGIC_RESISTANCE_UUID = UUID.fromString("2c00bbd1-4733-4d9b-ace2-ff5d6cab868e");
 	public static final String TAG_LAST_USED = "lastUsed";
 	private static double MAGIC_RESISTANCE = 50;
 	public static float INIT_AFFECT_CLOUD_RADIUS = 4.0F;
@@ -55,14 +58,15 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	@Override
 	protected void buildAttributeModifiers() {
 		super.buildAttributeModifiers();
-		ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		if (AttributeModifiers != null)
-			builder.putAll(AttributeModifiers);
-		builder.put(ModAttributes.MAGIC_RESISTANCE.get(), new AttributeModifier(
-				MAGIC_RESISTANCE_UUID, "Magic Resistance", MAGIC_RESISTANCE,
-				AttributeModifier.Operation.ADDITION
-		));
-		AttributeModifiers = builder.build();
+		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+		for (ItemAttributeModifiers.Entry entry : this.DefaultAttributeModifiers.modifiers()) {
+			builder.add(entry.attribute(), entry.modifier(), entry.slot());
+		}
+		builder.add(ModAttributes.MAGIC_RESISTANCE, new AttributeModifier(
+				ResourceLocation.fromNamespaceAndPath(PerkWeapons.MODID, "dragon_strike_magic_resistance"), MAGIC_RESISTANCE,
+				AttributeModifier.Operation.ADD_VALUE
+		), EquipmentSlotGroup.MAINHAND);
+		this.DefaultAttributeModifiers = builder.build();
 	}
 
 	@Override
@@ -119,12 +123,11 @@ public class DragonStrikeItem extends BaseSpearItem implements ICoolDownItem {
 	}
 
 	public void setLastAbilityUsedTime(ItemStack stack, Long time) {
-		CompoundTag tag = stack.getOrCreateTag();
-		tag.putLong(TAG_LAST_USED, time);
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, tag -> tag.putLong(TAG_LAST_USED, time));
 	}
 
 	public long getLastAbilityUsedTime(ItemStack stack) {
-		CompoundTag tag = stack.getOrCreateTag();
+		CompoundTag tag = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
 		if (tag.contains(TAG_LAST_USED)) {
 			return tag.getLong(TAG_LAST_USED);
 		}

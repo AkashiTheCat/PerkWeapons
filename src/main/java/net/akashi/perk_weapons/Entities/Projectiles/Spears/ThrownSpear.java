@@ -20,12 +20,14 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.akashi.perk_weapons.Util.EnchantmentUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -42,33 +44,51 @@ public class ThrownSpear extends AbstractArrow {
 	public boolean dealtDamage;
 	private int returnSlot = -2;
 	public int clientSideReturnSpearTickCount;
+	private int knockback;
+	private byte customPierceLevel;
 
 	public ThrownSpear(EntityType<? extends ThrownSpear> pEntityType, Level pLevel) {
 		super(pEntityType, pLevel);
 	}
 
 	public ThrownSpear(EntityType<? extends ThrownSpear> spearType, Level pLevel, LivingEntity pShooter, ItemStack pStack) {
-		super(spearType, pShooter, pLevel);
+		super(spearType, pShooter, pLevel, pStack, pStack);
 		this.entityData.set(ID_SPEAR_ITEM, pStack);
-		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(pStack));
-		this.entityData.set(ID_FIRE_ASPECT, (byte) pStack.getEnchantmentLevel(FIRE_ASPECT));
+		this.entityData.set(ID_LOYALTY, (byte) getEnchantmentLevel(pStack, Enchantments.LOYALTY));
+		this.entityData.set(ID_FIRE_ASPECT, (byte) getEnchantmentLevel(pStack, FIRE_ASPECT));
 		this.entityData.set(ID_FOIL, pStack.hasFoil());
-		setKnockback(EnchantmentHelper.getEnchantmentLevel(Enchantments.KNOCKBACK, pShooter));
+		setKnockback(getEnchantmentLevel(pStack, Enchantments.KNOCKBACK));
 	}
 
 	public void setReturnSlot(int slotIndex) {
 		this.returnSlot = slotIndex;
 	}
 
+	public void setKnockback(int knockback) {
+		this.knockback = knockback;
+	}
+
+	public int getKnockback() {
+		return this.knockback;
+	}
+
+	public void setPierceLevel(byte pierceLevel) {
+		this.customPierceLevel = pierceLevel;
+	}
+
+	public byte getPierceLevel() {
+		return this.customPierceLevel;
+	}
+
 
 	//Override Methods
 	@Override
-	protected void defineSynchedData() {
-		super.defineSynchedData();
-		this.entityData.define(ID_LOYALTY, (byte) 0);
-		this.entityData.define(ID_FIRE_ASPECT, (byte) 0);
-		this.entityData.define(ID_FOIL, false);
-		this.entityData.define(ID_SPEAR_ITEM, ModItems.IRON_SPEAR.get().getDefaultInstance());
+	protected void defineSynchedData(SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(ID_LOYALTY, (byte) 0);
+		builder.define(ID_FIRE_ASPECT, (byte) 0);
+		builder.define(ID_FOIL, false);
+		builder.define(ID_SPEAR_ITEM, ModItems.IRON_SPEAR.get().getDefaultInstance());
 	}
 
 	@Override
@@ -88,12 +108,11 @@ public class ThrownSpear extends AbstractArrow {
 	protected void onHitEntity(EntityHitResult pResult) {
 		Entity entity = pResult.getEntity();
 		float dmg = (float) getBaseDamage();
-		if (entity instanceof LivingEntity livingentity) {
-			dmg += EnchantmentHelper.getDamageBonus(getSpearItem(), livingentity.getMobType());
-		}
-
 		Entity entity1 = this.getOwner();
 		DamageSource damagesource = this.damageSources().trident(this, entity1 == null ? this : entity1);
+		if (this.level() instanceof ServerLevel serverLevel) {
+			dmg = EnchantmentHelper.modifyDamage(serverLevel, getSpearItem(), entity, damagesource, dmg);
+		}
 		SoundEvent soundevent = SoundEvents.TRIDENT_HIT;
 		if (entity.hurt(damagesource, dmg)) {
 			if (entity.getType() == EntityType.ENDERMAN) {
@@ -111,11 +130,7 @@ public class ThrownSpear extends AbstractArrow {
 				}
 				byte fireAspectLevel = getFireAspectLevel();
 				if (fireAspectLevel > 0) {
-					entity.setSecondsOnFire(fireAspectLevel * 4);
-				}
-				if (entity1 instanceof LivingEntity) {
-					EnchantmentHelper.doPostHurtEffects(livingentity, entity1);
-					EnchantmentHelper.doPostDamageEffects((LivingEntity) entity1, livingentity);
+					entity.setRemainingFireTicks(fireAspectLevel * 4);
 				}
 
 				this.doPostHurtEffects(livingentity);
@@ -128,7 +143,7 @@ public class ThrownSpear extends AbstractArrow {
 				piercedEntities = new IntOpenHashSet(16);
 			}
 			piercedEntities.add(entity.getId());
-			this.setPierceLevel(--pierceLevel);
+			setPierceLevel(--pierceLevel);
 		} else {
 			this.setDeltaMovement(this.getDeltaMovement().multiply(-0.01D, -0.1D, -0.01D));
 			this.dealtDamage = true;
@@ -143,7 +158,7 @@ public class ThrownSpear extends AbstractArrow {
 					lightningbolt.moveTo(Vec3.atBottomCenterOf(blockpos));
 					lightningbolt.setCause(entity1 instanceof ServerPlayer ? (ServerPlayer) entity1 : null);
 					this.level().addFreshEntity(lightningbolt);
-					soundevent = SoundEvents.TRIDENT_THUNDER;
+					soundevent = SoundEvents.TRIDENT_THUNDER.value();
 					f1 = 5.0F;
 				}
 			}
@@ -155,6 +170,11 @@ public class ThrownSpear extends AbstractArrow {
 	@Override
 	protected @NotNull ItemStack getPickupItem() {
 		return getEntityData().get(ID_SPEAR_ITEM);
+	}
+
+	@Override
+	protected @NotNull ItemStack getDefaultPickupItem() {
+		return ModItems.IRON_SPEAR.get().getDefaultInstance();
 	}
 
 	@Override
@@ -175,7 +195,7 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	public boolean isChanneling() {
-		return EnchantmentHelper.hasChanneling(getSpearItem());
+		return getEnchantmentLevel(getSpearItem(), Enchantments.CHANNELING) > 0;
 	}
 
 	@Override
@@ -238,28 +258,31 @@ public class ThrownSpear extends AbstractArrow {
 		super.readAdditionalSaveData(pCompound);
 		ItemStack spearItem = ModItems.IRON_SPEAR.get().getDefaultInstance();
 		if (pCompound.contains("spear", 10)) {
-			spearItem = ItemStack.of(pCompound.getCompound("spear"));
+			spearItem = ItemStack.parseOptional(this.registryAccess(), pCompound.getCompound("spear"));
 		}
 		this.dealtDamage = pCompound.getBoolean("dealtdamage");
 		this.returnSlot = pCompound.getInt("returnslot");
-		this.entityData.set(ID_LOYALTY, (byte) EnchantmentHelper.getLoyalty(spearItem));
-		this.entityData.set(ID_FIRE_ASPECT, (byte) spearItem.getEnchantmentLevel(FIRE_ASPECT));
+		this.entityData.set(ID_LOYALTY, (byte) getEnchantmentLevel(spearItem, Enchantments.LOYALTY));
+		this.entityData.set(ID_FIRE_ASPECT, (byte) getEnchantmentLevel(spearItem, FIRE_ASPECT));
 		this.entityData.set(ID_SPEAR_ITEM, spearItem);
 	}
 
 	@Override
 	public void addAdditionalSaveData(@NotNull CompoundTag pCompound) {
 		super.addAdditionalSaveData(pCompound);
-		pCompound.put("spear", getSpearItem().save(new CompoundTag()));
+		pCompound.put("spear", getSpearItem().save(this.registryAccess()));
 		pCompound.putBoolean("dealtdamage", this.dealtDamage);
 		pCompound.putInt("returnslot", this.returnSlot);
+	}
+
+	private static int getEnchantmentLevel(ItemStack stack, net.minecraft.resources.ResourceKey<net.minecraft.world.item.enchantment.Enchantment> enchantment) {
+		return EnchantmentUtil.getLevel(stack, enchantment);
 	}
 
 	@Override
 	public void tickDespawn() {
 		int i = this.entityData.get(ID_LOYALTY);
 		if (this.pickup != Pickup.ALLOWED || i <= 0) {
-			super.tickDespawn();
 			super.tickDespawn();
 		}
 	}
@@ -277,9 +300,6 @@ public class ThrownSpear extends AbstractArrow {
 	}
 
 	//new methods
-	public boolean isFoil() {
-		return this.entityData.get(ID_FOIL);
-	}
 
 	public byte getLoyaltyLevel() {
 		return this.entityData.get(ID_LOYALTY);

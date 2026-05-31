@@ -1,15 +1,15 @@
 package net.akashi.perk_weapons.Config.Properties.Spear;
 
-import net.minecraftforge.common.ForgeConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class SpearProperties {
-	public ForgeConfigSpec.DoubleValue MELEE_DAMAGE;
-	public ForgeConfigSpec.DoubleValue ATTACK_SPEED;
-	public ForgeConfigSpec.DoubleValue RANGED_DAMAGE;
-	public ForgeConfigSpec.DoubleValue VELOCITY;
-	public ForgeConfigSpec.IntValue MAX_CHARGE_TICKS;
+	public ModConfigSpec.DoubleValue MELEE_DAMAGE;
+	public ModConfigSpec.DoubleValue ATTACK_SPEED;
+	public ModConfigSpec.DoubleValue RANGED_DAMAGE;
+	public ModConfigSpec.DoubleValue VELOCITY;
+	public ModConfigSpec.IntValue MAX_CHARGE_TICKS;
 
-	public SpearProperties(ForgeConfigSpec.Builder builder, String name,
+	public SpearProperties(ModConfigSpec.Builder builder, String name,
 	                       float defaultMeleeDamage, double defaultAttackSpeed,
 	                       float defaultRangedDamage, float defaultVelocity,
 	                       int defaultMaxChargeTicks, boolean shouldPop) {
