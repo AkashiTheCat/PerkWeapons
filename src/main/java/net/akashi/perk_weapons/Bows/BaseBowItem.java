@@ -190,12 +190,7 @@ public class BaseBowItem extends BowItem implements IDoubleLineCrosshairItem {
 		if (ONLY_ALLOW_MAINHAND && pHand != InteractionHand.MAIN_HAND) {
 			return InteractionResultHolder.pass(itemstack);
 		}
-
-		boolean flag = !pPlayer.getProjectile(itemstack).isEmpty();
-
-		return net.neoforged.neoforge.event.EventHooks.onArrowNock(
-				itemstack, pLevel, pPlayer, pHand, flag);
-
+		return super.use(pLevel, pPlayer, pHand);
 	}
 
 	//Enchantments
@@ -265,6 +260,10 @@ public class BaseBowItem extends BowItem implements IDoubleLineCrosshairItem {
 		}
 		arrow.setBaseDamage(PROJECTILE_DAMAGE / VELOCITY);
 		return arrow;
+	}
+
+	public int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
+		return EnchantmentUtil.getLevel(stack, enchantment);
 	}
 
 	public double getDamageMultiplier(ItemStack stack) {

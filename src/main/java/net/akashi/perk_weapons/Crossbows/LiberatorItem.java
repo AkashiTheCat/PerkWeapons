@@ -6,8 +6,8 @@ import net.akashi.perk_weapons.Config.Properties.Crossbow.LiberatorProperties;
 import net.akashi.perk_weapons.Entities.Projectiles.Arrows.BaseArrow;
 import net.akashi.perk_weapons.Registry.ModEnchantments;
 import net.akashi.perk_weapons.Util.TooltipHelper;
-import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
@@ -66,16 +66,16 @@ public class LiberatorItem extends BaseCrossbowItem {
 	}
 
 	@Override
-	public int getCrossbowEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
-		if (enchantment.is(Enchantments.MULTISHOT)) {
-			return super.getCrossbowEnchantmentLevel(stack, enchantment) + MULTISHOT_BONUS;
+	public int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
+		if (enchantment.equals(Enchantments.MULTISHOT)) {
+			return super.getEnchantmentLevel(stack, enchantment) + MULTISHOT_BONUS;
 		}
-		return super.getCrossbowEnchantmentLevel(stack, enchantment);
+		return super.getEnchantmentLevel(stack, enchantment);
 	}
 
 	@Override
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return getCrossbowEnchantmentLevel(crossbowStack, ModEnchantments.REGICIDE_KEY) > 0 ?
+		return getEnchantmentLevel(crossbowStack, ModEnchantments.REGICIDE_KEY) > 0 ?
 				AMMO_CAPACITY_REGICIDE : super.getAmmoCapacity(crossbowStack);
 	}
 

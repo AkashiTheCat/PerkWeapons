@@ -221,9 +221,9 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		if (shooter instanceof Player player && net.neoforged.neoforge.event.EventHooks.onArrowLoose(crossbowStack,
 				shooter.level(), player, 1, true) < 0) return;
 
-		int multiShotLevel = getCrossbowEnchantmentLevel(crossbowStack, Enchantments.MULTISHOT);
-		int pierceLevel = getCrossbowEnchantmentLevel(crossbowStack, Enchantments.PIERCING);
-		int powerLevel = getCrossbowEnchantmentLevel(crossbowStack, Enchantments.POWER);
+		int multiShotLevel = getEnchantmentLevel(crossbowStack, Enchantments.MULTISHOT);
+		int pierceLevel = getEnchantmentLevel(crossbowStack, Enchantments.PIERCING);
+		int powerLevel = getEnchantmentLevel(crossbowStack, Enchantments.POWER);
 
 		int shotAmount = multiShotLevel * 2 + 1;
 		int angle = multiShotLevel * -10;
@@ -262,7 +262,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		}
 		ItemStack ammoToLoad = ammoStack.copyWithCount(1);
 
-			if (isShooterPlayer && !isCreative && getCrossbowEnchantmentLevel(crossbowStack, Enchantments.INFINITY) == 0) {
+			if (isShooterPlayer && !isCreative && getEnchantmentLevel(crossbowStack, Enchantments.INFINITY) == 0) {
 				ammoStack.shrink(1);
 				if (ammoStack.isEmpty())
 					((Player) shooter).getInventory().removeItem(ammoStack);
@@ -273,7 +273,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 	}
 
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
-		int quickChargeLevel = getCrossbowEnchantmentLevel(crossbowStack, Enchantments.QUICK_CHARGE);
+		int quickChargeLevel = getEnchantmentLevel(crossbowStack, Enchantments.QUICK_CHARGE);
 		return Math.max(1, (int) Math.ceil(MAX_CHARGE_TICKS - QUICK_CHARGE_RELOAD_TIME_REDUCTION * quickChargeLevel)
 		);
 	}
@@ -459,7 +459,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 
 	@NotNull
 	protected SoundEventHolder getStartSound(LivingEntity shooter, ItemStack crossbowStack) {
-		return switch (getCrossbowEnchantmentLevel(crossbowStack, Enchantments.QUICK_CHARGE)) {
+		return switch (getEnchantmentLevel(crossbowStack, Enchantments.QUICK_CHARGE)) {
 			case 1 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_1, 0.5F, 1F);
 			case 2 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_2, 0.5F, 1F);
 			case 3 -> new SoundEventHolder(SoundEvents.CROSSBOW_QUICK_CHARGE_3, 0.5F, 1F);
@@ -564,11 +564,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		return ConflictEnchants.remove(enchantment);
 	}
 
-	public int getCrossbowEnchantmentLevel(ItemStack stack, Holder<Enchantment> enchantment) {
-		return EnchantmentUtil.getLevel(stack, enchantment);
-	}
-
-	public int getCrossbowEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
+	public int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
 		return EnchantmentUtil.getLevel(stack, enchantment);
 	}
 
@@ -596,7 +592,7 @@ public class BaseCrossbowItem extends CrossbowItem implements IDoubleLineCrossha
 		TooltipHelper.addWeaponDescription(tooltip, getWeaponDescription(stack, null));
 		TooltipHelper.addPerkDescription(tooltip, getPerkDescriptions(stack, null));
 
-		int powerLevel = getCrossbowEnchantmentLevel(stack, Enchantments.POWER);
+		int powerLevel = getEnchantmentLevel(stack, Enchantments.POWER);
 		float damage = (float) (DAMAGE * (powerLevel > 0 ? 1 + 0.25 * powerLevel : 1));
 		tooltip.add(Component.translatable("tooltip.perk_weapons.attribute_damage",
 						TooltipHelper.convertToEmbeddedElement(damage))

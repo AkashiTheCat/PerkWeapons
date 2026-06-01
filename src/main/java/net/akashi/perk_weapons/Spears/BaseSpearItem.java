@@ -199,6 +199,10 @@ public class BaseSpearItem extends TridentItem implements IDoubleLineCrosshairIt
 		return EnchantmentUtil.canBookEnchant(stack, book, GeneralEnchants, ConflictEnchants);
 	}
 
+	public int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
+		return EnchantmentUtil.getLevel(stack, enchantment);
+	}
+
 	public boolean AddGeneralEnchant(Holder<Enchantment> enchantment) {
 		return enchantment.unwrapKey().map(GeneralEnchants::add).orElse(false);
 	}
@@ -229,10 +233,6 @@ public class BaseSpearItem extends TridentItem implements IDoubleLineCrosshairIt
 
 	public boolean RemoveConflictEnchant(ResourceKey<Enchantment> enchantment) {
 		return ConflictEnchants.remove(enchantment);
-	}
-
-	private static int getEnchantmentLevel(ItemStack stack, ResourceKey<Enchantment> enchantment) {
-		return EnchantmentUtil.getLevel(stack, enchantment);
 	}
 
 	//New methods

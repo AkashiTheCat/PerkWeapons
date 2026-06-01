@@ -210,7 +210,7 @@ public class SonicBlasterItem extends BaseCrossbowItem {
 	}
 
 	private int getPierceLevel(ItemStack crossbowStack) {
-		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + getCrossbowEnchantmentLevel(crossbowStack, PIERCING);
+		return PIERCE_LEVEL == -1 ? -1 : PIERCE_LEVEL + getEnchantmentLevel(crossbowStack, PIERCING);
 	}
 
 	private int getAmmoLoaded(ItemStack crossbowStack) {

@@ -46,7 +46,7 @@ public class ClientHelper {
 
 	public static void registerLiberatorPropertyOverrides(LiberatorItem Item) {
 		ItemProperties.register(Item, ModelOverrides.REGICIDE, (stack, world, entity, value) ->
-				entity != null && Item.getCrossbowEnchantmentLevel(stack, ModEnchantments.REGICIDE_KEY) > 0 ? 1.0F : 0.0F);
+				entity != null && Item.getEnchantmentLevel(stack, ModEnchantments.REGICIDE_KEY) > 0 ? 1.0F : 0.0F);
 	}
 
 	public static void registerCrossbowPropertyOverrides(BaseCrossbowItem crossbow) {

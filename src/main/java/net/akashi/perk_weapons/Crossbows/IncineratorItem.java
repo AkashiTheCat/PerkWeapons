@@ -82,14 +82,14 @@ public class IncineratorItem extends BaseCrossbowItem {
 
 	@Override
 	public int getMaxChargeTicks(ItemStack crossbowStack) {
-		if (getCrossbowEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0) {
+		if (getEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0) {
 			return super.getMaxChargeTicks(crossbowStack) + BLAZE_RELOAD_ADDITION;
 		}
 		return super.getMaxChargeTicks(crossbowStack);
 	}
 
 	public int getAmmoCapacity(ItemStack crossbowStack) {
-		return getCrossbowEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0 ?
+		return getEnchantmentLevel(crossbowStack, ModEnchantments.BLAZE_KEY) > 0 ?
 				BLAZE_AMMO_CAPACITY : super.getAmmoCapacity(crossbowStack);
 	}
 

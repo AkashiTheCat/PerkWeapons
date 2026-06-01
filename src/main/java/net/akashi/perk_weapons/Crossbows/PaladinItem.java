@@ -161,10 +161,10 @@ public class PaladinItem extends AutoLoadingCrossbowItem implements IPerkItem, I
 	}
 
 	@Override
-	public int getCrossbowEnchantmentLevel(ItemStack stack, net.minecraft.resources.ResourceKey<Enchantment> enchantment) {
+	public int getEnchantmentLevel(ItemStack stack, net.minecraft.resources.ResourceKey<Enchantment> enchantment) {
 		if (enchantment == Enchantments.PIERCING)
-			return super.getCrossbowEnchantmentLevel(stack, enchantment) + PIERCE_LEVEL_BONUS;
-		return super.getCrossbowEnchantmentLevel(stack, enchantment);
+			return super.getEnchantmentLevel(stack, enchantment) + PIERCE_LEVEL_BONUS;
+		return super.getEnchantmentLevel(stack, enchantment);
 	}
 
 	@Override
